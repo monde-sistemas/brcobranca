@@ -40,12 +40,29 @@ module Brcobranca
           codigo_transmissao.rjust(20, ' ')
         end
 
+        # Zeros do header
+        #
+        # @return [String]
+        #
+        def zeros
+          "".ljust(16, "0")
+        end
+
+
         # Complemento do header
         #
         # @return [String]
         #
         def complemento
-          '058'.rjust(279, ' ')
+          "".ljust(275, " ")
+        end
+
+        # Numero da versão da remessa
+        #
+        # @return [String]
+        #
+        def versao
+          "058"
         end
 
         def monta_header
@@ -61,9 +78,10 @@ module Brcobranca
           # nome banco            [15]
           # data geracao          [6]        formato DDMMAA
           # zeros                 [16]
-          # complemento registro  [278]
+          # complemento registro  [275]
+          # versao                [3]
           # num. sequencial       [6]        000001
-          "01REMESSA01COBRANCA       #{info_conta}#{empresa_mae.to_s.ljust(30, ' ')}#{cod_banco}#{nome_banco}#{data_geracao}000000000000000#{complemento}000001"
+          "01REMESSA01COBRANCA       #{info_conta}#{empresa_mae.to_s.ljust(30, ' ')}#{cod_banco}#{nome_banco}#{data_geracao}#{zeros}#{complemento}#{versao}000001"
         end
 
         # Detalhe do arquivo
@@ -155,8 +173,8 @@ module Brcobranca
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
           detalhe << pagamento.nome_avalista.rjust(30, ' ')                 # Sacador/Mensagens                     X[40]
           detalhe << ''.rjust(1, ' ')                                       # Brancos                               X[1]
-          detalhe << ''.rjust(1, ' ')                                       # Identificador do Complemento          X[1]
-          detalhe << ''.rjust(2, ' ')                                       # Complemento                           9[2]
+          detalhe << identificador_movimento_complemento                    # Identificador do Complemento          X[1]
+          detalhe << movimento_complemento                                  # Complemento                           9[2]
           detalhe << ''.rjust(6, ' ')                                       # Brancos                               X[06]
           # Se identificacao_ocorrencia = 06
           detalhe << '00'.rjust(2, ' ')                                     # Número de dias para protesto          9[02]
@@ -165,17 +183,44 @@ module Brcobranca
           detalhe.upcase
         end
 
-        def monta_trailer(sequencial)
-          documentos = "#{pagamentos.count.to_s.rjust(6, '0')}"
-          total = sprintf "%.2f", pagamentos.map(&:valor).inject(:+)
+        def identificador_movimento_complemento
+          return 'I' if conta_padrao_novo?
+          ''.rjust(1, ' ')
+        end
 
+        def movimento_complemento
+          return "#{conta_corrente[8]}#{digito_conta}" if conta_padrao_novo?
+          ''.rjust(2, ' ')
+        end
+
+        def conta_padrao_novo?
+          conta_corrente.present? && conta_corrente.length > 8
+        end
+
+        # Valor total de todos os títulos
+        #
+        # @return [String]
+        #
+        def total_titulos
+          total = sprintf "%.2f", pagamentos.map(&:valor).inject(:+)
+          total.to_s.somente_numeros.rjust(13, "0")
+        end
+
+        # Trailer do arquivo remessa
+        #
+        # @param sequencial
+        #        num. sequencial do registro no arquivo
+        #
+        # @return [String]
+        #
+        def monta_trailer(sequencial)
           # CAMPO               TAMANHO   VALOR
           # código registro     [1]       9
           # quant. documentos   [6]
           # valor total titulos [13]
           # zeros               [374]     0
           # num. sequencial     [6]
-          "9#{documentos}#{total.to_s.somente_numeros.rjust(13, "0")}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, '0')}"
+          "9#{sequencial.to_s.rjust(6, '0')}#{total_titulos}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, "0")}"
         end
       end
     end
