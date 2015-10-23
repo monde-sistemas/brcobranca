@@ -44,9 +44,9 @@ module Brcobranca
 
       # Número documento
       #
-      # @return [String] 8 caracteres numéricos.
+      # @return [String] 7 caracteres numéricos.
       def numero_documento=(valor)
-        @numero_documento = valor.to_s.rjust(8, "0") if valor
+        @numero_documento = valor.to_s.rjust(7, "0") if valor
       end
 
       # Quantidade
@@ -92,9 +92,10 @@ module Brcobranca
       #     Ex.: 11 – 3 = 8, então Nosso Número + DV = 21-8
       #
       def nosso_numero_dv
-        "#{agencia}#{convenio}#{numero_documento}".modulo11(
-          multiplicador: [3, 1, 9, 7],
-          mapeamento: { 1 => 0, 10 => 0, 11 => 0 }
+        valor = "#{agencia}#{convenio.rjust(10, "0")}#{numero_documento}"
+        valor.modulo11(
+          multiplicador: [3, 7, 9, 1],
+          mapeamento: { 10 => 0, 11 => 0 }
         ) { |t| 11 - (t % 11) }
       end
 
@@ -110,7 +111,7 @@ module Brcobranca
       #    34 a 41      08                 Nosso número do boleto
       #    41 a 44      03                 Número da parcela a que o boleto se refere - "001" se parcela única
       def codigo_barras_segunda_parte
-        "#{carteira}#{agencia}#{variacao}#{convenio}#{numero_documento}#{quantidade}"
+        "#{carteira}#{agencia}#{variacao}#{convenio}#{nosso_numero_boleto}#{quantidade}"
       end
     end
   end
