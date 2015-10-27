@@ -97,8 +97,12 @@ module Brcobranca
           pagamentos.length.to_s.rjust(6, "0")
         end
 
+        def totaliza_valor_titulos
+          pagamentos.inject(0) { |sum, pag| sum += pag.valor.to_f }
+        end
+
         def valor_titulos_carteira
-          total = sprintf "%.2f", pagamentos.inject(0) { |sum, pag| sum += pag.valor.to_f }
+          total = sprintf "%.2f", totaliza_valor_titulos
           total.somente_numeros.rjust(17, "0")
         end
 
