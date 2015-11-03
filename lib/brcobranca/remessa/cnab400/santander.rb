@@ -27,7 +27,7 @@ module Brcobranca
         end
 
         def nome_banco
-          'SANTANDER'.ljust(15, ' ')
+          'SANTANDER'.format_size(15)
         end
 
         # Informacoes do Código de Transmissão
@@ -81,7 +81,7 @@ module Brcobranca
           # complemento registro  [275]
           # versao                [3]
           # num. sequencial       [6]        000001
-          "01REMESSA01COBRANCA       #{info_conta}#{empresa_mae.to_s.ljust(30, ' ')}#{cod_banco}#{nome_banco}#{data_geracao}#{zeros}#{complemento}#{versao}000001"
+          "01REMESSA01COBRANCA       #{info_conta}#{empresa_mae[0..29].to_s.ljust(30, ' ')}#{cod_banco}#{nome_banco}#{data_geracao}#{zeros}#{complemento}#{versao}000001"
         end
 
         # Detalhe do arquivo
@@ -171,7 +171,7 @@ module Brcobranca
           detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
-          detalhe << pagamento.nome_avalista.rjust(30, ' ')                 # Sacador/Mensagens                     X[40]
+          detalhe << pagamento.nome_avalista.format_size(30)                # Sacador/Mensagens                     X[30]
           detalhe << ''.rjust(1, ' ')                                       # Brancos                               X[1]
           detalhe << identificador_movimento_complemento                    # Identificador do Complemento          X[1]
           detalhe << movimento_complemento                                  # Complemento                           9[2]
@@ -180,7 +180,7 @@ module Brcobranca
           detalhe << '00'.rjust(2, ' ')                                     # Número de dias para protesto          9[02]
           detalhe << ''.rjust(1, ' ')                                       # Brancos                               X[1]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
-          detalhe.upcase
+          detalhe
         end
 
         def identificador_movimento_complemento
