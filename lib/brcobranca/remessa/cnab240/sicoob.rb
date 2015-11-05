@@ -93,8 +93,61 @@ module Brcobranca
           ''.rjust(29, ' ')
         end
 
+        def quantidade_titulos_cobranca
+          pagamentos.length.to_s.rjust(6, "0")
+        end
+
+        def totaliza_valor_titulos
+          pagamentos.inject(0) { |sum, pag| sum += pag.valor.to_f }
+        end
+
+        def valor_titulos_carteira
+          total = sprintf "%.2f", totaliza_valor_titulos
+          total.somente_numeros.rjust(17, "0")
+        end
+
         def complemento_trailer
-          ''.rjust(217, ' ')
+          # CAMPO                               TAMANHO
+          # Qt. Títulos em Cobrança Simples     6
+          # Vl. Títulos em Carteira Simples     15 + 2 decimais
+          # Qt. Títulos em Cobrança Vinculada   6
+          # Vl. Títulos em Carteira Vinculada   15 + 2 decimais
+          # Qt. Títulos em Cobrança Caucionada  6
+          # Vl. Títulos em Carteira Caucionada  15 + 2 decimais
+          # Qt. Títulos em Cobrança Descontada  6
+          # Vl. Títulos em Carteira Descontada  15 + 2 decimais
+          total_cobranca_simples    = "#{quantidade_titulos_cobranca}#{valor_titulos_carteira}"
+          total_cobranca_vinculada  = "".rjust(23, "0")
+          total_cobranca_caucionada = "".rjust(23, "0")
+          total_cobranca_descontada = "".rjust(23, "0")
+
+          "#{total_cobranca_simples}#{total_cobranca_vinculada}#{total_cobranca_caucionada}"\
+            "#{total_cobranca_descontada}".ljust(217, ' ')
+        end
+
+        # Monta o registro trailer do arquivo
+        #
+        # @param nro_lotes [Integer]
+        #   numero de lotes no arquivo
+        # @param sequencial [Integer]
+        #   numero de registros(linhas) no arquivo
+        #
+        # @return [String]
+        #
+        def monta_trailer_arquivo(nro_lotes, sequencial)
+          # CAMPO                     TAMANHO
+          # codigo banco              3
+          # lote de servico           4
+          # tipo de registro          1
+          # uso FEBRABAN              9
+          # nro de lotes              6
+          # nro de registros(linhas)  6
+          # uso FEBRABAN              211
+          "#{cod_banco}99999#{''.rjust(9, ' ')}#{nro_lotes.to_s.rjust(6, '0')}#{sequencial.to_s.rjust(6, '0')}#{''.rjust(6, '0')}#{''.rjust(205, ' ')}"
+        end
+
+        def codigo_protesto
+          "1"
         end
 
         def complemento_p(pagamento)

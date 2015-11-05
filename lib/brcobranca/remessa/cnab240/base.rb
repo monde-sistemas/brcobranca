@@ -168,7 +168,7 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_iof(15) # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15) # valor abatimento                      15
           segmento_p << ''.rjust(25, ' ') # identificacao titulo empresa          25  *
-          segmento_p << '0' # cod. para protesto                    1   *
+          segmento_p << codigo_protesto   # cod. para protesto                    1   *
           segmento_p << '00' # dias para protesto                    2   *
           segmento_p << '0' # cod. para baixa                       1   *
           segmento_p << '000' # dias para baixa                       2   *
@@ -369,6 +369,13 @@ module Brcobranca
         #
         def codigo_convenio
           fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+        end
+
+        # Codigo para protesto
+        #
+        # Sobreescreva caso necessário
+        def codigo_protesto
+         "0"
         end
       end
     end
