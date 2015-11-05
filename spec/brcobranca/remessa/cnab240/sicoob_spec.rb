@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(
-      valor: 50,
+      valor: 50.0,
       data_vencimento: Date.today,
       nosso_numero: '429715',
       documento_sacado: '82136760505',
@@ -132,8 +132,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       expect(sicoob.complemento_header).to eq ''.rjust(29, ' ')
     end
 
-    it 'complemento trailer deve retornar espacos em branco' do
-      expect(sicoob.complemento_trailer).to eq ''.rjust(217, ' ')
+    it 'complemento trailer deve retornar espacos em branco com a totalização das cobranças' do
+      total_cobranca_simples    = "00000100000000000005000"
+      total_cobranca_vinculada  = "".rjust(23, "0")
+      total_cobranca_caucionada = "".rjust(23, "0")
+      total_cobranca_descontada = "".rjust(23, "0")
+
+      expect(sicoob.complemento_trailer).to eq "#{total_cobranca_simples}#{total_cobranca_vinculada}"\
+                            "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
     end
 
     it 'formata o nosso numero' do

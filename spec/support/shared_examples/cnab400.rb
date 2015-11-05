@@ -69,9 +69,13 @@ shared_examples_for 'cnab400' do
 
     it 'informacoes devem estar posicionadas corretamente no trailer' do
       trailer = objeto.monta_trailer 3
-      expect(trailer[0]).to eq '9' # identificacao registro
-      expect(trailer[1..393]).to eq ''.rjust(393, ' ') # brancos
-      expect(trailer[394..399]).to eq '000003' # numero sequencial do registro
+      expect(trailer[0]).to eq '9'                       # identificacao registro
+
+      if subject.class != Brcobranca::Remessa::Cnab400::Santander
+        expect(trailer[1..393]).to eq ''.rjust(393, ' ')   # brancos
+      end
+
+      expect(trailer[394..399]).to eq '000003'           # numero sequencial do registro
     end
   end
 
@@ -81,21 +85,21 @@ shared_examples_for 'cnab400' do
 
   it 'remessa deve conter os registros mais as quebras de linha' do
     remessa = objeto.gera_arquivo
-    expect(remessa.size).to eq 1202
+    expect(remessa.size).to eq 1204
 
     # registros
     expect(remessa[0..399]).to eq objeto.monta_header
-    expect(remessa[401..800]).to eq objeto.monta_detalhe(pagamento, 2)
-    expect(remessa[802..1201]).to eq objeto.monta_trailer(3)
+    expect(remessa[402..801]).to eq objeto.monta_detalhe(pagamento, 2).upcase
+    expect(remessa[804..1203]).to eq objeto.monta_trailer(3)
     # quebras de linha
-    expect(remessa[400]).to eq "\n"
-    expect(remessa[801]).to eq "\n"
+    expect(remessa[400..401]).to eq "\r\n"
+    expect(remessa[802..803]).to eq "\r\n"
   end
 
   it 'deve ser possivel adicionar mais de um pagamento' do
     objeto.pagamentos << pagamento
     remessa = objeto.gera_arquivo
 
-    expect(remessa.size).to eq 1603
+    expect(remessa.size).to eq 1606
   end
 end

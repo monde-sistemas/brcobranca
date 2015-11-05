@@ -57,7 +57,8 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     expect(boleto_novo.conta_corrente).to eql("0417270")
     expect(boleto_novo.agencia).to eql("3007")
     expect(boleto_novo.convenio).to eql("0318957")
-    expect(boleto_novo.numero_documento).to eql("00000240")
+    expect(boleto_novo.numero_documento).to eql("0000240")
+    expect(boleto_novo.nosso_numero_boleto).to eql("00002404")
     expect(boleto_novo.carteira).to eql("1")
     expect(boleto_novo.codigo_servico).to be_falsey
   end
@@ -68,16 +69,21 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     expect(boleto_novo.errors.count).to eql(3)
   end
 
+  it "Validar a presença do campo variacao" do
+    @valid_attributes[:variacao] = ""
+    boleto_novo = described_class.new(@valid_attributes)
+    expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
+    expect(boleto_novo.errors.count).to eql(1)
+  end
+
   it "Montar agencia_conta_boleto" do
     boleto_novo = described_class.new(@valid_attributes)
 
     expect(boleto_novo.agencia_conta_boleto).to eql("3007 / 0318957")
   end
 
-  it "Busca logotipo do banco" do
-    boleto_novo = described_class.new
-    expect(File.exist?(boleto_novo.logotipo)).to be_truthy
-    expect(File.stat(boleto_novo.logotipo).zero?).to be_falsey
+  describe 'Busca logotipo do banco' do
+    it_behaves_like 'busca_logotipo'
   end
 
   it "Gerar boleto nos formatos válidos com método to_" do

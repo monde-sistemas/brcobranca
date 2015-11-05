@@ -69,7 +69,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
   end
 
   context 'formatacoes dos valores' do
-    it 'cod_banco deve ser 341' do
+    it 'cod_banco deve ser 033' do
       expect(santander.cod_banco).to eq '033'
     end
 
@@ -78,8 +78,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
       expect(nome_banco.strip).to eq 'SANTANDER'
     end
 
-    it 'complemento deve retornar 294 caracteres' do
-      expect(santander.complemento.size).to eq 294
+    it 'complemento deve retornar 275 caracteres' do
+      expect(santander.complemento.size).to eq 275
     end
 
     it 'info_conta deve retornar com 20 posicoes as informacoes da conta' do
@@ -95,10 +95,13 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
     context 'header' do
       it 'informacoes devem estar posicionadas corretamente no header' do
         header = santander.monta_header
-        expect(header[1]).to eq '1' # tipo operacao (1 = remessa)
-        expect(header[2..8]).to eq 'REMESSA' # literal da operacao
-        expect(header[26..45]).to eq santander.info_conta # informacoes da conta
-        expect(header[76..78]).to eq '033' # codigo do banco
+        expect(header[1]).to eq '1'                                 # tipo operacao (1 = remessa)
+        expect(header[2..8]).to eq 'REMESSA'                        # literal da operacao
+        expect(header[26..45]).to eq santander.info_conta   # informacoes da conta
+        expect(header[76..78]).to eq '033'                          # codigo do banco
+        expect(header[100..115]).to eq ''.rjust(16, "0")            # zeros
+        expect(header[116..390]).to eq ''.rjust(275,' ')            # campos mensagens vazios
+        expect(header[391..393]).to eq '058'                        # numero da versão da remessa
       end
     end
 
@@ -110,6 +113,17 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
         expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+      end
+    end
+
+    context 'trailer' do
+      it 'informacoes devem estar posicionadas corretamente no trailer' do
+        trailer = santander.monta_trailer "3"
+        expect(trailer[0]).to eq '9'                        # código registro
+        expect(trailer[1..6]).to eq '000003'                # quant. total de linhas
+        expect(trailer[7..19]).to eq '0000000019990'        # valor total dos titulos
+        expect(trailer[20..393]).to eq ''.rjust(374, '0')   # zeros
+        expect(trailer[394..399]).to eq '000003'            # num. sequencial
       end
     end
 
