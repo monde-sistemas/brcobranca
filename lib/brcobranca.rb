@@ -121,14 +121,15 @@ module Brcobranca
     autoload :RetornoCnab400,  'brcobranca/retorno/retorno_cnab400' # DEPRECATED
 
     module Cnab400
-      autoload :Base, 'brcobranca/retorno/cnab400/base'
-      autoload :Bradesco, 'brcobranca/retorno/cnab400/bradesco'
-      autoload :Itau, 'brcobranca/retorno/cnab400/itau'
+      autoload :Base,          'brcobranca/retorno/cnab400/base'
+      autoload :Bradesco,      'brcobranca/retorno/cnab400/bradesco'
+      autoload :Itau,          'brcobranca/retorno/cnab400/itau'
+      autoload :Unicred,       'brcobranca/retorno/cnab400/unicred'
     end
 
     module Cnab240
-      autoload :Base, 'brcobranca/retorno/cnab240/base'
-      autoload :Sicoob, 'brcobranca/retorno/cnab240/sicoob'
+      autoload :Base,          'brcobranca/retorno/cnab240/base'
+      autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
     end
   end
 
