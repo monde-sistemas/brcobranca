@@ -1,17 +1,17 @@
 # -*- encoding: utf-8 -*-
+require 'parseline'
 
 module Brcobranca
   module Retorno
     module Cnab400
       # Formato de Retorno CNAB 400
-      # Baseado em: 
-      class Unicred < Brcobranca::Retorno::Cnab400::Base
-        extend ParseLine::FixedWidth # Extendendo parseline
+      class Unicred < Brcobranca::Retorno::Base
+        extend ParseLine::FixedWidth
 
-        # Load lines
         def self.load_lines(file, options = {})
           default_options = { except: [1] } # por padrao ignora a primeira linha que é header
           options = default_options.merge!(options)
+
           super file, options
         end
 
