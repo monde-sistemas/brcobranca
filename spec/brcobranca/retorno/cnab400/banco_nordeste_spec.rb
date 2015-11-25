@@ -16,8 +16,8 @@ RSpec.describe Brcobranca::Retorno::Cnab400::BancoNordeste do
     pagamentos = described_class.load_lines(@arquivo)
     expect(pagamentos.size).to eq(2) # deve ignorar a primeira linha que é header
     pagamento = pagamentos.first
-    expect(pagamento.nosso_numero).to eql('0000116')
-    expect(pagamento.valor_recebido).to eql('0000000044400')
-    expect(pagamento.data_credito).to eql('150515')
+    expect(pagamento.nosso_numero).to eql('00000116')
+    expect(pagamento.valor_recebido).to eql('0000000017500')
+    expect(pagamento.data_credito).to eql('201114')
   end
 end
