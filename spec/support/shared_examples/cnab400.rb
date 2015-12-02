@@ -48,6 +48,17 @@ shared_examples_for 'cnab400' do
         documento_cedente: '12345678910',
         pagamentos: [pagamento]
       }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Unicred
+      {
+        carteira: '03',
+        agencia: '1234',
+        conta_corrente: '12345',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        literal_servico: '12345678901234567890',
+        pagamentos: [pagamento]
+      }
     else
       { carteira: '123',
         agencia: '1234',
