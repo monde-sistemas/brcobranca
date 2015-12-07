@@ -56,7 +56,7 @@ shared_examples_for 'cnab400' do
         digito_conta: '1',
         empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
         documento_cedente: '12345678910',
-        literal_servico: '12345678901234567890',
+        codigo_transmissao: '12345678901234567890',
         pagamentos: [pagamento]
       }
     else
