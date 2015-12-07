@@ -22,7 +22,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       digito_conta: '1',
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       documento_cedente: '12345678910',
-      literal_servico: '12345678901234567890',
+      codigo_transmissao: '12345678901234567890',
       pagamentos: [pagamento]
     }
   end
@@ -100,17 +100,17 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       end
     end
 
-    context '@literal_servico' do
-      it 'deve ser inváldo se não existir' do
-        object = subject.class.new(params.merge!(literal_servico: nil))
+    context '@codigo_transmissao' do
+      it 'deve ser inválido se não existir' do
+        object = subject.class.new(params.merge!(codigo_transmissao: nil))
         expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Literal servico não pode estar em branco.')
+        expect(object.errors.full_messages).to include('Codigo transmissao não pode estar em branco.')
       end
 
       it 'deve ser inválido quando não possuir até 20 dígitos' do
-        object = subject.class.new(params.merge!(literal_servico: '123456789012345678901'))
+        object = subject.class.new(params.merge!(codigo_transmissao: '123456789012345678901'))
         expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Literal servico deve ter 20 dígitos.')
+        expect(object.errors.full_messages).to include('Codigo transmissao deve ter 20 dígitos.')
       end
     end
   end

@@ -6,18 +6,18 @@ module Brcobranca
         # documento do cedente
         attr_accessor :documento_cedente
         # Codigo de transmissao fornecido pelo banco
-        attr_accessor :literal_servico
+        attr_accessor :codigo_transmissao
 
         validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
         validates_presence_of :documento_cedente, :digito_conta, message: 'não pode estar em branco.'
-        validates_presence_of :literal_servico, message: 'não pode estar em branco.'
+        validates_presence_of :codigo_transmissao, message: 'não pode estar em branco.'
 
         validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
         validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
         validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
         validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
-        validates_length_of :literal_servico, maximum: 20, message: 'deve ter 20 dígitos.'
+        validates_length_of :codigo_transmissao, maximum: 20, message: 'deve ter 20 dígitos.'
 
         validates_inclusion_of :carteira, in: %w(01 03 04 05 06 07), message: 'não é válida.'
 
@@ -57,7 +57,7 @@ module Brcobranca
         def info_conta
           # CAMPO                    TAMANHO
           # codigo da transmissao         20
-          "#{literal_servico}"
+          "#{codigo_transmissao}"
         end
 
         # Complemento do header
@@ -113,7 +113,7 @@ module Brcobranca
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
-          detalhe << literal_servico                                        # código da transmissao                 9[20]
+          detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
           detalhe << ''.rjust(25, ' ')                                      # numero de controle do participante    X[25]
           detalhe << pagamento.nosso_numero.to_s.rjust(7, '0')              # nosso numero                          9[07]
           detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s       # dv do nosso numero                    9[01]
