@@ -83,6 +83,7 @@ module Brcobranca
       def initialize(campos = {})
         padrao = {
           data_emissao: Date.today,
+          data_segundo_desconto:'00-00-00',
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,
