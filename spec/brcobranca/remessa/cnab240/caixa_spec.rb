@@ -139,7 +139,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       expect(comp_p[19..33]).to eq '000000000000123' # nosso numero
     end
 
-    it 'tipo do documento deve ser 2 - Duplicata mercantil' do
+    it 'tipo do documento deve ser 2 - Escritural' do
       expect(caixa.tipo_documento).to eq '2'
     end
 
