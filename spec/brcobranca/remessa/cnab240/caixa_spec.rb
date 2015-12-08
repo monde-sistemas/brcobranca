@@ -142,6 +142,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     it 'tipo do documento deve ser 2' do
       expect(caixa.tipo_documento).to eq '2'
     end
+
+    it 'codigo do protesto de ver ser 3' do
+      expect(caixa.codigo_protesto).to eq '3'
+    end
   end
 
   context 'geracao remessa' do

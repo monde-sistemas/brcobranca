@@ -98,6 +98,15 @@ module Brcobranca
           "2"
         end
 
+        # Código do Protesto
+        #
+        # 1 - Protestar
+        # 3 - Não protestar
+        # 9 - Cancelamento protesto automatico
+        def codigo_protesto
+          "3"
+        end
+
         def complemento_p(pagamento)
           # CAMPO                 TAMANHO
           # convenio              6
