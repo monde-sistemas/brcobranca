@@ -138,6 +138,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       expect(comp_p[17..18]).to eq '14' # modalidade carteira
       expect(comp_p[19..33]).to eq '000000000000123' # nosso numero
     end
+
+    it 'tipo do documento deve ser 2' do
+      expect(caixa.tipo_documento).to eq '2'
+    end
   end
 
   context 'geracao remessa' do

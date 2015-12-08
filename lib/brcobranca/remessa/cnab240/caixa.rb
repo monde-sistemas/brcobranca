@@ -94,6 +94,10 @@ module Brcobranca
           "#{''.rjust(69, '0')}#{''.rjust(148, ' ')}"
         end
 
+        def tipo_documento
+          "2"
+        end
+
         def complemento_p(pagamento)
           # CAMPO                 TAMANHO
           # convenio              6
