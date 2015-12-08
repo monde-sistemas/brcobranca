@@ -108,7 +108,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     it 'convenio lote deve retornar as informacoes nas posicoes corretas' do
       conv_lote = caixa.convenio_lote
       expect(conv_lote[0..5]).to eq '123456'
-      expect(conv_lote[6..19]).to eq ''.rjust(14, ' ')
+      expect(conv_lote[6..19]).to eq ''.rjust(14, '0')
     end
 
     it 'info_conta deve retornar as informacoes nas posicoes corretas' do

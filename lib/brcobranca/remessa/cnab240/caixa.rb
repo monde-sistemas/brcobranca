@@ -73,7 +73,7 @@ module Brcobranca
         end
 
         def convenio_lote
-          "#{convenio.rjust(6, '0')}#{''.rjust(14, ' ')}"
+          "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
         end
 
         def info_conta
