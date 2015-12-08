@@ -73,7 +73,7 @@ module Brcobranca
         end
 
         def convenio_lote
-          "#{convenio.rjust(6, '0')}#{''.rjust(14, ' ')}"
+          "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
         end
 
         def info_conta
@@ -92,6 +92,19 @@ module Brcobranca
 
         def complemento_trailer
           "#{''.rjust(69, '0')}#{''.rjust(148, ' ')}"
+        end
+
+        def tipo_documento
+          "2"
+        end
+
+        # Código do Protesto
+        #
+        # 1 - Protestar
+        # 3 - Não protestar
+        # 9 - Cancelamento protesto automatico
+        def codigo_protesto
+          "3"
         end
 
         def complemento_p(pagamento)

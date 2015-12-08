@@ -108,7 +108,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     it 'convenio lote deve retornar as informacoes nas posicoes corretas' do
       conv_lote = caixa.convenio_lote
       expect(conv_lote[0..5]).to eq '123456'
-      expect(conv_lote[6..19]).to eq ''.rjust(14, ' ')
+      expect(conv_lote[6..19]).to eq ''.rjust(14, '0')
     end
 
     it 'info_conta deve retornar as informacoes nas posicoes corretas' do
@@ -137,6 +137,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       expect(comp_p[0..5]).to eq '123456' # convenio
       expect(comp_p[17..18]).to eq '14' # modalidade carteira
       expect(comp_p[19..33]).to eq '000000000000123' # nosso numero
+    end
+
+    it 'tipo do documento deve ser 2 - Escritural' do
+      expect(caixa.tipo_documento).to eq '2'
+    end
+
+    it 'codigo do protesto de ver ser 3 - Não protestar' do
+      expect(caixa.codigo_protesto).to eq '3'
     end
   end
 
