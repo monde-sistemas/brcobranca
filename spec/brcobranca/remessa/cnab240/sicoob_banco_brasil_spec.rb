@@ -25,6 +25,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       conta_corrente: '1234567890',
       codigo_cobranca: '1234567',
       documento_cedente: '74576177000177',
+      sequencial_remessa: '1',
       pagamentos: [pagamento]
     }
   end
@@ -93,9 +94,31 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
     end
   end
 
-  context 'geracao remessa' do
-    # it_behaves_like 'cnab240'
+  context 'header do arquivo' do
+    it 'deve ter 240 posicoes' do
+      expect(sicoob_banco_brasil.monta_header_arquivo.size).to eq 240
+    end
 
+    it 'header arquivo deve ter as informacoes nas posicoes corretas' do
+      header = sicoob_banco_brasil.monta_header_arquivo
+      expect(header[0..2]).to eq sicoob_banco_brasil.cod_banco        # cod. do banco
+      expect(header[3..6]).to eq '0000'                               # cod. do banco
+      expect(header[7]).to eq '1'                                     # reg. header do lote
+      expect(header[8]).to eq 'R'                                     # tipo da operacao R - remessa
+      expect(header[9..15]).to eq ''.rjust(7, '0')                    # zeros
+      expect(header[16..17]).to eq '  '                               # brancos
+      expect(header[18..39]).to eq sicoob_banco_brasil.info_conta     # informacoes da conta
+      expect(header[40..69]).to eq ''.rjust(30, ' ')                  # brancos
+      expect(header[70..99]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG'   # razao social do cedente
+      expect(header[100..179]).to eq ''.rjust(80, ' ')                # brancos
+      expect(header[180..187]).to eq '00000001'                       # sequencial de remessa
+      expect(header[188..195]).to eq '10122015'                       # data gravacao
+      expect(header[196..206]).to eq ''.rjust(11, '0')                # zeros
+      expect(header[207..239]).to eq ''.rjust(33, ' ')                # brancos
+    end
+  end
+
+  context 'geracao remessa' do
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
       after { Timecop.return }
