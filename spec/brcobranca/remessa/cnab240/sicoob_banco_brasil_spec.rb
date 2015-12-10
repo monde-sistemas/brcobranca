@@ -169,7 +169,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
     end
 
     it 'segmento Q deve ter as informacoes nas posicoes corretas' do
-      segmento_q = sicoob_banco_brasil.monta_segmento_q pagamento, 3, 3
+      segmento_q = sicoob_banco_brasil.monta_segmento_q(pagamento, 3, 3)
       expect(segmento_q[0..6]).to eq ''.rjust(7, '0')                 # zeros
       expect(segmento_q[7]).to eq '3'                                 # registo detalhe
       expect(segmento_q[8..12]).to eq '00003'                         # numero do registro no lote
@@ -191,6 +191,24 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(segmento_q[209..239]).to eq ''.rjust(31, ' ')              # brancos
     end
   end
+
+  context 'trailer arquivo' do
+    it 'trailer arquivo deve ter 240 posicoes' do
+      expect(sicoob_banco_brasil.monta_trailer_arquivo(1, 5).size).to eq 240
+    end
+
+    it 'trailer arquivo deve ter as informacoes nas posicoes corretas' do
+      trailer = sicoob_banco_brasil.monta_trailer_arquivo 1, 5
+      expect(trailer[0..6]).to eq ''.rjust(7, '0')                  # zeros
+      expect(trailer[7]).to eq '5'                                  # registo detalhe
+      expect(trailer[8..16]).to eq ''.rjust(9, ' ')                 # brancos
+      expect(trailer[17..22]).to eq '000001'                        # qtde de registros do lote
+      expect(trailer[23..39]).to eq '00000000000005000'             # valor total dos titulos do lote
+      expect(trailer[40..45]).to eq ''.rjust(6, '0')                # zeros
+      expect(trailer[46..239]).to eq ''.rjust(194, ' ')             # brancos
+    end
+  end
+
 
   context 'geracao remessa' do
     context 'arquivo' do
