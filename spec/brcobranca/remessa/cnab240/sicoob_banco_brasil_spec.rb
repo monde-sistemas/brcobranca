@@ -118,6 +118,49 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
     end
   end
 
+  context 'segmento P' do
+    it 'segmento P deve ter 240 posicoes' do
+      expect(sicoob_banco_brasil.monta_segmento_p(pagamento, 1, 2).size).to eq 240
+    end
+
+    it 'segmento P deve ter as informacos nas posicoes corretas' do
+      segmento_p = sicoob_banco_brasil.monta_segmento_p pagamento, 1, 2
+      expect(segmento_p[0..6]).to eq ''.rjust(7, '0')                 # zeros
+      expect(segmento_p[7]).to eq '3'                                 # tipo do registro
+      expect(segmento_p[8..12]).to eq '00002'                         # sequencial do registro no lote
+      expect(segmento_p[13]).to eq 'P'                                # cod. segmento
+      expect(segmento_p[14]).to eq ' '                                # brancos
+      expect(segmento_p[15..16]).to eq '01'                           # codigo da instrucao
+      expect(segmento_p[17..39]).to eq ''.rjust(23, ' ')              # brancos
+      expect(segmento_p[40..56]).to eq '12345678901234567'            # nosso_numero
+      expect(segmento_p[57]).to eq '9'                                # carteira
+      expect(segmento_p[58..59]).to eq '02'                           # tipo documento
+      expect(segmento_p[60]).to eq '2'                                # emissao boleto
+      expect(segmento_p[61]).to eq ' '                                # branco
+      expect(segmento_p[62..76]).to eq '000000001234567'              # numero do documento de cobranca
+      expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y')  # data de vencimento
+      expect(segmento_p[85..99]).to eq '000000000005000'              # valor do documento
+      expect(segmento_p[100..105]).to eq ''.rjust(6, '0')             # zeros
+      expect(segmento_p[106]).to eq 'N'                               # aceite
+      expect(segmento_p[107..108]).to eq '  '                         # brancos
+      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y')# data de emissao
+      expect(segmento_p[117]).to eq '1'                               # tipo da mora
+      expect(segmento_p[118..132]).to eq ''.rjust(15, '0')            # valor juros/mora
+      expect(segmento_p[133..141]).to eq ''.rjust(9, '0')             # zeros
+      expect(segmento_p[142..149]).to eq ''.rjust(8, '0')             # data de desconto
+      expect(segmento_p[150..164]).to eq ''.rjust(15, '0')            # valor do desconto
+      expect(segmento_p[165..179]).to eq ''.rjust(15, ' ')            # brancos
+      expect(segmento_p[180..194]).to eq '000000000000000'            # valor do abatimento
+      expect(segmento_p[195..219]).to eq ''.rjust(25, ' ')            # brancos
+      expect(segmento_p[220]).to eq '0'                               # protesto automatico
+      expect(segmento_p[221..222]).to eq '00'                         # dias para prostesto
+      expect(segmento_p[223..226]).to eq '0000'                       # zeros
+      expect(segmento_p[227..228]).to eq '09'                         # dias para prostesto
+      expect(segmento_p[229..238]).to eq ''.rjust(10, '0')            # n. contr. da operacao de credito
+      expect(segmento_p[239]).to eq '0'                               # zero
+    end
+  end
+
   context 'geracao remessa' do
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }

@@ -2,7 +2,7 @@
 module Brcobranca
   module Remessa
     module Cnab240
-      class SicoobBancoBrasil < Brcobranca::Remessa::Cnab240::Base
+      class SicoobBancoBrasil < Brcobranca::Remessa::Cnab240::BaseCorrespondente
         attr_accessor :codigo_cobranca
 
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
@@ -13,39 +13,15 @@ module Brcobranca
         def initialize(campos = {})
           campos = {
             emissao_boleto: '2',
-            distribuicao_boleto: '2'
+            distribuicao_boleto: '2',
+            codigo_carteira: '9',
+            tipo_documento: '02'
           }.merge!(campos)
           super(campos)
         end
 
-        # Monta o registro header do arquivo
-        #
-        # @return [String]
-        #
-        def monta_header_arquivo
-          header_arquivo = ''                                   # CAMPO                         TAMANHO
-          header_arquivo << cod_banco                           # codigo do banco               3
-          header_arquivo << '0000'                              # zeros                         4
-          header_arquivo << '1'                                 # registro header do lote       1
-          header_arquivo << 'R'                                 # tipo operacao: R-remessa      1
-          header_arquivo << ''.rjust(7, '0')                    # zeros                         7
-          header_arquivo << ''.rjust(2, ' ')                    # brancos                       2
-          header_arquivo << info_conta                          # informacoes da conta          22
-          header_arquivo << ''.rjust(30, ' ')                   # brancos                       30
-          header_arquivo << empresa_mae.format_size(30)         # nome da empresa               30
-          header_arquivo << ''.rjust(80, ' ')                   # brancos                       80
-          header_arquivo << sequencial_remessa.to_s.rjust(8, '0') # numero seq. arquivo         8
-          header_arquivo << data_geracao                        # data geracao                  8
-          header_arquivo << complemento_header                  # complemento do arquivo        44
-          header_arquivo
-        end
-
         def cod_banco
           '756'
-        end
-
-        def nome_banco
-          ''
         end
 
         def digito_conta
@@ -62,10 +38,6 @@ module Brcobranca
 
         def complemento_header
           "#{''.rjust(11, '0')}#{''.rjust(33, ' ')}"
-        end
-
-        def codigo_protesto
-          "1"
         end
 
         # Monta o registro segmento P do arquivo
@@ -88,7 +60,7 @@ module Brcobranca
           segmento_p << ' '                                             # uso exclusivo                         1
           segmento_p << '01'                                            # cod. movimento remessa                2
           segmento_p << ''.rjust(23, ' ')                               # brancos                               23
-          segmento_p << pagamento.numero_documento.to_s.rjust(17, '0')  # uso exclusivo                         17
+          segmento_p << formata_nosso_numero(pagamento.nosso_numero)    # uso exclusivo                         17
           segmento_p << codigo_carteira                                 # codigo da carteira                    1
           segmento_p << tipo_documento                                  # tipo de documento                     2
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
@@ -101,7 +73,7 @@ module Brcobranca
           segmento_p << '  '                                            # brancos                               2
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
           segmento_p << '1'                                             # tipo da mora                          1
-          segmento_p << pagamento.valor_mora.to_s                       # valor da mora                         15
+          segmento_p << pagamento.formata_valor_mora(15).to_s           # valor da mora                         15
           segmento_p << ''.rjust(9, '0')                                # zeros                                 9
           segmento_p << pagamento.formata_data_desconto('%d%m%Y')       # data desconto                         8
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
@@ -121,15 +93,7 @@ module Brcobranca
         def complemento_p(pagamento)
           # CAMPO                   TAMANHO
           # num. doc. de corbanca   15
-          "#{codigo_cobranca.rjust(15, '0')}"
-        end
-
-        def versao_layout_arquivo
-          '081'
-        end
-
-        def versao_layout_lote
-          '040'
+          "#{pagamento.nosso_numero.to_s.rjust(15, '0')}"
         end
 
         def codigo_convenio
