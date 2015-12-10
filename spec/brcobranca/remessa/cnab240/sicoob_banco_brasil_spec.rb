@@ -13,7 +13,9 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'RJ'
+      documento_avalista: '12345678901',
+      nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
+      uf_sacado: 'SP'
     )
   end
 
@@ -158,6 +160,35 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(segmento_p[227..228]).to eq '09'                         # dias para prostesto
       expect(segmento_p[229..238]).to eq ''.rjust(10, '0')            # n. contr. da operacao de credito
       expect(segmento_p[239]).to eq '0'                               # zero
+    end
+  end
+
+  context 'segmento Q' do
+    it 'segmento Q deve ter 240 posicoes' do
+      expect(sicoob_banco_brasil.monta_segmento_q(pagamento, 1, 3).size).to eq 240
+    end
+
+    it 'segmento Q deve ter as informacoes nas posicoes corretas' do
+      segmento_q = sicoob_banco_brasil.monta_segmento_q pagamento, 3, 3
+      expect(segmento_q[0..6]).to eq ''.rjust(7, '0')                 # zeros
+      expect(segmento_q[7]).to eq '3'                                 # registo detalhe
+      expect(segmento_q[8..12]).to eq '00003'                         # numero do registro no lote
+      expect(segmento_q[13]).to eq 'Q'                                # cod. segmento
+      expect(segmento_q[14]).to eq ' '                                # brancos
+      expect(segmento_q[15..16]).to eq '01'                           # codigo instrucao
+      expect(segmento_q[17..18]).to eq '01'                           # tipo insc. sacado
+      expect(segmento_q[19..32]).to eq '00082136760505'               # documento sacado
+      expect(segmento_q[33..72]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'  # nome do sacado
+      expect(segmento_q[73..112]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas ca' # endereco do sacado
+      expect(segmento_q[113..127]).to eq 'Sao jose dos qu'            # bairro do sacado
+      expect(segmento_q[128..132]).to eq '12345'                      # CEP do sacado
+      expect(segmento_q[133..135]).to eq '678'                        # sufixo CEP do sacado
+      expect(segmento_q[136..150]).to eq 'Santa rita de c'            # cidade do sacado
+      expect(segmento_q[151..152]).to eq 'SP'                         # UF do sacado
+      expect(segmento_q[153..154]).to eq '01'                         # tipo inscricao avalista
+      expect(segmento_q[155..168]).to eq '00012345678901'             # documento avalista
+      expect(segmento_q[169..208]).to eq 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUE' # nome do avalista
+      expect(segmento_q[209..239]).to eq ''.rjust(31, ' ')              # brancos
     end
   end
 
