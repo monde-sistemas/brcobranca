@@ -153,6 +153,7 @@ module Brcobranca
 
     module Cnab240
       autoload :Base,         'brcobranca/remessa/cnab240/base'
+      autoload :BaseCorrespondente,'brcobranca/remessa/cnab240/base_correspondente'
       autoload :Caixa,        'brcobranca/remessa/cnab240/caixa'
       autoload :BancoBrasil,  'brcobranca/remessa/cnab240/banco_brasil'
       autoload :Sicoob,       'brcobranca/remessa/cnab240/sicoob'
