@@ -122,11 +122,11 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
 
   context 'segmento P' do
     it 'segmento P deve ter 240 posicoes' do
-      expect(sicoob_banco_brasil.monta_segmento_p(pagamento, 1, 2).size).to eq 240
+      expect(sicoob_banco_brasil.monta_segmento_p(pagamento, 2).size).to eq 240
     end
 
     it 'segmento P deve ter as informacos nas posicoes corretas' do
-      segmento_p = sicoob_banco_brasil.monta_segmento_p pagamento, 1, 2
+      segmento_p = sicoob_banco_brasil.monta_segmento_p(pagamento, 2)
       expect(segmento_p[0..6]).to eq ''.rjust(7, '0')                 # zeros
       expect(segmento_p[7]).to eq '3'                                 # tipo do registro
       expect(segmento_p[8..12]).to eq '00002'                         # sequencial do registro no lote
@@ -165,11 +165,11 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
 
   context 'segmento Q' do
     it 'segmento Q deve ter 240 posicoes' do
-      expect(sicoob_banco_brasil.monta_segmento_q(pagamento, 1, 3).size).to eq 240
+      expect(sicoob_banco_brasil.monta_segmento_q(pagamento, 3).size).to eq 240
     end
 
     it 'segmento Q deve ter as informacoes nas posicoes corretas' do
-      segmento_q = sicoob_banco_brasil.monta_segmento_q(pagamento, 1, 3)
+      segmento_q = sicoob_banco_brasil.monta_segmento_q(pagamento, 3)
       expect(segmento_q[0..6]).to eq ''.rjust(7, '0')                 # zeros
       expect(segmento_q[7]).to eq '3'                                 # registo detalhe
       expect(segmento_q[8..12]).to eq '00003'                         # numero do registro no lote
