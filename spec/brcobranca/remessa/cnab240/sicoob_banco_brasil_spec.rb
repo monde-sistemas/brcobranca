@@ -114,7 +114,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(header[70..99]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG'   # razao social do cedente
       expect(header[100..179]).to eq ''.rjust(80, ' ')                # brancos
       expect(header[180..187]).to eq '00000001'                       # sequencial de remessa
-      expect(header[188..195]).to eq '10122015'                       # data gravacao
+      expect(header[188..195]).to eq Date.today.strftime('%d%m%Y')    # data gravacao
       expect(header[196..206]).to eq ''.rjust(11, '0')                # zeros
       expect(header[207..239]).to eq ''.rjust(33, ' ')                # brancos
     end
@@ -169,7 +169,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
     end
 
     it 'segmento Q deve ter as informacoes nas posicoes corretas' do
-      segmento_q = sicoob_banco_brasil.monta_segmento_q(pagamento, 3, 3)
+      segmento_q = sicoob_banco_brasil.monta_segmento_q(pagamento, 1, 3)
       expect(segmento_q[0..6]).to eq ''.rjust(7, '0')                 # zeros
       expect(segmento_q[7]).to eq '3'                                 # registo detalhe
       expect(segmento_q[8..12]).to eq '00003'                         # numero do registro no lote
@@ -209,6 +209,37 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
     end
   end
 
+  context 'monta lote' do
+    it 'retorno de lote deve ser uma colecao com os registros' do
+      lote = sicoob_banco_brasil.monta_lote(1)
+
+      expect(lote.is_a?(Array)).to be true
+      expect(lote.count).to be 2 # segmento p e segmento q
+    end
+
+    it 'contador de registros deve acrescer 1 a cada registro' do
+      lote = sicoob_banco_brasil.monta_lote(1)
+
+      expect(lote[0][8..12]).to eq '00001' # segmento P
+      expect(lote[1][8..12]).to eq '00002' # segmento Q
+    end
+  end
+
+  context 'gera arquivo' do
+    it 'deve falhar se o sicoob_banco_brasil for invalido' do
+      expect { subject.class.new.gera_arquivo }.to raise_error(Brcobranca::RemessaInvalida)
+    end
+
+    it 'remessa deve conter os registros mais as quebras de linha' do
+      remessa = sicoob_banco_brasil.gera_arquivo
+
+      expect(remessa.size).to eq 966
+      # quebras de linha
+      expect(remessa[240..241]).to eq "\r\n"
+      expect(remessa[482..483]).to eq "\r\n"
+      expect(remessa[724..725]).to eq "\r\n"
+    end
+  end
 
   context 'geracao remessa' do
     context 'arquivo' do
