@@ -110,7 +110,7 @@ module Brcobranca
           segmento_q = ''                                               # CAMPO                         TAMANHO
           segmento_q << ''.rjust(7, '0')                                # zeros                         3
           segmento_q << '3'                                             # registro detalhe              1
-          segmento_q << nro_lote.to_s.rjust(5, '0')                     # lote de servico               5
+          segmento_q << sequencial.to_s.rjust(5, '0')                   # lote de servico               5
           segmento_q << 'Q'                                             # cod. segmento                 1
           segmento_q << ' '                                             # brancos                       1
           segmento_q << '01'                                            # cod. movimento remessa        2
