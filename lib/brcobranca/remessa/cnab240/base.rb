@@ -67,27 +67,27 @@ module Brcobranca
         # @return [String]
         #
         def monta_header_arquivo
-          header_arquivo = '' # CAMPO                         TAMANHO
-          header_arquivo << cod_banco # codigo do banco               3
-          header_arquivo << '0000' # lote do servico               4
-          header_arquivo << '0' # tipo de registro              1
-          header_arquivo << ''.rjust(9, ' ') # uso exclusivo FEBRABAN        9
+          header_arquivo = ''                                   # CAMPO                         TAMANHO
+          header_arquivo << cod_banco                           # codigo do banco               3
+          header_arquivo << '0000'                              # lote do servico               4
+          header_arquivo << '0'                                 # tipo de registro              1
+          header_arquivo << ''.rjust(9, ' ')                    # uso exclusivo FEBRABAN        9
           header_arquivo << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo inscricao                1
-          header_arquivo << documento_cedente.to_s.rjust(14, '0') # numero de inscricao           14
-          header_arquivo << codigo_convenio # codigo do convenio no banco   20
-          header_arquivo << info_conta # informacoes da conta          20
-          header_arquivo << empresa_mae.format_size(30) # nome da empresa               30
-          header_arquivo << nome_banco.format_size(30) # nome do banco                 30
-          header_arquivo << ''.rjust(10, ' ') # uso exclusivo FEBRABAN        10
-          header_arquivo << '1' # codigo remessa                1
-          header_arquivo << data_geracao # data geracao                  8
-          header_arquivo << hora_geracao # hora geracao                  6
-          header_arquivo << sequencial_remessa.to_s.rjust(6, '0') # numero seq. arquivo           6
-          header_arquivo << versao_layout_arquivo # num. versao arquivo           3
-          header_arquivo << ''.rjust(5, '0') # densidade gravacao            5
-          header_arquivo << ''.rjust(20, '0') # uso exclusivo                 20
-          header_arquivo << ''.rjust(20, '0') # uso exclusivo                 20
-          header_arquivo << complemento_header # complemento do arquivo        29
+          header_arquivo << documento_cedente.to_s.rjust(14, '0') # numero de inscricao         14
+          header_arquivo << codigo_convenio                     # codigo do convenio no banco   20
+          header_arquivo << info_conta                          # informacoes da conta          20
+          header_arquivo << empresa_mae.format_size(30)         # nome da empresa               30
+          header_arquivo << nome_banco.format_size(30)          # nome do banco                 30
+          header_arquivo << ''.rjust(10, ' ')                   # uso exclusivo FEBRABAN        10
+          header_arquivo << '1'                                 # codigo remessa                1
+          header_arquivo << data_geracao                        # data geracao                  8
+          header_arquivo << hora_geracao                        # hora geracao                  6
+          header_arquivo << sequencial_remessa.to_s.rjust(6, '0') # numero seq. arquivo         6
+          header_arquivo << versao_layout_arquivo               # num. versao arquivo           3
+          header_arquivo << ''.rjust(5, '0')                    # densidade gravacao            5
+          header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
+          header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
+          header_arquivo << complemento_header                  # complemento do arquivo        29
           header_arquivo
         end
 
