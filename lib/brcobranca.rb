@@ -128,6 +128,7 @@ module Brcobranca
       autoload :Bradesco,      'brcobranca/retorno/cnab400/bradesco'
       autoload :Itau,          'brcobranca/retorno/cnab400/itau'
       autoload :BancoNordeste, 'brcobranca/retorno/cnab400/banco_nordeste'
+      autoload :BancoBrasilia, 'brcobranca/retorno/cnab400/banco_brasilia'
       autoload :Unicred,       'brcobranca/retorno/cnab400/unicred'
     end
 
