@@ -159,6 +159,22 @@ module Brcobranca
           detalhe << ''.rjust(32, ' ')                                      # branco                                X[32]
           detalhe
         end
+
+        # Gera o arquivo com os registros
+        #
+        # @return [String]
+        def gera_arquivo
+          fail Brcobranca::RemessaInvalida.new(self) unless self.valid?
+
+          # contador de registros no arquivo
+          contador = 1
+          ret = [monta_header]
+          pagamentos.each do |pagamento|
+            contador += 1
+            ret << monta_detalhe(pagamento, contador)
+          end
+          ret.join("\r\n").to_ascii.upcase
+        end
       end
     end
   end
