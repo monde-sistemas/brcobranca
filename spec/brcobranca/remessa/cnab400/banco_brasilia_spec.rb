@@ -155,6 +155,23 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       end
     end
 
+    it 'montagem da remessa deve falhar se o objeto nao for valido' do
+      expect { subject.class.new.gera_arquivo }.to raise_error(Brcobranca::RemessaInvalida)
+    end
+
+    it 'remessa deve conter os registros mais as quebras de linha' do
+      remessa = banco_brasilia.gera_arquivo
+      expect(remessa.size).to eq 443
+
+      # registros
+      expect(remessa[0..38]).to eq banco_brasilia.monta_header
+      expect(remessa[41..440]).to eq banco_brasilia.monta_detalhe(pagamento, 2).upcase
+
+      # quebras de linha
+      expect(remessa[39..40]).to eq "\r\n"
+      expect(remessa[441..442]).to eq "\r\n"
+    end
+
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
       after { Timecop.return }

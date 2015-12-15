@@ -173,6 +173,8 @@ module Brcobranca
             contador += 1
             ret << monta_detalhe(pagamento, contador)
           end
+
+          ret << []
           ret.join("\r\n").to_ascii.upcase
         end
       end
