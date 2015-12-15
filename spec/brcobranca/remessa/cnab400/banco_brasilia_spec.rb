@@ -89,15 +89,11 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       expect(banco_brasilia.cod_banco).to eq '070'
     end
 
-    it 'complemento deve retornar 294 caracteres' do
-      expect(banco_brasilia.complemento.size).to eq 294
-    end
-
     it 'info_conta deve retornar com 10 posicoes as informacoes da conta' do
       info_conta = banco_brasilia.info_conta
       expect(info_conta.size).to eq 10
-      expect(info_conta[0..3]).to eq '123'        # num. da agencia
-      expect(info_conta[6..12]).to eq '1234567'    # num. da conta
+      expect(info_conta[0..2]).to eq '083'          # num. da agencia
+      expect(info_conta[3..9]).to eq '0000490'      # num. da conta
     end
   end
 
@@ -121,16 +117,41 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
     end
 
     context 'detalhe' do
+      it 'deve ter 400 posições' do
+        expect(banco_brasilia.monta_detalhe(pagamento, 1).size).to eq 400
+      end
+
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = banco_brasilia.monta_detalhe pagamento, 1
-        expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
-        expect(detalhe[69]).to eq '6'                                 # digito verificador
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
-        expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
-        expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
-        expect(detalhe[156..159]).to eq '0000'                        # instrução
-        expect(detalhe[220..233]).to eq '00012345678901'              # documento do pagador
-        expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+        expect(detalhe[0..1]).to eq '01'                              # identificador
+        expect(detalhe[2..11]).to eq banco_brasilia.info_conta        # info da conta
+        expect(detalhe[12..25]).to eq '00012345678901'                # identificador
+        expect(detalhe[26..60]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA'   # nome do pagador
+        expect(detalhe[61..95]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Min'   # endereço do pagador
+        expect(detalhe[96..110]).to eq 'Santa rita de c'              # cidade do pagador
+        expect(detalhe[111..112]).to eq 'SP'                          # uf do pagador
+        expect(detalhe[113..120]).to eq '12345678'                    # cep do pagador
+        expect(detalhe[121..121]).to eq '1'                           # tipo de pessoa
+        expect(detalhe[122..134]).to eq ''.rjust(13, "0")             # seu numero
+        expect(detalhe[135..135]).to eq '2'                           # categoria de cobranca
+        expect(detalhe[136..143]).to eq Date.today.strftime('%d%m%Y') # data de emissao
+        expect(detalhe[144..145]).to eq '21'                          # tipo do documento
+        expect(detalhe[146..146]).to eq '0'                           # código da natureza
+        expect(detalhe[147..147]).to eq '0'                           # código da cond. pagamento
+        expect(detalhe[148..149]).to eq '02'                          # código da moeda
+        expect(detalhe[150..152]).to eq '070'                         # código do banco
+        expect(detalhe[153..156]).to eq '0083'                        # código da agência
+        expect(detalhe[157..186]).to eq ''.rjust(30, ' ')             # praça de cobranca
+        expect(detalhe[187..194]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
+        expect(detalhe[195..208]).to eq '00000000019990'              # valor do titulo
+        expect(detalhe[209..220]).to eq '200012307038'                # nosso numero
+        expect(detalhe[221..222]).to eq '00'                          # tipo de juros
+        expect(detalhe[223..236]).to eq ''.rjust(14, "0")             # valor dos juros
+        expect(detalhe[237..250]).to eq ''.rjust(14, "0")             # valor dos abatimento
+        expect(detalhe[251..252]).to eq '00'                          # tipo de desconto
+        expect(detalhe[253..260]).to eq ''.rjust(8, "0")              # data limite de desconto
+        expect(detalhe[261..274]).to eq ''.rjust(14, "0")             # valor dos descontos
+        expect(detalhe[288..327]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA   ' # emitente do titulo
       end
     end
 
@@ -138,7 +159,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
       after { Timecop.return }
 
-      it { expect(banco_brasilia.gera_arquivo).to eq(read_remessa('remessa-banco-nordeste-cnab400.rem', banco_nordeste.gera_arquivo)) }
+      it { expect(banco_brasilia.gera_arquivo).to eq(read_remessa('remessa-banco-brasilia-cnab400.rem', banco_brasilia.gera_arquivo)) }
     end
   end
 end

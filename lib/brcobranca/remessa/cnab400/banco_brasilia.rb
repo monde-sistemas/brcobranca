@@ -57,18 +57,17 @@ module Brcobranca
         #
         def info_conta
           # CAMPO             TAMANHO
-          # agencia           4
+          # agencia           3
           # conta corrente    7
           "#{agencia}#{conta_corrente}"
         end
 
         # Complemento do header
-        # (no caso do Banco do Nordeste, sao apenas espacos em branco)
+        # (no caso do Banco de Brasilia, não é usado)
         #
         # @return [String]
         #
         def complemento
-          ''.rjust(294, ' ')
         end
 
         # Codigo da carteira de acordo com a documentacao do Banco do Nordeste
@@ -76,14 +75,29 @@ module Brcobranca
         # @return [String]
         #
         def codigo_carteira
-          return "I" if carteira.to_s == "51"
+          carteira.to_s
+        end
 
-          carteiras = {
-            "1" => { "21" => "1", "41" => "2" }, # 1 - Emitido pelo banco
-            "2" => { "21" => "4", "41" => "5" }  # 2 - Emitido pelo cliente
-          }
+        def monta_nosso_numero(pagamento)
+          return nosso_numero.rjust(12, "0") if carteira == "3"
 
-          carteiras[emissao_boleto.to_s][carteira.to_s]
+          formacao = "#{carteira}#{pagamento.nosso_numero.to_s.rjust(6, "0")}#{cod_banco}"
+
+          formacao << formacao.modulo10.to_s
+          formacao << formacao.modulo11(
+            multiplicador: (2..7).to_a,
+            mapeamento: { 10 => 0, 11 => 0}
+          ) { |total| 11 - (total % 11) }.to_s
+        end
+
+        def codigo_tipo_juros(pagamento)
+          return "50" if pagamento.valor_mora > 0
+          "00"
+        end
+
+        def codigo_tipo_desconto(pagamento)
+          return "52" if pagamento.valor_desconto > 0
+          "00"
         end
 
         # Dígito verificador do nosso número.
@@ -92,10 +106,6 @@ module Brcobranca
         #
         # @return [String] 1 caracteres numéricos.
         def digito_nosso_numero(nosso_numero)
-          nosso_numero.to_s.rjust(7, '0').modulo11(
-            multiplicador: (2..8).to_a,
-            mapeamento: { 1 => 0, 10 => 0, 11 => 0 }
-          ) { |total| 11 - (total % 11) }
         end
 
         # Detalhe do arquivo
@@ -110,50 +120,43 @@ module Brcobranca
         def monta_detalhe(pagamento, sequencial)
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
-          detalhe = '1'                                                     # identificacao transacao               9[01]
-          detalhe << ''.rjust(16, ' ')                                      # filler                                 [16]
-          detalhe << agencia                                                # agencia                               9[04]
-          detalhe << ''.rjust(2, '0')                                       # complemento de registro (zeros)       9[02]
+          detalhe = '01'                                                    # identificacao transacao               9[02]
+          detalhe << agencia                                                # agencia                               9[03]
           detalhe << conta_corrente                                         # conta corrente                        9[07]
-          detalhe << digito_conta                                           # dac                                   9[01]
-          detalhe << pagamento.percentual_multa.to_s.rjust(2, '0')          # taxa - multa                           [02]
-          detalhe << ''.rjust(4, ' ')                                       # filler                                 [04]
-          detalhe << ''.rjust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
-          detalhe << pagamento.nosso_numero.to_s.rjust(7, '0')              # nosso numero                          9[07]
-          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s       # dv nosso numero                       9[01]
-          detalhe << ''.rjust(10, '0')                                      # numero do contrato                     [10]
-          detalhe << ''.rjust(6, '0')                                       # data do segundo pagamento              [06]
-          detalhe << ''.rjust(13, '0')                                      # valor do segundo pagamento             [13]
-          detalhe << ''.rjust(8, ' ')                                       # filler                                 [08]
-          detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
-          detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero_documento.to_s.rjust(10, '0')         # numero do documento                   X[10]
-          detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    9[06]
-          detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
-          detalhe << cod_banco                                              # codigo banco                          9[03]
-          detalhe << ''.rjust(4, '0')                                       # agencia cobradora - deixar zero       9[05]
-          detalhe << ' '                                                    # filler                                 [01]
-          detalhe << '01'                                                   # especie  do titulo                    X[02]
-          detalhe << aceite                                                 # aceite (A/N)                          X[01]
-          detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
-          detalhe << ''.rjust(4, '0')                                       # instrucao - deixar zero                [04]
-          detalhe << pagamento.formata_valor_mora                           # valor mora ao dia                     9[13]
-          detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
-          detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
-          detalhe << pagamento.formata_valor_iof                            # valor do iof                          9[13]
-          detalhe << pagamento.formata_valor_abatimento                     # valor do abatimento                   9[13]
-          detalhe << pagamento.identificacao_sacado                         # identificacao do pagador              9[02]
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')         # documento do pagador                  9[14]
-          detalhe << pagamento.nome_sacado.format_size(40)                  # nome do pagador                       X[40]
-          detalhe << pagamento.endereco_sacado.format_size(40)              # endereco do pagador                   X[40]
-          detalhe << pagamento.bairro_sacado.format_size(12)                # bairro do pagador                     X[12]
-          detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
+          detalhe << pagamento.nome_sacado.format_size(35)                  # nome do pagador                       X[35]
+          detalhe << pagamento.endereco_sacado.format_size(35)              # endereco do pagador                   X[35]
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
-          detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[30]
-          detalhe << "99"                                                   # prazo para protesto                    [02]
-          detalhe << "0"                                                    # código da moeda                       X[01]
-          detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
+          detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
+          detalhe << pagamento.identificacao_sacado(false).to_s             # tipo de pessoa                        9[01]
+          detalhe << ''.rjust(13, '0')                                      # seu numero                            9[13]
+          detalhe << codigo_carteira                                        # categoria de cobranca                 9[01]
+          detalhe << pagamento.data_emissao.strftime('%d%m%Y')              # data de emissao                       9[08]
+          detalhe << "21"                                                   # tipo do documento                     9[02]
+          detalhe << "0"                                                    # código da natureza                    9[01]
+          detalhe << "0"                                                    # código da cond. pagamento             9[02]
+          detalhe << "02"                                                   # código da moeda                       9[02]
+          detalhe << cod_banco                                              # código do banco                       9[03]
+          detalhe << agencia.rjust(4, "0")                                  # código da agênica                     9[04]
+          detalhe << ''.rjust(30, " ")                                      # praca de cobranca                     X[30]
+          detalhe << pagamento.data_vencimento.strftime('%d%m%Y')           # data do vencimento                    9[08]
+          detalhe << pagamento.formata_valor(14)                            # valor do documento                    9[14]
+          detalhe << monta_nosso_numero(pagamento)                          # nosso numero                          9[12]
+          detalhe << codigo_tipo_juros(pagamento)                           # codigo tipo juros                     9[02]
+          detalhe << pagamento.formata_valor_mora(14)                       # valor mora ao dia                     9[14]
+          detalhe << pagamento.formata_valor_abatimento(14)                 # valor do abatimento                   9[14]
+          detalhe << codigo_tipo_desconto(pagamento)                        # codigo tipo desconto                  9[02]
+          detalhe << pagamento.formata_data_desconto('%d%m%Y')              # data limite para desconto             9[08]
+          detalhe << pagamento.formata_valor_desconto(14)                   # valor do desconto                     9[14]
+          detalhe << "00"                                                   # primeira instrucao                    9[02]
+          detalhe << "00"                                                   # prazo da instrucao                    9[02]
+          detalhe << "00"                                                   # segunda instrucao                     9[02]
+          detalhe << "00"                                                   # prazo da instrucao                    9[02]
+          detalhe << "00000"                                                # taxa referente a instrucao            9[05]
+          detalhe << empresa_mae.format_size(40)                            # emitente do titulo                    X[40]
+          detalhe << ''.rjust(40, ' ')                                      # mensagem livre                        X[40]
+          detalhe << ''.rjust(32, ' ')                                      # branco                                X[32]
           detalhe
         end
       end
