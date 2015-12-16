@@ -116,7 +116,7 @@ module Brcobranca
         end
 
         def dias_baixa
-          "150"
+          "120"
         end
 
         def complemento_p(pagamento)
