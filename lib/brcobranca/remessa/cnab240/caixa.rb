@@ -90,6 +90,10 @@ module Brcobranca
           "#{versao_aplicativo.rjust(4, '0')}#{''.rjust(25, ' ')}"
         end
 
+        def exclusivo_servico
+          "00"
+        end
+
         def complemento_trailer
           "#{''.rjust(69, '0')}#{''.rjust(148, ' ')}"
         end
