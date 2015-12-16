@@ -90,6 +90,10 @@ module Brcobranca
           "#{versao_aplicativo.rjust(4, '0')}#{''.rjust(25, ' ')}"
         end
 
+        def exclusivo_servico
+          "00"
+        end
+
         def complemento_trailer
           "#{''.rjust(69, '0')}#{''.rjust(148, ' ')}"
         end
@@ -105,6 +109,14 @@ module Brcobranca
         # 9 - Cancelamento protesto automatico
         def codigo_protesto
           "3"
+        end
+
+        def codigo_baixa
+          "1"
+        end
+
+        def dias_baixa
+          "120"
         end
 
         def complemento_p(pagamento)

@@ -105,7 +105,7 @@ module Brcobranca
           header_lote << '1' # tipo de registro        1
           header_lote << 'R' # tipo de operacao        1
           header_lote << '01' # tipo de servico         2
-          header_lote << '  ' # uso exclusivo           2
+          header_lote << exclusivo_servico  # uso exclusivo           2
           header_lote << versao_layout_lote # num.versao layout lote  3
           header_lote << ' ' # uso exclusivo           1
           header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
@@ -170,8 +170,8 @@ module Brcobranca
           segmento_p << ''.rjust(25, ' ') # identificacao titulo empresa          25  *
           segmento_p << codigo_protesto   # cod. para protesto                    1   *
           segmento_p << '00' # dias para protesto                    2   *
-          segmento_p << '0' # cod. para baixa                       1   *
-          segmento_p << '000' # dias para baixa                       2   *
+          segmento_p << codigo_baixa  # cod. para baixa                       1   *
+          segmento_p << dias_baixa    # dias para baixa                       2   *
           segmento_p << '09' # cod. da moeda                         2
           segmento_p << ''.rjust(10, '0') # uso exclusivo                         10
           segmento_p << ' ' # uso exclusivo                         1
@@ -376,6 +376,18 @@ module Brcobranca
         # Sobreescreva caso necessário
         def codigo_protesto
          "0"
+        end
+
+        def codigo_baixa
+          "0"
+        end
+
+        def dias_baixa
+          "000"
+        end
+
+        def exclusivo_servico
+          "".rjust(2, " ")
         end
       end
     end
