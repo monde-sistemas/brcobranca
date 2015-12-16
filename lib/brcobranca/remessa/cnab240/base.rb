@@ -105,7 +105,7 @@ module Brcobranca
           header_lote << '1' # tipo de registro        1
           header_lote << 'R' # tipo de operacao        1
           header_lote << '01' # tipo de servico         2
-          header_lote << '  ' # uso exclusivo           2
+          header_lote << exclusivo_servico  # uso exclusivo           2
           header_lote << versao_layout_lote # num.versao layout lote  3
           header_lote << ' ' # uso exclusivo           1
           header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
@@ -376,6 +376,13 @@ module Brcobranca
         # Sobreescreva caso necessário
         def codigo_protesto
          "0"
+        end
+
+        # Uso exclusivo FEBRABAN
+        #
+        # Sobrescreva caso necessário
+        def exclusivo_servico
+          "".rjust(2, " ")
         end
       end
     end
