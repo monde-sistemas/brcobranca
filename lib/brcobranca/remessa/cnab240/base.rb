@@ -170,8 +170,8 @@ module Brcobranca
           segmento_p << ''.rjust(25, ' ') # identificacao titulo empresa          25  *
           segmento_p << codigo_protesto   # cod. para protesto                    1   *
           segmento_p << '00' # dias para protesto                    2   *
-          segmento_p << '0' # cod. para baixa                       1   *
-          segmento_p << '000' # dias para baixa                       2   *
+          segmento_p << codigo_baixa  # cod. para baixa                       1   *
+          segmento_p << dias_baixa    # dias para baixa                       2   *
           segmento_p << '09' # cod. da moeda                         2
           segmento_p << ''.rjust(10, '0') # uso exclusivo                         10
           segmento_p << ' ' # uso exclusivo                         1
@@ -378,9 +378,14 @@ module Brcobranca
          "0"
         end
 
-        # Uso exclusivo FEBRABAN
-        #
-        # Sobrescreva caso necessário
+        def codigo_baixa
+          "0"
+        end
+
+        def dias_baixa
+          "000"
+        end
+
         def exclusivo_servico
           "".rjust(2, " ")
         end

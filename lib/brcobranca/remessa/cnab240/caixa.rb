@@ -111,6 +111,14 @@ module Brcobranca
           "3"
         end
 
+        def codigo_baixa
+          "1"
+        end
+
+        def dias_baixa
+          "150"
+        end
+
         def complemento_p(pagamento)
           # CAMPO                 TAMANHO
           # convenio              6
