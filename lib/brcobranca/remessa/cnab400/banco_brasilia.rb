@@ -40,7 +40,7 @@ module Brcobranca
         end
 
         def data_formacao
-          DateTime.now.strftime('%Y%m%d%H%M%S')
+          Time.now.strftime('%Y%m%d%H%M%S')
         end
 
         def quantidade_registros

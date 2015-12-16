@@ -111,7 +111,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(header[3..5]).to eq '001'                              # versão
         expect(header[6..8]).to eq '075'                              # arquivo
         expect(header[9..18]).to eq banco_brasilia.info_conta         # informacoes da conta
-        expect(header[19..32]).to eq DateTime.now.strftime('%Y%m%d%H%M%S')  # data/hora de formação
+        expect(header[19..32]).to eq Time.now.strftime('%Y%m%d%H%M%S')  # data/hora de formação
         expect(header[33..38]).to eq '000002'                         # num. de registros
       end
     end
