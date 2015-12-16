@@ -150,6 +150,7 @@ module Brcobranca
       autoload :Citibank,      'brcobranca/remessa/cnab400/citibank'
       autoload :Santander,     'brcobranca/remessa/cnab400/santander'
       autoload :BancoNordeste, 'brcobranca/remessa/cnab400/banco_nordeste'
+      autoload :BancoBrasilia, 'brcobranca/remessa/cnab400/banco_brasilia'
       autoload :Unicred,       'brcobranca/remessa/cnab400/unicred'
     end
 
