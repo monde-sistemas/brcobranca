@@ -47,7 +47,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se o codigo cobranca tiver mais de 7 digitos' do
         sicoob_banco_brasil.codigo_cobranca = '12345678'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca deve ter 7 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca deve ter até 7 dígitos.')
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a convenio tiver mais de 10 digitos' do
         sicoob_banco_brasil.convenio = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio deve ter 10 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio deve ter até 10 dígitos.')
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a conta corrente tiver mais de 10 digitos' do
         sicoob_banco_brasil.conta_corrente = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente deve ter 10 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente deve ter até 10 dígitos.')
       end
     end
   end
