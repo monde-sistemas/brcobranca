@@ -9,6 +9,8 @@ module Brcobranca
         validates_length_of :convenio, maximum: 10, message: 'deve ter até 10 dígitos.'
         validates_length_of :conta_corrente, maximum: 10, message: 'deve ter até 10 dígitos.'
         validates_length_of :codigo_cobranca, maximum: 7, message: 'deve ter até 7 dígitos.'
+        validates_length_of :sequencial_remessa, maximum: 8, message: 'deve ter até 8 dígitos.'
+        validates_presence_of :sequencial_remessa, message: 'deve ser informado.'
 
         def initialize(campos = {})
           campos = {

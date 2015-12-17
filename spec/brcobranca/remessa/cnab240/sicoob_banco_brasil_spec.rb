@@ -66,6 +66,21 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
         expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente deve ter até 10 dígitos.')
       end
     end
+
+    context '@sequencial_remessa' do
+      it 'deve ser invalido se não for informado' do
+        sicoob_banco_brasil.sequencial_remessa = nil
+        expect(sicoob_banco_brasil.invalid?).to be true
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa deve ser informado.')
+      end
+
+      it 'deve ser invalido se o sequencial remessa tiver mais de 8 digitos' do
+        sicoob_banco_brasil.sequencial_remessa = '123456789'
+        expect(sicoob_banco_brasil.invalid?).to be true
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa deve ter até 8 dígitos.')
+      end
+    end
+
   end
 
   context 'formatacoes' do
