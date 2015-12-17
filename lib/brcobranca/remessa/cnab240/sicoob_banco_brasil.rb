@@ -6,9 +6,9 @@ module Brcobranca
         attr_accessor :codigo_cobranca
 
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
-        validates_length_of :convenio, is: 10, message: 'deve ter 10 dígitos.'
-        validates_length_of :conta_corrente, maximum: 10, message: 'deve ter 10 dígitos.'
-        validates_length_of :codigo_cobranca, is: 7, message: 'deve ter 7 dígitos.'
+        validates_length_of :convenio, maximum: 10, message: 'deve ter até 10 dígitos.'
+        validates_length_of :conta_corrente, maximum: 10, message: 'deve ter até 10 dígitos.'
+        validates_length_of :codigo_cobranca, maximum: 7, message: 'deve ter até 7 dígitos.'
 
         def initialize(campos = {})
           campos = {
