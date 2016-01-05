@@ -150,7 +150,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
     it 'deve conter a identificacao do titulo da empresa' do
       segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[195..219]).to eq "0000000000000000000000123"
+      expect(segmento_p[195..205]).to eq "00000000123"
     end
   end
 
