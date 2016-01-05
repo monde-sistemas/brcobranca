@@ -129,7 +129,7 @@ module Brcobranca
         end
 
         def identificacao_titulo_empresa(pagamento)
-          "#{pagamento.nosso_numero.to_s.rjust(25, "0")}"
+          "#{pagamento.numero_documento.to_s.rjust(25, "0")}"
         end
       end
     end
