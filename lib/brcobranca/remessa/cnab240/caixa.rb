@@ -127,6 +127,10 @@ module Brcobranca
           # ident. titulo         15
           "#{convenio.rjust(6, '0')}#{''.rjust(11, '0')}#{modalidade_carteira}#{pagamento.nosso_numero.to_s.rjust(15, '0')}"
         end
+
+        def identificacao_titulo_empresa(pagamento)
+          "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(14, ' ')}"
+        end
       end
     end
   end

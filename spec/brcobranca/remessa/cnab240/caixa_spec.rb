@@ -6,6 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
       nosso_numero: 123,
+      numero_documento: 123,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -145,6 +146,11 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
     it 'codigo do protesto de ver ser 3 - Não protestar' do
       expect(caixa.codigo_protesto).to eq '3'
+    end
+
+    it 'deve conter a identificacao do titulo da empresa' do
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[195..205]).to eq "00000000123"
     end
   end
 

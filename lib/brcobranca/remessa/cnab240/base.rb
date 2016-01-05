@@ -99,26 +99,26 @@ module Brcobranca
         # @return [String]
         #
         def monta_header_lote(nro_lote)
-          header_lote = '' # CAMPO                   TAMANHO
-          header_lote << cod_banco # codigo banco            3
-          header_lote << nro_lote.to_s.rjust(4, '0') # lote servico            4
-          header_lote << '1' # tipo de registro        1
-          header_lote << 'R' # tipo de operacao        1
-          header_lote << '01' # tipo de servico         2
-          header_lote << exclusivo_servico  # uso exclusivo           2
-          header_lote << versao_layout_lote # num.versao layout lote  3
-          header_lote << ' ' # uso exclusivo           1
+          header_lote = ''                                      # CAMPO                   TAMANHO
+          header_lote << cod_banco                              # codigo banco            3
+          header_lote << nro_lote.to_s.rjust(4, '0')            # lote servico            4
+          header_lote << '1'                                    # tipo de registro        1
+          header_lote << 'R'                                    # tipo de operacao        1
+          header_lote << '01'                                   # tipo de servico         2
+          header_lote << exclusivo_servico                      # uso exclusivo           2
+          header_lote << versao_layout_lote                     # num.versao layout lote  3
+          header_lote << ' '                                    # uso exclusivo           1
           header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
-          header_lote << documento_cedente.to_s.rjust(15, '0') # inscricao cedente       15
-          header_lote << convenio_lote # codigo do convenio      20
-          header_lote << info_conta # informacoes conta       20
-          header_lote << empresa_mae.format_size(30) # nome empresa            30
-          header_lote << mensagem_1.to_s.format_size(40) # 1a mensagem             40
-          header_lote << mensagem_2.to_s.format_size(40) # 2a mensagem             40
-          header_lote << sequencial_remessa.to_s.rjust(8, '0') # numero remessa          8
-          header_lote << data_geracao # data gravacao           8
-          header_lote << ''.rjust(8, '0') # data do credito         8
-          header_lote << ''.rjust(33, ' ') # complemento             33
+          header_lote << documento_cedente.to_s.rjust(15, '0')  # inscricao cedente       15
+          header_lote << convenio_lote                          # codigo do convenio      20
+          header_lote << info_conta                             # informacoes conta       20
+          header_lote << empresa_mae.format_size(30)            # nome empresa            30
+          header_lote << mensagem_1.to_s.format_size(40)        # 1a mensagem             40
+          header_lote << mensagem_2.to_s.format_size(40)        # 2a mensagem             40
+          header_lote << sequencial_remessa.to_s.rjust(8, '0')  # numero remessa          8
+          header_lote << data_geracao                           # data gravacao           8
+          header_lote << ''.rjust(8, '0')                       # data do credito         8
+          header_lote << ''.rjust(33, ' ')                      # complemento             33
           header_lote
         end
 
@@ -167,11 +167,11 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
-          segmento_p << ''.rjust(25, ' ')                               # identificacao titulo empresa          25  *
-          segmento_p << codigo_protesto                                 # cod. para protesto                    1   *
+          segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
+          segmento_p << codigo_protesto                                 # cod. para protesto                    1
           segmento_p << '00'                                            # dias para protesto                    2   *
-          segmento_p << codigo_baixa                                    # cod. para baixa                       1   *
-          segmento_p << dias_baixa                                      # dias para baixa                       2   *
+          segmento_p << codigo_baixa                                    # cod. para baixa                       1
+          segmento_p << dias_baixa                                      # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2
           segmento_p << ''.rjust(10, '0')                               # uso exclusivo                         10
           segmento_p << ' '                                             # uso exclusivo                         1
@@ -190,29 +190,29 @@ module Brcobranca
         # @return [String]
         #
         def monta_segmento_q(pagamento, nro_lote, sequencial)
-          segmento_q = '' # CAMPO                                TAMANHO
-          segmento_q << cod_banco # codigo banco                         3
-          segmento_q << nro_lote.to_s.rjust(4, '0') # lote de servico                      4
-          segmento_q << '3' # tipo de registro                     1
-          segmento_q << sequencial.to_s.rjust(5, '0') # num. sequencial do registro no lote  5
-          segmento_q << 'Q' # cod. segmento                        1
-          segmento_q << ' ' # uso exclusivo                        1
-          segmento_q << '01' # cod. movimento remessa               2
-          segmento_q << pagamento.identificacao_sacado(false) # tipo insc. sacado                    1
-          segmento_q << pagamento.documento_sacado.to_s.rjust(15, '0') # documento sacado                     14
-          segmento_q << pagamento.nome_sacado.format_size(40) # nome cliente                         40
-          segmento_q << pagamento.endereco_sacado.format_size(40) # endereco cliente                     40
-          segmento_q << pagamento.bairro_sacado.format_size(15) # bairro                               15
-          segmento_q << pagamento.cep_sacado[0..4] # cep                                  5
-          segmento_q << pagamento.cep_sacado[5..7] # sufixo cep                           3
-          segmento_q << pagamento.cidade_sacado.format_size(15) # cidade                               15
-          segmento_q << pagamento.uf_sacado # uf                                   2
-          segmento_q << pagamento.identificacao_avalista(false) # identificacao do sacador             1
-          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0') # documento sacador                    15
-          segmento_q << pagamento.nome_avalista.format_size(40) # nome avalista                         40
-          segmento_q << ''.rjust(3, '0') # cod. banco correspondente            3
-          segmento_q << ''.rjust(20, ' ') # nosso numero banco correspondente    20
-          segmento_q << ''.rjust(8, ' ') # uso exclusivo                        8
+          segmento_q = ''                                               # CAMPO                                TAMANHO
+          segmento_q << cod_banco                                       # codigo banco                         3
+          segmento_q << nro_lote.to_s.rjust(4, '0')                     # lote de servico                      4
+          segmento_q << '3'                                             # tipo de registro                     1
+          segmento_q << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
+          segmento_q << 'Q'                                             # cod. segmento                        1
+          segmento_q << ' '                                             # uso exclusivo                        1
+          segmento_q << '01'                                            # cod. movimento remessa               2
+          segmento_q << pagamento.identificacao_sacado(false)           # tipo insc. sacado                    1
+          segmento_q << pagamento.documento_sacado.to_s.rjust(15, '0')  # documento sacado                     14
+          segmento_q << pagamento.nome_sacado.format_size(40)           # nome cliente                         40
+          segmento_q << pagamento.endereco_sacado.format_size(40)       # endereco cliente                     40
+          segmento_q << pagamento.bairro_sacado.format_size(15)         # bairro                               15
+          segmento_q << pagamento.cep_sacado[0..4]                      # cep                                  5
+          segmento_q << pagamento.cep_sacado[5..7]                      # sufixo cep                           3
+          segmento_q << pagamento.cidade_sacado.format_size(15)         # cidade                               15
+          segmento_q << pagamento.uf_sacado                             # uf                                   2
+          segmento_q << pagamento.identificacao_avalista(false)         # identificacao do sacador             1
+          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0')# documento sacador                    15
+          segmento_q << pagamento.nome_avalista.format_size(40)         # nome avalista                        40
+          segmento_q << ''.rjust(3, '0')                                # cod. banco correspondente            3
+          segmento_q << ''.rjust(20, ' ')                               # nosso numero banco correspondente    20
+          segmento_q << ''.rjust(8, ' ')                                # uso exclusivo                        8
           segmento_q
         end
 
@@ -227,13 +227,13 @@ module Brcobranca
         # @return [String]
         #
         def monta_trailer_lote(nro_lote, nro_registros)
-          trailer_lote = '' # CAMPO                   # TAMANHO
-          trailer_lote << cod_banco # codigo banco            3
-          trailer_lote << nro_lote.to_s.rjust(4, '0') # lote de servico         4
-          trailer_lote << '5' # tipo de servico         1
-          trailer_lote << ''.rjust(9, ' ') # uso exclusivo           9
-          trailer_lote << nro_registros.to_s.rjust(6, '0') # qtde de registros lote  6
-          trailer_lote << complemento_trailer # uso exclusivo           217
+          trailer_lote = ''                                             # CAMPO                   # TAMANHO
+          trailer_lote << cod_banco                                     # codigo banco            3
+          trailer_lote << nro_lote.to_s.rjust(4, '0')                   # lote de servico         4
+          trailer_lote << '5'                                           # tipo de servico         1
+          trailer_lote << ''.rjust(9, ' ')                              # uso exclusivo           9
+          trailer_lote << nro_registros.to_s.rjust(6, '0')              # qtde de registros lote  6
+          trailer_lote << complemento_trailer                           # uso exclusivo           217
           trailer_lote
         end
 
@@ -376,6 +376,13 @@ module Brcobranca
           pagamento.data_vencimento.strftime("%d%m%Y")
         end
 
+        # Identificacao do titulo da empresa
+        #
+        # Sobreescreva caso necessário
+        def identificacao_titulo_empresa(pagamento)
+          ''.rjust(25, ' ')
+        end
+
         # Codigo para protesto
         #
         # Sobreescreva caso necessário
@@ -383,14 +390,23 @@ module Brcobranca
          "0"
         end
 
+        # Codigo da baixa
+        #
+        # Sobreescreva caso necessario
         def codigo_baixa
           "0"
         end
 
+        # Dias para baixa
+        #
+        # Sobreescreva caso necessário
         def dias_baixa
           "000"
         end
 
+        # Campo exclusivo para serviço
+        #
+        # Sobreescreva caso necessário
         def exclusivo_servico
           "".rjust(2, " ")
         end
