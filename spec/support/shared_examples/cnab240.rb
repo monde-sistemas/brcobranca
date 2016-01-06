@@ -92,7 +92,11 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[17..21]).to eq '01234' # agencia
       expect(segmento_p[22]).to eq objeto.digito_agencia.to_s # digito da agencia
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
-      expect(segmento_p[62..76]).to eq '000000000000123' # numero do documento
+      if objeto.cod_banco == '104'
+        expect(segmento_p[62..76]).to eq '00000000123    ' # numero do documento
+      else
+        expect(segmento_p[62..76]).to eq '000000000000123' # numero do documento
+      end
       expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
       expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
