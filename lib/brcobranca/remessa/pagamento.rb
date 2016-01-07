@@ -67,6 +67,10 @@ module Brcobranca
       attr_accessor :percentual_multa
       # <b>OPCIONAL</b>: Data para cobrança de multa
       attr_accessor :data_multa
+      # <b>OPCIONAL</b>: tipo de juros (diário, mensal)
+      attr_accessor :tipo_juros
+      # <b>OPCIONAL</b>: valor dos juros (% ou R$)
+      attr_accessor :valor_juros
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
         :documento_sacado, :nome_sacado, :endereco_sacado,
@@ -94,7 +98,9 @@ module Brcobranca
           especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
-          percentual_multa: '0'
+          percentual_multa: '0',
+          tipo_juros: "0",
+          valor_juros: 0.0
         }
 
         campos = padrao.merge!(campos)
@@ -201,6 +207,15 @@ module Brcobranca
       #
       def formata_valor_abatimento(tamanho = 13)
         format_value(valor_abatimento, tamanho)
+      end
+
+      # Formata o campo valor do juro
+      #
+      # @param tamanho [Integer]
+      #   quantidade de caracteres a ser retornado
+      #
+      def formata_valor_juros(tamanho = 13)
+        format_value(valor_juros, tamanho)
       end
 
       # Retorna a identificacao do pagador

@@ -164,6 +164,14 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.formata_valor_abatimento(10)).to eq '0000003490'
     end
 
+    it 'formata valor dos juros com o numero de posicoes passadas' do
+      # padrao com 13 posicoes
+      pagamento.valor_juros = 49.2
+      expect(pagamento.formata_valor_juros).to eq '0000000004920'
+      # formata com o tamanho passado
+      expect(pagamento.formata_valor_juros(15)).to eq '000000000004920'
+    end
+
     context 'identificacao sacado' do
       it 'verifica a identificacao do sacado (pessoa fisica ou juridica)' do
         # pessoa fisica
