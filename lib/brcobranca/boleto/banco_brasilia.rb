@@ -5,7 +5,6 @@ module Brcobranca
     class BancoBrasilia < Base # Banco Brasilia
       # Validações
       # Modalidade/Carteira de Cobrança (1-Sem Registro | 2-Registrada)
-      validates_length_of :agencia, is: 3, message: 'deve possuir 3 dígitos.'
       validates_length_of :carteira, is: 1, message: 'deve possuir 1 dígito.'
       validates_length_of :convenio, is: 7, message: 'deve possuir 7 dígitos.'
       validates_length_of :numero_documento, is: 6, message: 'deve possuir 6 dígitos.'
