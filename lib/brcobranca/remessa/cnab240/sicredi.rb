@@ -15,18 +15,14 @@ module Brcobranca
         #     ‘1’ = Banco distribui
         #     ‘2’ = Cliente distribui
 
-        attr_accessor :tipo_formulario
-        #       Tipo Formulário - 01 posição  (15 a 15):
-        #            "1" -auto-copiativo
-        #            "3" -auto-envelopável
-        #            "4" -A4 sem envelopamento
-        #            "6" -A4 sem envelopamento 3 vias
-
         attr_accessor :parcela
         #       Parcela - 02 posições (11 a 12) - "01" se parcela única
 
-        validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, message: 'não pode estar em branco.'
-        # Remessa 400 - 8 digitos
+        attr_accessor :byte_idt
+
+        validates_presence_of :byte_idt, :modalidade_carteira, :parcela,
+          message: 'não pode estar em branco.'
+
         # Remessa 240 - 12 digitos
         validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
@@ -34,21 +30,21 @@ module Brcobranca
 
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
-            distribuicao_boleto: '2',
-            especie_titulo: '02',
-            tipo_formulario: '4',
-            parcela: '01',
-            modalidade_carteira: '01',
-            forma_cadastramento: '0'}.merge!(campos)
+                     distribuicao_boleto: '2',
+                     especie_titulo: '03',
+                     parcela: '01',
+                     modalidade_carteira: '01',
+                     forma_cadastramento: '1',
+                     tipo_documento: '1'}.merge!(campos)
           super(campos)
         end
 
         def cod_banco
-          '756'
+          '748'
         end
 
         def nome_banco
-          'SICOOB'.ljust(30, ' ')
+          'SICREDI'.ljust(30, ' ')
         end
 
         def versao_layout_arquivo
@@ -162,20 +158,24 @@ module Brcobranca
         # Retorna o nosso numero
         #
         # @return [String]
-        #
-        # Nosso Número:
-        #  - Se emissão a cargo do Cedente (vide planilha "Capa" deste arquivo):
-        #       NumTitulo - 10 posições (1 a 10)
-        #       Parcela - 02 posições (11 a 12) - "01" se parcela única
-        #       Modalidade - 02 posições (13 a 14) - vide planilha "Capa" deste arquivo
-        #       Tipo Formulário - 01 posição  (15 a 15):
-        #            "1" -auto-copiativo
-        #            "3" -auto-envelopável
-        #            "4" -A4 sem envelopamento
-        #            "6" -A4 sem envelopamento 3 vias
-        #       Em branco - 05 posições (16 a 20)
         def formata_nosso_numero(nosso_numero)
-          "#{nosso_numero.to_s.rjust(10, '0')}#{parcela}#{modalidade_carteira}#{tipo_formulario}     "
+          "#{Time.now.strftime("%y")}#{byte_idt}#{nosso_numero.to_s.rjust(16, "0")}#{nosso_numero_dv}"
+        end
+
+        def nosso_numero_dv
+          "1"
+        end
+
+        def codigo_protesto
+          '3'
+        end
+
+        def codigo_baixa
+          '1'
+        end
+
+        def dias_baixa
+          '060'
         end
       end
     end

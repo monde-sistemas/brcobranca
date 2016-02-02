@@ -7,6 +7,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       valor: 50.0,
       data_vencimento: Date.today,
       nosso_numero: '429715',
+      numero_documento: '429715',
       documento_sacado: '82136760505',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -24,6 +25,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       conta_corrente: '03666',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
+      byte_idt: '2',
       pagamentos: [pagamento]
     }
   end
@@ -31,19 +33,19 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
   let(:sicredi) { subject.class.new(params) }
 
   context 'validacoes' do
+    context '@byte_idt' do
+      it 'deve ser invalido se nao possuir o valor da byte de geracao' do
+        objeto = subject.class.new(params.merge(byte_idt: nil))
+        expect(objeto.invalid?).to be true
+        expect(objeto.errors.full_messages).to include('Byte idt não pode estar em branco.')
+      end
+    end
+
     context '@modalidade_carteira' do
       it 'deve ser invalido se nao possuir a modalidade da carteira' do
         objeto = subject.class.new(params.merge(modalidade_carteira: nil))
         expect(objeto.invalid?).to be true
         expect(objeto.errors.full_messages).to include('Modalidade carteira não pode estar em branco.')
-      end
-    end
-
-    context '@tipo_formulario' do
-      it 'deve ser invalido se nao possuir o tipo de formulario' do
-        objeto = subject.class.new(params.merge(tipo_formulario: nil))
-        expect(objeto.invalid?).to be true
-        expect(objeto.errors.full_messages).to include('Tipo formulario não pode estar em branco.')
       end
     end
 
@@ -74,13 +76,13 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
   context 'formatacoes' do
     it 'codigo do banco deve ser 001' do
-      expect(sicredi.cod_banco).to eq '756'
+      expect(sicredi.cod_banco).to eq '748'
     end
 
     it 'nome do banco deve ser sicredi com 30 posicoes' do
       nome_banco = sicredi.nome_banco
       expect(nome_banco.size).to eq 30
-      expect(nome_banco[0..19]).to eq 'sicredi              '
+      expect(nome_banco[0..19]).to eq 'SICREDI             '
     end
 
     it 'versao do layout do arquivo deve ser 081' do
@@ -139,12 +141,15 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       total_cobranca_descontada = "".rjust(23, "0")
 
       expect(sicredi.complemento_trailer).to eq "#{total_cobranca_simples}#{total_cobranca_vinculada}"\
-                            "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
+        "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
     end
+
+    before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+    after { Timecop.return }
 
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero 1
-      expect(nosso_numero).to eq "000000000101014     "
+      expect(nosso_numero).to eq "15200000000000000011"
     end
   end
 
@@ -155,7 +160,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
       after { Timecop.return }
 
-      it { expect(sicredi.gera_arquivo).to eq(read_remessa('remessa-bancoob-cnab240.rem', sicoob.gera_arquivo)) }
+      it { expect(sicredi.gera_arquivo).to eq(read_remessa('remessa-sicredi-cnab240.rem', sicredi.gera_arquivo)) }
     end
   end
 end
