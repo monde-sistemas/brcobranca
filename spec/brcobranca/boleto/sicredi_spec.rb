@@ -60,6 +60,23 @@ RSpec.describe Brcobranca::Boleto::Sicredi do
     expect(boleto_novo.carteira).to eql('03')
   end
 
+  it 'Montar código de barras para carteira número 01' do
+    @valid_attributes[:valor] = 2952.95
+    @valid_attributes[:data_vencimento] = Date.parse('2012-01-24')
+    @valid_attributes[:data_documento] = Date.parse('2012-01-19')
+    @valid_attributes[:numero_documento] = '13871'
+    @valid_attributes[:conta_corrente] = '12345'
+    @valid_attributes[:agencia] = '1234'
+    @valid_attributes[:carteira] = '01'
+    @valid_attributes[:posto] = '18'
+    @valid_attributes[:aceite] = 'N'
+    @valid_attributes[:byte_idt] = '2'
+    boleto_novo = described_class.new(@valid_attributes)
+
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('74891.11224 13871.512342 18123.451074 1 52220000295295')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('1112213871512341812345107')
+  end
+
   it 'Montar código de barras para carteira número 03' do
     @valid_attributes[:valor] = 2952.95
     @valid_attributes[:data_vencimento] = Date.parse('2012-01-24')
