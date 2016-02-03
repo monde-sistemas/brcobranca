@@ -33,6 +33,9 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
   let(:sicredi) { subject.class.new(params) }
 
+  before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+  after { Timecop.return }
+
   context 'validacoes' do
     context '@posto' do
       it 'deve ser invalido se nao possuir o valor do posto' do
@@ -166,9 +169,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
         "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
     end
 
-    before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
-    after { Timecop.return }
-
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero 1
       expect(nosso_numero).to eq "15200000000000000011"
@@ -179,9 +179,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     it_behaves_like 'cnab240'
 
     context 'arquivo' do
-      before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
-      after { Timecop.return }
-
       it { expect(sicredi.gera_arquivo).to eq(read_remessa('remessa-sicredi-cnab240.rem', sicredi.gera_arquivo)) }
     end
   end
