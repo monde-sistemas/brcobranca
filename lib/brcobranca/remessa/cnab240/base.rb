@@ -31,6 +31,12 @@ module Brcobranca
         attr_accessor :especie_titulo
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
+        # codigo do protesto(verificar o padrao nas classes referentes aos bancos)
+        attr_accessor :codigo_protesto
+        # codigo_baixa (verificar o padrao nas classes referentes aos bancos)
+        attr_accessor :codigo_baixa
+        # dias_baixa (verificar o padrao nas classes referentes aos bancos)
+        attr_accessor :dias_baixa
 
         validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
         validates_presence_of :documento_cedente, message: 'não pode estar em branco.'
@@ -42,7 +48,10 @@ module Brcobranca
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
             forma_cadastramento: '1',
-            tipo_documento: ' ' }.merge!(campos)
+            tipo_documento: ' ',
+            codigo_protesto: '0',
+            codigo_baixa: '0',
+            dias_baixa: '000' }.merge!(campos)
           super(campos)
         end
 
@@ -84,7 +93,7 @@ module Brcobranca
           header_arquivo << hora_geracao                        # hora geracao                  6
           header_arquivo << sequencial_remessa.to_s.rjust(6, '0') # numero seq. arquivo         6
           header_arquivo << versao_layout_arquivo               # num. versao arquivo           3
-          header_arquivo << ''.rjust(5, '0')                    # densidade gravacao            5
+          header_arquivo << densidade_gravacao                  # densidade gravacao            5
           header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
           header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
           header_arquivo << complemento_header                  # complemento do arquivo        29
@@ -331,6 +340,11 @@ module Brcobranca
           fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
         end
 
+        # Densidade de gravacao do arquivo
+        def densidade_gravacao
+          '00000'
+        end
+
         # Informacoes do convenio para o lote
         #
         # Este metodo deve ser sobrescrevido na classe do banco
@@ -377,21 +391,6 @@ module Brcobranca
 
         def identificacao_titulo_empresa(pagamento)
           ''.rjust(25, ' ')
-        end
-
-        # Codigo para protesto
-        #
-        # Sobreescreva caso necessário
-        def codigo_protesto
-         "0"
-        end
-
-        def codigo_baixa
-          "0"
-        end
-
-        def dias_baixa
-          "000"
         end
 
         def exclusivo_servico
