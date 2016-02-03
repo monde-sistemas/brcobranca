@@ -3,22 +3,12 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Sicredi < Brcobranca::Remessa::Cnab240::Base
-
         attr_accessor :modalidade_carteira
-        # identificacao da emissao do boleto (attr na classe base)
-        #   opcoes:
-        #     ‘1’ = Banco Emite
-        #     ‘2’ = Cliente Emite
-        #
-        # identificacao da distribuicao do boleto (attr na classe base)
-        #   opcoes:
-        #     ‘1’ = Banco distribui
-        #     ‘2’ = Cliente distribui
-
         attr_accessor :parcela
         #       Parcela - 02 posições (11 a 12) - "01" se parcela única
 
         attr_accessor :byte_idt
+        attr_accessor :posto
 
         validates_presence_of :byte_idt, :modalidade_carteira, :parcela,
           message: 'não pode estar em branco.'
@@ -35,7 +25,10 @@ module Brcobranca
                      parcela: '01',
                      modalidade_carteira: '01',
                      forma_cadastramento: '1',
-                     tipo_documento: '1'}.merge!(campos)
+                     tipo_documento: '1',
+                     codigo_protesto: '3',
+                     codigo_baixa: '1',
+                     dias_baixa: '060' }.merge!(campos)
           super(campos)
         end
 
@@ -53,6 +46,10 @@ module Brcobranca
 
         def versao_layout_lote
           '040'
+        end
+
+        def densidade_gravacao
+          '01600'
         end
 
         def digito_agencia
@@ -142,10 +139,6 @@ module Brcobranca
           "#{cod_banco}99999#{''.rjust(9, ' ')}#{nro_lotes.to_s.rjust(6, '0')}#{sequencial.to_s.rjust(6, '0')}#{''.rjust(6, '0')}#{''.rjust(205, ' ')}"
         end
 
-        def codigo_protesto
-          "1"
-        end
-
         def complemento_p(pagamento)
           # CAMPO                   TAMANHO
           # conta corrente          12
@@ -159,23 +152,35 @@ module Brcobranca
         #
         # @return [String]
         def formata_nosso_numero(nosso_numero)
-          "#{Time.now.strftime("%y")}#{byte_idt}#{nosso_numero.to_s.rjust(16, "0")}#{nosso_numero_dv}"
+          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}"
         end
 
-        def nosso_numero_dv
-          "1"
+        def nosso_numero_with_byte_idt(nosso_numero)
+          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(16, "0")}"
         end
 
-        def codigo_protesto
-          '3'
+        # Dígito verificador do nosso número
+        # @return [Integer] 1 caracteres numéricos.
+        def nosso_numero_dv(nosso_numero)
+          "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero)}"
+            .modulo11(mapeamento: mapeamento_para_modulo_11)
         end
 
-        def codigo_baixa
-          '1'
+        def agencia_conta_boleto
+          "#{agencia}.#{posto}.#{conta_corrente}"
         end
 
-        def dias_baixa
-          '060'
+        def agencia_posto_conta
+          "#{agencia}#{posto}#{conta_corrente}"
+        end
+
+        private
+
+        def mapeamento_para_modulo_11
+          {
+            10 => 0,
+            11 => 0
+          }
         end
       end
     end
