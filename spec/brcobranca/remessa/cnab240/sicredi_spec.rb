@@ -25,6 +25,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       conta_corrente: '03666',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
+      posto: '14',
       byte_idt: '2',
       pagamentos: [pagamento]
     }
@@ -33,11 +34,32 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
   let(:sicredi) { subject.class.new(params) }
 
   context 'validacoes' do
+    context '@posto' do
+      it 'deve ser invalido se nao possuir o valor do posto' do
+        objeto = subject.class.new(params.merge(posto: nil))
+        expect(objeto.invalid?).to be true
+        expect(objeto.errors.full_messages).to include('Posto não pode estar em branco.')
+      end
+
+      it 'deve ser invalido se o posto tiver mais de 2 dígitos' do
+        sicredi.posto = '123'
+        expect(sicredi.invalid?).to be true
+        expect(sicredi.errors.full_messages).to include('Posto deve ser menor ou igual a 2 dígitos.')
+      end
+    end
+
     context '@byte_idt' do
       it 'deve ser invalido se nao possuir o valor da byte de geracao' do
         objeto = subject.class.new(params.merge(byte_idt: nil))
         expect(objeto.invalid?).to be true
         expect(objeto.errors.full_messages).to include('Byte idt não pode estar em branco.')
+      end
+
+      it 'deve ser invalido se o byte idt tiver mais de 1 dígito' do
+        sicredi.byte_idt = '12'
+        expect(sicredi.invalid?).to be true
+        expect(sicredi.errors.full_messages)
+          .to include('Byte idt deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário')
       end
     end
 
@@ -149,7 +171,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero 1
-      expect(nosso_numero).to eq "15200000000000000010"
+      expect(nosso_numero).to eq "15200000000000000011"
     end
   end
 
