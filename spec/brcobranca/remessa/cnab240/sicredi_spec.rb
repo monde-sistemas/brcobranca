@@ -149,7 +149,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero 1
-      expect(nosso_numero).to eq "15200000000000000011"
+      expect(nosso_numero).to eq "15200000000000000010"
     end
   end
 
