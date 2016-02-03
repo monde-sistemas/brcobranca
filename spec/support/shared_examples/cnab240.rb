@@ -35,6 +35,8 @@ shared_examples_for 'cnab240' do
     elsif subject.class == Brcobranca::Remessa::Cnab240::BancoBrasil
       p.merge!(carteira: '12',
         variacao: '123')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Sicredi
+      p.merge!(byte_idt: '2', posto: '14')
     end
     p
   end

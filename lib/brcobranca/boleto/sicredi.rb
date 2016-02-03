@@ -80,13 +80,14 @@ module Brcobranca
       # Codigo referente ao tipo de cobrança
       # @return [String]: 1 caractere numérico
       def tipo_cobranca
-        '3'
+        return '1' if carteira == "01"
+        '3' if carteira == "03"
       end
 
       # Codigo referente ao tipo de carteira
       # @return [String]: 1 caractere numérico
       def tipo_carteira
-        '1' if carteira == '03'
+        '1'
       end
       # Dígito verificador do nosso número
       # @return [Integer] 1 caracteres numéricos.
