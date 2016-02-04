@@ -31,6 +31,8 @@ module Brcobranca
         attr_accessor :especie_titulo
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
+        # codigo dos juros(verificar o padrao nas classes referentes aos bancos)
+        attr_accessor :codigo_juros
         # codigo do protesto(verificar o padrao nas classes referentes aos bancos)
         attr_accessor :codigo_protesto
         # codigo_baixa (verificar o padrao nas classes referentes aos bancos)
@@ -49,6 +51,7 @@ module Brcobranca
           campos = { codigo_carteira: '1',
             forma_cadastramento: '1',
             tipo_documento: ' ',
+            codigo_juros: '0',
             codigo_protesto: '0',
             codigo_baixa: '0',
             dias_baixa: '000' }.merge!(campos)
@@ -94,8 +97,8 @@ module Brcobranca
           header_arquivo << sequencial_remessa.to_s.rjust(6, '0') # numero seq. arquivo         6
           header_arquivo << versao_layout_arquivo               # num. versao arquivo           3
           header_arquivo << densidade_gravacao                  # densidade gravacao            5
-          header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
-          header_arquivo << ''.rjust(20, '0')                   # uso exclusivo                 20
+          header_arquivo << uso_exclusivo_banco                 # uso exclusivo                 20
+          header_arquivo << uso_exclusivo_empresa               # uso exclusivo                 20
           header_arquivo << complemento_header                  # complemento do arquivo        29
           header_arquivo
         end
@@ -168,7 +171,7 @@ module Brcobranca
           segmento_p << especie_titulo                                  # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
-          segmento_p << '0'                                             # cod. do juros                         1   *
+          segmento_p << codigo_juros                                    # cod. do juros                         1   *
           segmento_p << ''.rjust(8, '0')                                # data juros                            8   *
           segmento_p << ''.rjust(15, '0')                               # valor juros                           15  *
           segmento_p << pagamento.cod_desconto                          # cod. do desconto                      1
@@ -343,6 +346,16 @@ module Brcobranca
         # Densidade de gravacao do arquivo
         def densidade_gravacao
           '00000'
+        end
+
+        # Uso exclusivo do Banco
+        def uso_exclusivo_banco
+          ''.rjust(20, '0')
+        end
+
+        # Uso exclusivo da Empresa
+        def uso_exclusivo_empresa
+          ''.rjust(20, '0')
         end
 
         # Informacoes do convenio para o lote

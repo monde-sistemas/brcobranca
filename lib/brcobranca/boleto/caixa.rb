@@ -9,10 +9,10 @@ module Brcobranca
     class Caixa < Base # Caixa
       # <b>REQUERIDO</b>: Emissão do boleto
       attr_accessor :emissao
-      
+
       # Validações
-      #Modalidade/Carteira de Cobrança (1-Registrada | 2-Sem Registro)
-      validates_length_of :carteira, is: 1, message: 'deve possuir 1 dígitos.'
+      #Modalidade/Carteira de Cobrança (RG-Registrada | SR-Sem Registro)
+      validates_inclusion_of :carteira, in: %w( RG SR ), message: 'não existente para esse banco.'
       # Emissão do boleto (4-Beneficiário)
       validates_length_of :emissao, is: 1, message: 'deve possuir 1 dígitos.'
       validates_length_of :convenio, is: 6, message: 'deve possuir 6 dígitos.'
@@ -22,7 +22,7 @@ module Brcobranca
       # @param (see Brcobranca::Boleto::Base#initialize)
       def initialize(campos = {})
         campos = {
-          carteira: '2',
+          carteira: 'SR',
           emissao: '4'
         }.merge!(campos)
 
@@ -42,6 +42,15 @@ module Brcobranca
       # @return [String]
       def banco_dv
         '0'
+      end
+
+      def numero_carteira(carteira)
+        carteiras = {
+          "RG" => "1",
+          "SR" => "2"
+        }
+
+        carteiras[carteira]
       end
 
       # Número do convênio/contrato do cliente junto ao banco.
@@ -66,9 +75,9 @@ module Brcobranca
       #  1 à 2: carteira
       #  3 à 17: campo_livre
       def nosso_numero
-        "#{carteira}#{emissao}#{numero_documento}"
+        "#{numero_carteira(carteira)}#{emissao}#{numero_documento}"
       end
-      
+
       # Dígito verificador do Nosso Número
       # Utiliza-se o [-1..-1] para retornar o último caracter
       # @return [String]
