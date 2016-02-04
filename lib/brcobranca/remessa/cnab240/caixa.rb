@@ -28,7 +28,7 @@ module Brcobranca
         #     ‘3’ = Sacado via e-mail
         #     ‘4’ = Sacado via SMS
 
-        validates_presence_of :versao_aplicativo, :digito_agencia, message: 'não pode estar em branco.'
+        validates_presence_of :digito_agencia, message: 'não pode estar em branco.'
         validates_presence_of :convenio, message: 'não pode estar em branco.'
         validates_length_of :convenio, maximum: 6, message: 'não deve ter mais de 6 dígitos.'
         validates_length_of :versao_aplicativo, maximum: 4, message: 'não deve ter mais de 4 dígitos.'
@@ -77,7 +77,7 @@ module Brcobranca
         end
 
         def uso_exclusivo_banco
-          ''.rjust(20, '0')
+          ''.rjust(20, ' ')
         end
 
         def uso_exclusivo_empresa
@@ -99,7 +99,8 @@ module Brcobranca
         end
 
         def complemento_header
-          "#{versao_aplicativo.rjust(4, ' ')}#{''.rjust(25, ' ')}"
+          versao = versao_aplicativo || ''
+          "#{versao.rjust(4, ' ')}#{''.rjust(25, ' ')}"
         end
 
         def exclusivo_servico
