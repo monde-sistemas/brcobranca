@@ -19,29 +19,16 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       agencia: '12345',
       conta_corrente: '1234',
+      versao_aplicativo: '1234',
       documento_cedente: '12345678901',
       convenio: '123456',
-      versao_aplicativo: '1234',
       digito_agencia: '1',
+      sequencial_remessa: '000001',
       pagamentos: [pagamento] }
   end
   let(:caixa) { subject.class.new(params) }
 
   context 'validacoes' do
-    context '@versao_aplicativo' do
-      it 'deve ser invalido se nao possuir a versao do aplicativo' do
-        objeto = subject.class.new(params.merge!(versao_aplicativo: nil))
-        expect(objeto.invalid?).to be true
-        expect(objeto.errors.full_messages).to include('Versao aplicativo não pode estar em branco.')
-      end
-
-      it 'deve ser invalido se a versao do aplicativo tiver mais de 4 digitos' do
-        caixa.versao_aplicativo = '12345'
-        expect(caixa.invalid?).to be true
-        expect(caixa.errors.full_messages).to include('Versao aplicativo não deve ter mais de 4 dígitos.')
-      end
-    end
-
     context '@digito_agencia' do
       it 'deve ser invalido se nao possuir o digito da agencia' do
         objeto = subject.class.new(params.merge!(digito_agencia: nil))

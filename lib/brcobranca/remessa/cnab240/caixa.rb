@@ -28,7 +28,7 @@ module Brcobranca
         #     ‘3’ = Sacado via e-mail
         #     ‘4’ = Sacado via SMS
 
-        validates_presence_of :versao_aplicativo, :digito_agencia, message: 'não pode estar em branco.'
+        validates_presence_of :digito_agencia, message: 'não pode estar em branco.'
         validates_presence_of :convenio, message: 'não pode estar em branco.'
         validates_length_of :convenio, maximum: 6, message: 'não deve ter mais de 6 dígitos.'
         validates_length_of :versao_aplicativo, maximum: 4, message: 'não deve ter mais de 4 dígitos.'
@@ -39,6 +39,10 @@ module Brcobranca
           # Modalidade carteira: 14 (título Registrado emissão Cedente)
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
+                     codigo_juros: '3',
+                     codigo_protesto: '3',
+                     codigo_baixa: '1',
+                     dias_baixa: '120',
                      distribuicao_boleto: '0',
                      especie_titulo: '99' }.merge!(campos)
           super(campos)
@@ -72,6 +76,14 @@ module Brcobranca
           ''.rjust(20, '0')
         end
 
+        def uso_exclusivo_banco
+          ''.rjust(20, ' ')
+        end
+
+        def uso_exclusivo_empresa
+          'REMESSA-PRODUCAO'.ljust(20, ' ')
+        end
+
         def convenio_lote
           "#{convenio.rjust(6, '0')}#{''.rjust(14, '0')}"
         end
@@ -87,7 +99,8 @@ module Brcobranca
         end
 
         def complemento_header
-          "#{versao_aplicativo.rjust(4, '0')}#{''.rjust(25, ' ')}"
+          versao = versao_aplicativo || ''
+          "#{versao.rjust(4, ' ')}#{''.rjust(25, ' ')}"
         end
 
         def exclusivo_servico
@@ -100,23 +113,6 @@ module Brcobranca
 
         def tipo_documento
           "2"
-        end
-
-        # Código do Protesto
-        #
-        # 1 - Protestar
-        # 3 - Não protestar
-        # 9 - Cancelamento protesto automatico
-        def codigo_protesto
-          "3"
-        end
-
-        def codigo_baixa
-          "1"
-        end
-
-        def dias_baixa
-          "120"
         end
 
         def complemento_p(pagamento)
