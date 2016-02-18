@@ -92,9 +92,9 @@ module Brcobranca
       #     Ex.: 11 – 3 = 8, então Nosso Número + DV = 21-8
       #
       def nosso_numero_dv
-        valor = "#{agencia}#{convenio.rjust(10, "0")}#{numero}"
-        valor.modulo11(
-          multiplicador: [3, 7, 9, 1],
+        "#{agencia}#{convenio.rjust(10, "0")}#{numero}".modulo11(
+          reverse: false,
+          multiplicador: [3, 1, 9, 7],
           mapeamento: { 10 => 0, 11 => 0 }
         ) { |t| 11 - (t % 11) }
       end
