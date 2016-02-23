@@ -19,6 +19,8 @@ module Brcobranca
         fixed_width_layout do |parse|
           # Todos os campos descritos no documento em ordem
           # :tipo_de_registro, 0..0 # identificacao do registro transacao
+          parse.field :tipo_registro, 0..0
+
           # :codigo_de_inscricao, 1..2 # identificacao do tipo de inscricao/empresa
           # :numero_de_inscricao, 3..16 # numero de inscricao da empresa (cpf/cnpj)
           # :zeros, 17..19
