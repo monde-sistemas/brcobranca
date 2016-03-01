@@ -91,10 +91,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     context '@conta_corrente' do
-      it 'deve ser invalido se a conta corrente tiver mais de 8 digitos' do
-        sicredi.conta_corrente = '123456789'
+      it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
+        sicredi.conta_corrente = '123456'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 8 dígitos.')
+        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
       end
     end
   end
@@ -136,7 +136,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
     it 'cod. convenio deve retornar as informacoes nas posicoes corretas' do
       cod_convenio = sicredi.codigo_convenio
-      expect(cod_convenio[0..19]).to eq '                    '
+      expect(cod_convenio[0..19]).to eq ''.rjust(20, ' ')
     end
 
     it 'info conta deve retornar as informacoes nas posicoes corretas' do
@@ -163,7 +163,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero 3
-      expect(nosso_numero).to eq "07200000000000000031"
+      expect(nosso_numero.strip).to eq "072000031"
     end
   end
 
