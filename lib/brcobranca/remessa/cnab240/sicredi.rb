@@ -14,7 +14,7 @@ module Brcobranca
           message: 'não pode estar em branco.'
 
         # Remessa 240 - 12 digitos
-        validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
+        validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
         validates_length_of :posto, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
@@ -166,18 +166,18 @@ module Brcobranca
         #
         # @return [String]
         def formata_nosso_numero(nosso_numero)
-          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}"
+          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}".ljust(20, ' ')
         end
 
-        def nosso_numero_with_byte_idt(nosso_numero, filer_length=16)
-          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(filer_length, "0")}"
+        def nosso_numero_with_byte_idt(nosso_numero)
+          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(5, "0")}"
         end
 
         # Dígito verificador do nosso número
         # @return [Integer] 1 caracteres numéricos.
         def nosso_numero_dv(nosso_numero)
-          "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero, 5)}"
-            .modulo11(mapeamento: mapeamento_para_modulo_11)
+          dados_da_conta = "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero)}"
+          dados_da_conta.modulo11(mapeamento: mapeamento_para_modulo_11)
         end
 
         def agencia_conta_boleto
