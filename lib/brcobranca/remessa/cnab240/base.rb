@@ -167,7 +167,7 @@ module Brcobranca
           segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
-          segmento_p << '0'                                             # dv agencia cobradora                  1
+          segmento_p << dv_agencia_cobradora                            # dv agencia cobradora                  1
           segmento_p << especie_titulo                                  # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
@@ -419,6 +419,10 @@ module Brcobranca
         # Sobreescreva caso necessário
         def exclusivo_servico
           "".rjust(2, " ")
+        end
+
+        def dv_agencia_cobradora
+          '0'
         end
       end
     end

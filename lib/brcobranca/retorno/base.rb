@@ -3,6 +3,7 @@
 module Brcobranca
   module Retorno
     class Base # Classe base para retornos bancários
+      attr_accessor :codigo_registro
       attr_accessor :agencia_com_dv
       attr_accessor :agencia_sem_dv
       attr_accessor :cedente_com_dv

@@ -6,8 +6,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
       data_vencimento: Date.today,
-      nosso_numero: '429715',
-      numero_documento: '429715',
+      nosso_numero: '00003',
+      numero_documento: '00003',
       documento_sacado: '82136760505',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -21,11 +21,11 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
   let(:params) do
     {
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
-      agencia: '4327',
-      conta_corrente: '03666',
+      agencia: '0165',
+      conta_corrente: '00623',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
-      posto: '14',
+      posto: '02',
       byte_idt: '2',
       pagamentos: [pagamento]
     }
@@ -33,7 +33,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
   let(:sicredi) { subject.class.new(params) }
 
-  before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+  before { Timecop.freeze(Time.local(2007, 7, 14, 16, 15, 15)) }
   after { Timecop.return }
 
   context 'validacoes' do
@@ -91,10 +91,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     context '@conta_corrente' do
-      it 'deve ser invalido se a conta corrente tiver mais de 8 digitos' do
-        sicredi.conta_corrente = '123456789'
+      it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
+        sicredi.conta_corrente = '123456'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 8 dígitos.')
+        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
       end
     end
   end
@@ -119,15 +119,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     it 'deve calcular o digito da agencia' do
-      # digito calculado a partir do modulo 11 com base 9
-      #
-      # agencia = 1  2  3  4
-      #
-      #           4  3  2  1
-      # x         9  8  7  6
-      # =         36 24 14 6 = 80
-      # 80 / 11 = 7 com resto 3
-      expect(sicredi.digito_agencia).to eq '3'
+      expect(sicredi.digito_agencia).to eq ' '
     end
 
     it 'deve calcular  digito da conta' do
@@ -144,14 +136,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
     it 'cod. convenio deve retornar as informacoes nas posicoes corretas' do
       cod_convenio = sicredi.codigo_convenio
-      expect(cod_convenio[0..19]).to eq '                    '
+      expect(cod_convenio[0..19]).to eq ''.rjust(20, ' ')
     end
 
     it 'info conta deve retornar as informacoes nas posicoes corretas' do
       info_conta = sicredi.info_conta
-      expect(info_conta[0..4]).to eq '04327'
-      expect(info_conta[5]).to eq '3'
-      expect(info_conta[6..17]).to eq '000000003666'
+      expect(info_conta[0..4]).to eq '00165'
+      expect(info_conta[5]).to eq ' '
+      expect(info_conta[6..17]).to eq '000000000623'
       expect(info_conta[18]).to eq '8'
     end
 
@@ -170,8 +162,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     it 'formata o nosso numero' do
-      nosso_numero = sicredi.formata_nosso_numero 1
-      expect(nosso_numero).to eq "15200000000000000011"
+      nosso_numero = sicredi.formata_nosso_numero 3
+      expect(nosso_numero.strip).to eq "072000031"
     end
   end
 

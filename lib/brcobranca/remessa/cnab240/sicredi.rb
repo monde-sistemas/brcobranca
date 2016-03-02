@@ -14,7 +14,7 @@ module Brcobranca
           message: 'não pode estar em branco.'
 
         # Remessa 240 - 12 digitos
-        validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
+        validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
         validates_length_of :posto, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
@@ -29,6 +29,7 @@ module Brcobranca
                      modalidade_carteira: '01',
                      forma_cadastramento: '1',
                      tipo_documento: '1',
+                     codigo_juros: '3',
                      codigo_protesto: '3',
                      codigo_baixa: '1',
                      dias_baixa: '060' }.merge!(campos)
@@ -56,9 +57,19 @@ module Brcobranca
         end
 
         def digito_agencia
-          # utilizando a agencia com 4 digitos
-          # para calcular o digito
-          agencia.modulo11(mapeamento: { 10 => 'X' }).to_s
+          " "
+        end
+
+        def dv_agencia_cobradora
+          " "
+        end
+
+        def uso_exclusivo_banco
+          ''.rjust(20, ' ')
+        end
+
+        def uso_exclusivo_empresa
+          ''.rjust(20, ' ')
         end
 
         def digito_conta
@@ -155,18 +166,18 @@ module Brcobranca
         #
         # @return [String]
         def formata_nosso_numero(nosso_numero)
-          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}"
+          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}".ljust(20, ' ')
         end
 
         def nosso_numero_with_byte_idt(nosso_numero)
-          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(16, "0")}"
+          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(5, "0")}"
         end
 
         # Dígito verificador do nosso número
         # @return [Integer] 1 caracteres numéricos.
         def nosso_numero_dv(nosso_numero)
-          "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero)}"
-            .modulo11(mapeamento: mapeamento_para_modulo_11)
+          dados_da_conta = "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero)}"
+          dados_da_conta.modulo11(mapeamento: mapeamento_para_modulo_11)
         end
 
         def agencia_conta_boleto
