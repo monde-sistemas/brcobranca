@@ -146,7 +146,6 @@ module Brcobranca
         # @return [String]
         #
         def monta_segmento_p(pagamento, nro_lote, sequencial)
-          # campos com * na frente nao foram implementados
           #                                                             # DESCRICAO                             TAMANHO
           segmento_p = cod_banco                                        # codigo banco                          3
           segmento_p << nro_lote.to_s.rjust(4, '0')                     # lote de servico                       4

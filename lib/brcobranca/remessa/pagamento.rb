@@ -99,7 +99,7 @@ module Brcobranca
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
           percentual_multa: '0',
-          tipo_juros: "0",
+          tipo_juros: "3",
           valor_juros: 0.0
         }
 
