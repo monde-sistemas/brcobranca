@@ -14,7 +14,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
       uf_sacado: 'RJ',
-      tipo_juros: '0'
+      tipo_mora: '0'
     )
   end
 
