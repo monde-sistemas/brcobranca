@@ -67,6 +67,8 @@ module Brcobranca
       attr_accessor :percentual_multa
       # <b>OPCIONAL</b>: Data para cobrança de multa
       attr_accessor :data_multa
+      # <b>OPCIONAL</b>: tipo de mora (diário, mensal)
+      attr_accessor :tipo_mora
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
         :documento_sacado, :nome_sacado, :endereco_sacado,
@@ -84,6 +86,7 @@ module Brcobranca
         padrao = {
           data_emissao: Date.today,
           data_segundo_desconto:'00-00-00',
+          tipo_mora: "3",
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,
