@@ -152,7 +152,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     it 'complemento trailer deve retornar espacos em branco com a totalização das cobranças' do
-      total_cobranca_simples    = "00000100000000000005000"
+      total_cobranca_simples    = "".rjust(23, "0")
       total_cobranca_vinculada  = "".rjust(23, "0")
       total_cobranca_caucionada = "".rjust(23, "0")
       total_cobranca_descontada = "".rjust(23, "0")
