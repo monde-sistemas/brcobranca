@@ -174,7 +174,7 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
           segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
           segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
-          segmento_p << pagamento.dias_protesto                         # dias para protesto                    2
+          segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
           segmento_p << codigo_baixa                                    # cod. para baixa                       1
           segmento_p << dias_baixa                                      # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2

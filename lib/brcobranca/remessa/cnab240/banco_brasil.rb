@@ -231,7 +231,7 @@ module Brcobranca
           # Para código '1' – é possível, de 6 a 29 dias, 35o, 40o, dia corrido.
           # Para código '2' – é possível, 3o, 4o ou 5o dia útil.
           # Para código '3' preencher com Zeros.
-          segmento_p << pagamento.dias_protesto                         # dias para protesto                    2   *
+          segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
           segmento_p << '0'                                             # cod. para baixa                       1   *'1' = Protestar Dias Corridos, '2' = Protestar Dias Úteis, '3' = Não Protestar
           segmento_p << '000'                                           # dias para baixa                       2   *
           segmento_p << '09'                                            # cod. da moeda                         2
