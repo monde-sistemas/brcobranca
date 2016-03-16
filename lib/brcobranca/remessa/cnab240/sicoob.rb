@@ -146,10 +146,6 @@ module Brcobranca
           "#{cod_banco}99999#{''.rjust(9, ' ')}#{nro_lotes.to_s.rjust(6, '0')}#{sequencial.to_s.rjust(6, '0')}#{''.rjust(6, '0')}#{''.rjust(205, ' ')}"
         end
 
-        def codigo_protesto
-          "1"
-        end
-
         def complemento_p(pagamento)
           # CAMPO                   TAMANHO
           # conta corrente          12

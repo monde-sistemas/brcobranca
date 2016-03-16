@@ -131,10 +131,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       expect(caixa.tipo_documento).to eq '2'
     end
 
-    it 'codigo do protesto de ver ser 3 - Não protestar' do
-      expect(caixa.codigo_protesto).to eq '3'
-    end
-
     it 'deve conter a identificacao do titulo da empresa' do
       segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
       expect(segmento_p[195..205]).to eq "00000000123"
