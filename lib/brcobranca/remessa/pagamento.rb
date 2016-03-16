@@ -69,6 +69,16 @@ module Brcobranca
       attr_accessor :data_multa
       # <b>OPCIONAL</b>: tipo de mora (diário, mensal)
       attr_accessor :tipo_mora
+      # <b>OPCIONAL</b>: codigo dos juros
+      attr_accessor :codigo_juros
+      # <b>OPCIONAL</b>: codigo do protesto
+      attr_accessor :codigo_protesto
+      # <b>OPCIONAL</b>: dias para protesto
+      attr_accessor :dias_protesto
+      # <b>OPCIONAL</b>: codigo baixa
+      attr_accessor :codigo_baixa
+      # <b>OPCIONAL</b>: dias para baixa
+      attr_accessor :dias_baixa
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
         :documento_sacado, :nome_sacado, :endereco_sacado,
@@ -97,7 +107,9 @@ module Brcobranca
           especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
-          percentual_multa: '0'
+          percentual_multa: '0',
+          codigo_protesto: '3',
+          dias_protesto: '00'
         }
 
         campos = padrao.merge!(campos)

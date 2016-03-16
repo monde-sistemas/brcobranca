@@ -29,8 +29,6 @@ module Brcobranca
                      modalidade_carteira: '01',
                      forma_cadastramento: '1',
                      tipo_documento: '1',
-                     codigo_juros: '3',
-                     codigo_protesto: '3',
                      codigo_baixa: '1',
                      dias_baixa: '060' }.merge!(campos)
           super(campos)
