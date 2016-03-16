@@ -31,10 +31,6 @@ module Brcobranca
         attr_accessor :especie_titulo
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
-        # codigo dos juros(verificar o padrao nas classes referentes aos bancos)
-        attr_accessor :codigo_juros
-        # codigo do protesto(verificar o padrao nas classes referentes aos bancos)
-        attr_accessor :codigo_protesto
         # codigo_baixa (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :codigo_baixa
         # dias_baixa (verificar o padrao nas classes referentes aos bancos)
@@ -51,8 +47,6 @@ module Brcobranca
           campos = { codigo_carteira: '1',
             forma_cadastramento: '1',
             tipo_documento: ' ',
-            codigo_juros: '0',
-            codigo_protesto: '0',
             codigo_baixa: '0',
             dias_baixa: '000' }.merge!(campos)
           super(campos)
@@ -179,8 +173,8 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
           segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
-          segmento_p << codigo_protesto                                 # cod. para protesto                    1
-          segmento_p << '00'                                            # dias para protesto                    2   *
+          segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
+          segmento_p << pagamento.dias_protesto                         # dias para protesto                    2
           segmento_p << codigo_baixa                                    # cod. para baixa                       1
           segmento_p << dias_baixa                                      # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2
