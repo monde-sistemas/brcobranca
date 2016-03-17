@@ -10,16 +10,16 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
       documento_cedente: '12345678912',
       sacado: 'Claudio Pozzebom',
       sacado_documento: '12345678900',
-      agencia: '4042',
-      conta_corrente: '61900',
-      convenio: 12_387_989,
-      numero_documento: '777700168'
+      agencia: '0001',
+      conta_corrente: '0000002',
+      convenio: 1_000_000,
+      numero_documento: '000095'
     }
   end
 
   it 'Criar nova instancia com atributos padrões' do
     boleto_novo = described_class.new
-    expect(boleto_novo.banco).to eql('001')
+    expect(boleto_novo.banco).to eql('097')
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
@@ -36,7 +36,7 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
 
   it 'Criar nova instancia com atributos válidos' do
     boleto_novo = described_class.new(@valid_attributes)
-    expect(boleto_novo.banco).to eql('001')
+    expect(boleto_novo.banco).to eql('097')
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
@@ -255,12 +255,12 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
   it 'Montar agencia_conta_boleto' do
     boleto_novo = described_class.new(@valid_attributes)
 
-    expect(boleto_novo.agencia_conta_boleto).to eql('4042-8 / 00061900-0')
+    expect(boleto_novo.agencia_conta_boleto).to eql('0001-9 / 0000002-7')
     boleto_novo.agencia = '0719'
-    expect(boleto_novo.agencia_conta_boleto).to eql('0719-6 / 00061900-0')
+    expect(boleto_novo.agencia_conta_boleto).to eql('0719-6 / 0000002-7')
     boleto_novo.agencia = '0548'
     boleto_novo.conta_corrente = '1448'
-    expect(boleto_novo.agencia_conta_boleto).to eql('0548-7 / 00001448-6')
+    expect(boleto_novo.agencia_conta_boleto).to eql('0548-7 / 0001448-6')
   end
 
   describe 'Busca logotipo do banco' do
