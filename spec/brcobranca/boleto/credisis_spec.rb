@@ -122,7 +122,7 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
   it 'Montar nosso_numero_boleto' do
     boleto_novo = described_class.new(@valid_attributes)
     boleto_novo.numero_documento = '95'
-    expect(boleto_novo.nosso_numero_boleto).to eql('100000000000027000095')
+    expect(boleto_novo.nosso_numero_boleto).to eql('10000000027000095')
     expect(boleto_novo.nosso_numero_dv).to eql(7)
   end
 
