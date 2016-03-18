@@ -18,6 +18,40 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     }
   end
 
+  it 'Não permitir gerar boleto com atributos inválidos' do
+    boleto_novo = described_class.new
+    expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
+  end
+
+  it 'Tamanho do número da agência deve ser de 4 dígitos' do
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: "0001")
+    expect(boleto_novo.agencia).to eq('0001')
+
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: "00001")
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'Tamanho do número de convênio deve ser de 7 dígitos' do
+    boleto_novo = described_class.new @valid_attributes.merge(convenio: '12345678')
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'Tamanho da carteira deve ser de 2 dígitos' do
+    boleto_novo = described_class.new @valid_attributes.merge(carteira: '145')
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'Tamanho do número documento deve ser de 6 dígitos' do
+    boleto_novo = described_class.new @valid_attributes.merge(numero_documento: '1234567')
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'Número do documento deve ser preenchido com zeros à esquerda quando menor que 6 dígitos' do
+    boleto_novo = described_class.new @valid_attributes.merge(numero_documento: '1')
+    expect(boleto_novo.numero_documento).to eq('000001')
+    expect(boleto_novo).to be_valid
+  end
+
   it 'Criar nova instancia com atributos padrões' do
     boleto_novo = described_class.new
     expect(boleto_novo.banco).to eql('097')
