@@ -109,28 +109,12 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
 
   it 'Calcular agencia_dv' do
     boleto_novo = described_class.new(@valid_attributes)
-    boleto_novo.agencia = '85068014982'
-    expect(boleto_novo.agencia_dv).to eql(9)
-    boleto_novo.agencia = '05009401448'
-    expect(boleto_novo.agencia_dv).to eql(1)
-    boleto_novo.agencia = '12387987777700168'
-    expect(boleto_novo.agencia_dv).to eql(2)
     boleto_novo.agencia = '4042'
     expect(boleto_novo.agencia_dv).to eql(8)
-    boleto_novo.agencia = '61900'
-    expect(boleto_novo.agencia_dv).to eql(0)
     boleto_novo.agencia = '0719'
     expect(boleto_novo.agencia_dv).to eql(6)
-    boleto_novo.agencia = 85_068_014_982
-    expect(boleto_novo.agencia_dv).to eql(9)
-    boleto_novo.agencia = 5_009_401_448
-    expect(boleto_novo.agencia_dv).to eql(1)
-    boleto_novo.agencia = 12_387_987_777_700_168
-    expect(boleto_novo.agencia_dv).to eql(2)
     boleto_novo.agencia = 4042
     expect(boleto_novo.agencia_dv).to eql(8)
-    boleto_novo.agencia = 61_900
-    expect(boleto_novo.agencia_dv).to eql(0)
     boleto_novo.agencia = 719
     expect(boleto_novo.agencia_dv).to eql(6)
   end
