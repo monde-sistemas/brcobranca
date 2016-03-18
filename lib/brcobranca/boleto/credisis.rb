@@ -2,8 +2,13 @@
 module Brcobranca
   module Boleto
     class Credisis < Base # CrediSIS
+      attr_accessor :codigo_cedente
+
+      validates_presence_of :codigo_cedente
+
       validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
       validates_length_of :conta_corrente, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :codigo_cedente, is: 4, message: 'deve ser igual a 4 dígitos.'
       validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
       validates_length_of :convenio, in: 4..8, message: 'não existente para este banco.'
 
@@ -71,46 +76,29 @@ module Brcobranca
       # @return [String] 1 caracteres numéricos.
       # @see BancoBrasil#numero_documento
       def nosso_numero_dv
-        "#{convenio}#{numero_documento}".modulo11(mapeamento: { 10 => 'X' })
+        "#{numero_documento}".modulo11(mapeamento: { 10 => 'X' })
       end
 
       # Nosso número para exibir no boleto.
       # @return [String]
       # @example
-      #  boleto.nosso_numero_boleto #=> "12387989000004042-4"
+      #  boleto.nosso_numero_boleto #=> "100000000000027000095-7"
       def nosso_numero_boleto
-        "#{convenio}#{numero_documento}"
+        "#{convenio}#{conta_corrente}#{conta_corrente_dv}#{numero_documento}"
       end
 
       # Agência + conta corrente do cliente para exibir no boleto.
       # @return [String]
       # @example
-      #  boleto.agencia_conta_boleto #=> "0548-7 / 00001448-6"
+      #  boleto.agencia_conta_boleto #=> "0001-9 / 0000002-7"
       def agencia_conta_boleto
         "#{agencia}-#{agencia_dv} / #{conta_corrente}-#{conta_corrente_dv}"
       end
 
       # Segunda parte do código de barras.
-      # A montagem é feita baseada na quantidade de dígitos do convênio.
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        case convenio.to_s.size
-        when 8 # Nosso Número de 17 dígitos com Convenio de 8 dígitos e numero_documento de 9 dígitos
-          "000000#{convenio}#{numero_documento}#{carteira}"
-        when 7 # Nosso Número de 17 dígitos com Convenio de 7 dígitos e numero_documento de 10 dígitos
-          "000000#{convenio}#{numero_documento}#{carteira}"
-        when 6 # Convenio de 6 dígitos
-          if codigo_servico == false
-            # Nosso Número de 11 dígitos com Convenio de 6 dígitos e numero_documento de 5 dígitos
-            "#{convenio}#{numero_documento}#{agencia}#{conta_corrente}#{carteira}"
-          else
-            # Nosso Número de 17 dígitos com Convenio de 6 dígitos e sem numero_documento, carteira 16 e 18
-            fail "Só é permitido emitir boletos com nosso número de 17 dígitos com carteiras 16 ou 18. Sua carteira atual é #{carteira}" unless %w(16 18).include?(carteira)
-            "#{convenio}#{numero_documento}21"
-          end
-        when 4 # Nosso Número de 7 dígitos com Convenio de 4 dígitos e sem numero_documento
-          "#{convenio}#{numero_documento}#{agencia}#{conta_corrente}#{carteira}"
-        end
+        "#{@codigo_cedente[0..1]}#{convenio}00#{@codigo_cedente[2..3]}#{numero_documento}#{carteira}".rjust(25, '0')
       end
     end
   end
