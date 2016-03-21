@@ -59,6 +59,17 @@ shared_examples_for 'cnab400' do
         codigo_transmissao: '12345678901234567890',
         pagamentos: [pagamento]
       }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Credisis
+      {
+        carteira: '18',
+        agencia: '1234',
+        conta_corrente: '12345',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        codigo_cedente: '0027',
+        documento_cedente: '12345678910',
+        pagamentos: [pagamento]
+      }
     else
       { carteira: '123',
         agencia: '1234',
