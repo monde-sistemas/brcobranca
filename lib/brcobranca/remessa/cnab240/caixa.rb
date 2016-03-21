@@ -39,8 +39,6 @@ module Brcobranca
           # Modalidade carteira: 14 (título Registrado emissão Cedente)
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
-                     codigo_juros: '3',
-                     codigo_protesto: '3',
                      codigo_baixa: '1',
                      dias_baixa: '120',
                      distribuicao_boleto: '0',

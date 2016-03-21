@@ -109,6 +109,15 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[165..179]).to eq '000000000000990' # valor do IOF
       expect(segmento_p[180..194]).to eq '000000000002435' # valor do abatimento
     end
+
+    it 'segmento P deve ter as informações sobre o protesto' do
+      pagamento.codigo_protesto = "1"
+      pagamento.dias_protesto =  "6"
+      segmento_p = objeto.monta_segmento_p pagamento, 1, 2
+
+      expect(segmento_p[220]).to eq "1"
+      expect(segmento_p[221..222]).to eq "06"
+    end
   end
 
   context 'segmento Q' do

@@ -13,7 +13,9 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'RJ'
+      uf_sacado: 'RJ',
+      tipo_mora: '0',
+      codigo_protesto: '1'
     )
   end
 

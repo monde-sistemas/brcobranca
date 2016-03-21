@@ -31,10 +31,6 @@ module Brcobranca
         attr_accessor :especie_titulo
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
-        # codigo dos juros(verificar o padrao nas classes referentes aos bancos)
-        attr_accessor :codigo_juros
-        # codigo do protesto(verificar o padrao nas classes referentes aos bancos)
-        attr_accessor :codigo_protesto
         # codigo_baixa (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :codigo_baixa
         # dias_baixa (verificar o padrao nas classes referentes aos bancos)
@@ -51,8 +47,6 @@ module Brcobranca
           campos = { codigo_carteira: '1',
             forma_cadastramento: '1',
             tipo_documento: ' ',
-            codigo_juros: '0',
-            codigo_protesto: '0',
             codigo_baixa: '0',
             dias_baixa: '000' }.merge!(campos)
           super(campos)
@@ -111,26 +105,26 @@ module Brcobranca
         # @return [String]
         #
         def monta_header_lote(nro_lote)
-          header_lote = '' # CAMPO                   TAMANHO
-          header_lote << cod_banco # codigo banco            3
-          header_lote << nro_lote.to_s.rjust(4, '0') # lote servico            4
-          header_lote << '1' # tipo de registro        1
-          header_lote << 'R' # tipo de operacao        1
-          header_lote << '01' # tipo de servico         2
-          header_lote << exclusivo_servico  # uso exclusivo           2
-          header_lote << versao_layout_lote # num.versao layout lote  3
-          header_lote << ' ' # uso exclusivo           1
+          header_lote = ''                                      # CAMPO                   TAMANHO
+          header_lote << cod_banco                              # codigo banco            3
+          header_lote << nro_lote.to_s.rjust(4, '0')            # lote servico            4
+          header_lote << '1'                                    # tipo de registro        1
+          header_lote << 'R'                                    # tipo de operacao        1
+          header_lote << '01'                                   # tipo de servico         2
+          header_lote << exclusivo_servico                      # uso exclusivo           2
+          header_lote << versao_layout_lote                     # num.versao layout lote  3
+          header_lote << ' '                                    # uso exclusivo           1
           header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
-          header_lote << documento_cedente.to_s.rjust(15, '0') # inscricao cedente       15
-          header_lote << convenio_lote # codigo do convenio      20
-          header_lote << info_conta # informacoes conta       20
-          header_lote << empresa_mae.format_size(30) # nome empresa            30
-          header_lote << mensagem_1.to_s.format_size(40) # 1a mensagem             40
-          header_lote << mensagem_2.to_s.format_size(40) # 2a mensagem             40
-          header_lote << sequencial_remessa.to_s.rjust(8, '0') # numero remessa          8
-          header_lote << data_geracao # data gravacao           8
-          header_lote << ''.rjust(8, '0') # data do credito         8
-          header_lote << ''.rjust(33, ' ') # complemento             33
+          header_lote << documento_cedente.to_s.rjust(15, '0')  # inscricao cedente       15
+          header_lote << convenio_lote                          # codigo do convenio      20
+          header_lote << info_conta                             # informacoes conta       20
+          header_lote << empresa_mae.format_size(30)            # nome empresa            30
+          header_lote << mensagem_1.to_s.format_size(40)        # 1a mensagem             40
+          header_lote << mensagem_2.to_s.format_size(40)        # 2a mensagem             40
+          header_lote << sequencial_remessa.to_s.rjust(8, '0')  # numero remessa          8
+          header_lote << data_geracao                           # data gravacao           8
+          header_lote << ''.rjust(8, '0')                       # data do credito         8
+          header_lote << ''.rjust(33, ' ')                      # complemento             33
           header_lote
         end
 
@@ -146,7 +140,6 @@ module Brcobranca
         # @return [String]
         #
         def monta_segmento_p(pagamento, nro_lote, sequencial)
-          # campos com * na frente nao foram implementados
           #                                                             # DESCRICAO                             TAMANHO
           segmento_p = cod_banco                                        # codigo banco                          3
           segmento_p << nro_lote.to_s.rjust(4, '0')                     # lote de servico                       4
@@ -171,17 +164,17 @@ module Brcobranca
           segmento_p << especie_titulo                                  # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
-          segmento_p << codigo_juros                                    # cod. do juros                         1   *
-          segmento_p << ''.rjust(8, '0')                                # data juros                            8   *
-          segmento_p << ''.rjust(15, '0')                               # valor juros                           15  *
+          segmento_p << pagamento.tipo_mora                             # cod. do mora                          1
+          segmento_p << data_mora(pagamento)                            # data mora                             8
+          segmento_p << pagamento.formata_valor_mora(15)                # valor mora                            15
           segmento_p << pagamento.cod_desconto                          # cod. do desconto                      1
           segmento_p << pagamento.formata_data_desconto('%d%m%Y')       # data desconto                         8
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
           segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
-          segmento_p << codigo_protesto                                 # cod. para protesto                    1
-          segmento_p << '00'                                            # dias para protesto                    2   *
+          segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
+          segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
           segmento_p << codigo_baixa                                    # cod. para baixa                       1
           segmento_p << dias_baixa                                      # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2
@@ -398,6 +391,14 @@ module Brcobranca
           fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
         end
 
+        def data_mora(pagamento)
+          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
+          pagamento.data_vencimento.strftime("%d%m%Y")
+        end
+
+        # Identificacao do titulo da empresa
+        #
+        # Sobreescreva caso necessário
         def numero_documento(pagamento)
           pagamento.numero_documento.to_s.rjust(15, '0')
         end
@@ -406,6 +407,9 @@ module Brcobranca
           ''.rjust(25, ' ')
         end
 
+        # Campo exclusivo para serviço
+        #
+        # Sobreescreva caso necessário
         def exclusivo_servico
           "".rjust(2, " ")
         end
