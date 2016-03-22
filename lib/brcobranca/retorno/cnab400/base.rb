@@ -15,6 +15,8 @@ module Brcobranca
           case codigo_banco
           when "070"
             Brcobranca::Retorno::Cnab400::BancoBrasilia.load_lines(file, options)
+          when "097"
+            Brcobranca::Retorno::Cnab400::Credisis.load_lines(file, options)
           when "237"
             Brcobranca::Retorno::Cnab400::Bradesco.load_lines(file, options)
           when "341"
