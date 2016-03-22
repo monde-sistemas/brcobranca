@@ -103,7 +103,6 @@ module Brcobranca
           valor_iof: 0.0,
           valor_abatimento: 0.0,
           nome_avalista: '',
-          documento_avalista: '',
           cod_desconto: '0',
           especie_titulo: '01',
           identificacao_ocorrencia: '01',
