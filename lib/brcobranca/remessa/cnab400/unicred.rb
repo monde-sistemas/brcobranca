@@ -120,7 +120,7 @@ module Brcobranca
           detalhe << pagamento.formata_data_segundo_desconto                # data do segundo desconto              9[06]
           detalhe << ' '                                                    # branco                                X[01]
           detalhe << informacao_multa(pagamento)                            # informação de multa                   9[01]
-          detalhe << pagamento.percentual_multa.to_s.rjust(4, '0')          # taxa - multa                          9[04]
+          detalhe << pagamento.formata_percentual_multa                     # taxa - multa                          9[04]
           detalhe << "00"                                                   # código da moeda                       9[02]
           detalhe << ''.rjust(13, '0')                                      # valor do titulo em outra moeda        9[13]
           detalhe << ''.rjust(4, ' ')                                       # brancos                               X[04]
