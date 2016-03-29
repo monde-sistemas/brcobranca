@@ -105,7 +105,7 @@ module Brcobranca
           detalhe << pagamento.formata_data_segundo_desconto                # data limite para o segundo desconto   9[06]
           detalhe << ''.rjust(1, ' ')                                       # brancos                               X[1]
           detalhe << pagamento.codigo_multa                                 # Com multa = 4, Sem multa = 0          9[1]
-          detalhe << pagamento.percentual_multa.rjust(4, '0')               # Percentual multa por atraso %         9[6]
+          detalhe << pagamento.formata_percentual_multa                     # Percentual multa por atraso %         9[6]
           detalhe << '00'                                                   # Unidade de valor moeda corrente = 00  9[2]
           detalhe << '0'.rjust(13, '0')                                     # Valor do título em outra unidade      9[15]
           detalhe << ''.rjust(4, ' ')                                       # brancos                               X[4]
@@ -156,8 +156,8 @@ module Brcobranca
           # 06 = PROTESTAR (VIDE POSIÇÃO392/393)
           # 07 = NÃO PROTESTAR
           # 08 = NÃO COBRAR JUROS DE MORA
-          detalhe << '00'                                                   # Instrução para o título               9[02]
-          detalhe << '00'                                                   # Número de dias válidos para instrução 9[02]
+          detalhe << pagamento.cod_primeira_instrucao                       # primeira instrução                    9[02]
+          detalhe << pagamento.cod_segunda_instrucao                        # segunda instrução                     9[02]
           detalhe << pagamento.formata_valor_mora                           # valor mora ao dia                     9[13]
           detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
@@ -177,7 +177,7 @@ module Brcobranca
           detalhe << movimento_complemento                                  # Complemento                           9[2]
           detalhe << ''.rjust(6, ' ')                                       # Brancos                               X[06]
           # Se identificacao_ocorrencia = 06
-          detalhe << '00'.rjust(2, ' ')                                     # Número de dias para protesto          9[02]
+          detalhe << pagamento.dias_protesto.rjust(2, '0')                  # Número de dias para protesto          9[02]
           detalhe << ''.rjust(1, ' ')                                       # Brancos                               X[1]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
