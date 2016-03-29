@@ -95,7 +95,7 @@ module Brcobranca
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << ''.rjust(4, ' ')                                       # brancos                               X[04]
           detalhe << pagamento.formata_valor_mora(6)                        # valor mora ao dia                     9[06]
-          detalhe << pagamento.percentual_multa.rjust(6, '0')               # valor multa                           9[06]
+          detalhe << pagamento.formata_percentual_multa(6)                  # valor multa                           9[06]
           detalhe << ''.rjust(33, ' ')                                      # brancos                               X[33]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
           detalhe << pagamento.identificacao_sacado                         # identificacao do pagador              9[02]

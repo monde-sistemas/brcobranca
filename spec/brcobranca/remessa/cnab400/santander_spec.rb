@@ -5,6 +5,11 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
+      codigo_multa: '4',
+      percentual_multa: '2.00',
+      valor_mora: '8.00',
+      cod_primeira_instrucao: '06',
+      dias_protesto: '6',
       nosso_numero: 123,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
