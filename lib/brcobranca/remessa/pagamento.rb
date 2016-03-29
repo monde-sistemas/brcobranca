@@ -107,9 +107,11 @@ module Brcobranca
           especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
-          percentual_multa: '0',
+          percentual_multa: 0.0,
           codigo_protesto: '3',
-          dias_protesto: '00'
+          dias_protesto: '00',
+          cod_primeira_instrucao: '00',
+          cod_segunda_instrucao: '00'
         }
 
         campos = padrao.merge!(campos)
@@ -146,6 +148,17 @@ module Brcobranca
         else
           '00000000'
         end
+      end
+
+      # Formata a valor do percentual da multa
+      #
+      # @param tamanho [Integer]
+      #   quantidade de caracteres a ser retornado
+      #
+      # @return [String]
+      #
+      def formata_percentual_multa(tamanho = 4)
+        format_value(percentual_multa, tamanho)
       end
 
       # Formata a data de cobrança da multa
