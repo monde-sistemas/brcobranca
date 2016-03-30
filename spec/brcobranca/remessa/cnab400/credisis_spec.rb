@@ -6,6 +6,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
        data_vencimento: Date.today,
        nosso_numero: 123,
+       dias_protesto: '6',
+       valor_mora: "8.00",
+       percentual_multa: "2.00",
        documento_sacado: '12345678901',
        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
        endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -146,8 +149,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
         expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')               # data emissão título
         expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
-        expect(detalhe[160..165]).to eq '000000'                                    # mora
-        expect(detalhe[166..171]).to eq '000000'                                    # multa
+        expect(detalhe[160..165]).to eq '000800'                                    # mora
+        expect(detalhe[166..171]).to eq '000200'                                    # multa
         expect(detalhe[172..204]).to eq ''.rjust(33, ' ')                           # brancos
         expect(detalhe[205..217]).to eq ''.rjust(13, '0')                           # desconto
         expect(detalhe[218..219]).to eq '01'                                        # tipo documento sacado
@@ -160,7 +163,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[349..350]).to eq 'SP'                                        # uf sacado
         expect(detalhe[351..375]).to eq ''.rjust(25, " ")                           # nome avalista
         expect(detalhe[377..390]).to eq ''.rjust(14, " ")                           # documento avalista
-        expect(detalhe[391..392]).to eq '00'                                        # dias para envio a protesto
+        expect(detalhe[391..392]).to eq '06'                                        # dias para envio a protesto
       end
     end
 

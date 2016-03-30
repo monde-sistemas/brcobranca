@@ -109,7 +109,7 @@ module Brcobranca
           detalhe << pagamento.nome_avalista.format_size(25)                # nome do sacador/avalista              X[25]
           detalhe << ''.rjust(1, ' ')                                       # complemento do registro               X[01]
           detalhe << ''.rjust(14, ' ')                                      # documento avalista                    X[14] *
-          detalhe << '00'                                                   # quantidade de dias do prazo           9[02] *
+          detalhe << pagamento.dias_protesto.rjust(2, '0')                  # quantidade de dias do prazo           9[02]
           detalhe << ''.rjust(1, ' ')                                       # complemento do registro (brancos)     X[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
