@@ -23,6 +23,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       agencia: '0165',
       conta_corrente: '00623',
+      digito_conta: '8',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
       posto: '02',
@@ -95,6 +96,20 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
         sicredi.conta_corrente = '123456'
         expect(sicredi.invalid?).to be true
         expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
+      end
+    end
+
+    context '@digito_conta' do
+      it 'deve ser inválido se o dígito conta não for informado' do
+        sicredi.digito_conta = nil
+        expect(sicredi.invalid?).to be true
+        expect(sicredi.errors.full_messages).to include('Digito conta não pode estar em branco.')
+      end
+
+      it 'deve ser inválido se o dígito conta tiver mais de 1 dígito' do
+        sicredi.digito_conta = '12'
+        expect(sicredi.invalid?).to be true
+        expect(sicredi.errors.full_messages).to include('Digito conta deve ser igual a 1 dígito.')
       end
     end
   end
