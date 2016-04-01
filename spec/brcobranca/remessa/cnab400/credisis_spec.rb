@@ -149,8 +149,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
         expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')               # data emissão título
         expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
-        expect(detalhe[160..165]).to eq '000800'                                    # mora
-        expect(detalhe[166..171]).to eq '000200'                                    # multa
+        expect(detalhe[160..165]).to eq '080000'                                    # mora
+        expect(detalhe[166..171]).to eq '020000'                                    # multa
         expect(detalhe[172..204]).to eq ''.rjust(33, ' ')                           # brancos
         expect(detalhe[205..217]).to eq ''.rjust(13, '0')                           # desconto
         expect(detalhe[218..219]).to eq '01'                                        # tipo documento sacado
