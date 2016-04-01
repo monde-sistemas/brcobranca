@@ -10,13 +10,14 @@ module Brcobranca
         attr_accessor :byte_idt
         attr_accessor :posto
 
-        validates_presence_of :byte_idt, :modalidade_carteira, :parcela, :posto,
+        validates_presence_of :byte_idt, :modalidade_carteira, :parcela, :posto, :digito_conta,
           message: 'não pode estar em branco.'
 
         # Remessa 240 - 12 digitos
         validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
         validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
         validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
+        validates_length_of :digito_conta, is: 1, message: 'deve ser igual a 1 dígito.'
         validates_length_of :posto, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
         validates_length_of :byte_idt, is: 1,
           message: 'deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário'
@@ -68,12 +69,6 @@ module Brcobranca
 
         def uso_exclusivo_empresa
           ''.rjust(20, ' ')
-        end
-
-        def digito_conta
-          # utilizando a conta corrente com 5 digitos
-          # para calcular o digito
-          conta_corrente.modulo11(mapeamento: { 10 => 'X' }).to_s
         end
 
         def codigo_convenio
