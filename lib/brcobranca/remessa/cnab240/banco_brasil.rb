@@ -218,7 +218,7 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
-          segmento_p << ''.rjust(25, ' ')                               # identificacao titulo empresa          25  *
+          segmento_p << pagamento.numero_documento.to_s.rjust(25, ' ')  # identificacao titulo empresa          25
           # O Banco do Brasil trata somente os códigos
           # '1' – Protestar dias corridos,
           # '2' – Protestar dias úteis, e
