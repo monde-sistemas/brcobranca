@@ -30,6 +30,10 @@ module Brcobranca
           'SANTANDER'.format_size(15)
         end
 
+        def codigo_transmissao=(valor)
+          @codigo_transmissao = valor.to_s.strip.rjust(20, '0') if valor
+        end
+
         # Informacoes do Código de Transmissão
         #
         # @return [String]
@@ -37,7 +41,7 @@ module Brcobranca
         def info_conta
           # CAMPO                     TAMANHO
           # codigo_transmissao        20
-          codigo_transmissao.strip.rjust(20, '0')
+          codigo_transmissao
         end
 
         # Zeros do header
