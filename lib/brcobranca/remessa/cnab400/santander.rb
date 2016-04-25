@@ -37,7 +37,7 @@ module Brcobranca
         def info_conta
           # CAMPO                     TAMANHO
           # codigo_transmissao        20
-          codigo_transmissao.rjust(20, ' ')
+          codigo_transmissao.strip.rjust(20, '0')
         end
 
         # Zeros do header
