@@ -6,7 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
       data_vencimento: Date.today,
-      nosso_numero: '00003',
+      nosso_numero: '072000031',
       numero_documento: '00003',
       documento_sacado: '82136760505',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
@@ -177,7 +177,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     it 'formata o nosso numero' do
-      nosso_numero = sicredi.formata_nosso_numero 3
+      nosso_numero = sicredi.formata_nosso_numero "072000031"
       expect(nosso_numero.strip).to eq "072000031"
     end
   end
