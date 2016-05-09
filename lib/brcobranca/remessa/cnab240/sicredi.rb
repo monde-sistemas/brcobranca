@@ -146,26 +146,7 @@ module Brcobranca
         #
         # @return [String]
         def formata_nosso_numero(nosso_numero)
-          "#{nosso_numero_with_byte_idt(nosso_numero)}#{nosso_numero_dv(nosso_numero)}".ljust(20, ' ')
-        end
-
-        def nosso_numero_with_byte_idt(nosso_numero)
-          "#{Time.now.strftime('%y')}#{byte_idt}#{nosso_numero.to_s.rjust(5, "0")}"
-        end
-
-        # Dígito verificador do nosso número
-        # @return [Integer] 1 caracteres numéricos.
-        def nosso_numero_dv(nosso_numero)
-          dados_da_conta = "#{agencia_posto_conta}#{nosso_numero_with_byte_idt(nosso_numero)}"
-          dados_da_conta.modulo11(mapeamento: mapeamento_para_modulo_11)
-        end
-
-        def agencia_conta_boleto
-          "#{agencia}.#{posto}.#{conta_corrente}"
-        end
-
-        def agencia_posto_conta
-          "#{agencia}#{posto}#{conta_corrente}"
+          nosso_numero.somente_numeros.ljust(20, ' ')
         end
 
         private
