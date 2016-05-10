@@ -301,9 +301,8 @@ module Brcobranca
             lote << monta_segmento_q(pagamento, nro_lote, contador)
             contador += 1
 
-            segmento_r = monta_segmento_r(pagamento, nro_lote, contador)
-            if segmento_r
-              lote << segmento_r
+            if cod_banco == "756"
+              lote << monta_segmento_r(pagamento, nro_lote, contador)
               contador += 1
             end
           end
@@ -327,7 +326,10 @@ module Brcobranca
           contador = 1
           arquivo.push monta_lote(contador)
 
-          arquivo << monta_trailer_arquivo(contador, ((pagamentos.size * 2) + (contador * 2) + 2))
+          segmentos = 2
+          segmentos = 3 if cod_banco == "756"
+
+          arquivo << monta_trailer_arquivo(contador, ((pagamentos.size * 2) + (contador * 2) + segmentos))
 
           arquivo.join("\r\n").to_ascii.upcase
         end
