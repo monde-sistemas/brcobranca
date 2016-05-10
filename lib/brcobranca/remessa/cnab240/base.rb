@@ -221,6 +221,20 @@ module Brcobranca
           segmento_q
         end
 
+        # Monta o registro segmento R do arquivo
+        #
+        # @param pagamento [Brcobranca::Remessa::Pagamento]
+        #   objeto contendo os detalhes do boleto (valor, vencimento, sacado, etc)
+        # @param nro_lote [Integer]
+        #   numero do lote que o segmento esta inserido
+        # @param sequencial [Integer]
+        #   numero sequencial do registro no lote
+        #
+        # @return [String]
+        #
+        def monta_segmento_r(pagamento, nro_lote, nro_registros)
+        end
+
         # Monta o registro trailer do lote
         #
         # @param nro_lote [Integer]
@@ -286,6 +300,12 @@ module Brcobranca
             contador += 1
             lote << monta_segmento_q(pagamento, nro_lote, contador)
             contador += 1
+
+            segmento_r = monta_segmento_r(pagamento, nro_lote, contador)
+            if segmento_r
+              lote << segmento_r
+              contador += 1
+            end
           end
           contador += 1 #trailer
 
