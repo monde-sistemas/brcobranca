@@ -68,7 +68,7 @@ module Brcobranca
         def digito_conta
           # utilizando a conta corrente com 5 digitos
           # para calcular o digito
-          conta_corrente.modulo11(mapeamento: { 10 => 'X' }).to_s
+          conta_corrente.modulo11(mapeamento: { 10 => '0' }).to_s
         end
 
         def codigo_convenio
@@ -153,6 +153,46 @@ module Brcobranca
           # digito agencia/conta    1
           # ident. titulo no banco  20
           "#{conta_corrente.rjust(12, '0')}#{digito_conta} #{formata_nosso_numero(pagamento.nosso_numero)}"
+        end
+
+
+        def monta_segmento_r(pagamento, nro_lote, sequencial)
+          segmento_r = ''                                               # CAMPO                                TAMANHO
+          segmento_r << cod_banco                                       # codigo banco                         3
+          segmento_r << nro_lote.to_s.rjust(4, '0')                     # lote de servico                      4
+          segmento_r << '3'                                             # lote de servico                      1
+          segmento_r << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
+          segmento_r << 'R'                                             # cod. segmento                        1
+          segmento_r << ' '                                             # uso exclusivo                        1
+          segmento_r << '01'                                            # cod. movimento remessa               2
+          segmento_r << "0"                                             # cod. desconto 2                      1
+          segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
+          segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
+          segmento_r << "0"                                             # cod. desconto 3                      1
+          segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
+          segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
+          segmento_r << pagamento.codigo_multa                          # codigo multa                         1
+          segmento_r << data_multa(pagamento)                           # data multa                           8
+          segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
+          segmento_r << ''.rjust(10, ' ')                               # info pagador                         10
+          segmento_r << ''.rjust(40, ' ')                               # mensagem 3                           40
+          segmento_r << ''.rjust(40, ' ')                               # mensagem 4                           40
+          segmento_r << ''.rjust(20, ' ')                               # Exclusivo FEBRABAN                   20
+          segmento_r << ''.rjust(8, '0')                                # Cod. Ocor do Pagador                 8
+          segmento_r << ''.rjust(3, '0')                                # Cod. do Banco conta débito           3
+          segmento_r << ''.rjust(5, '0')                                # Cod. da Agencia do débito            5
+          segmento_r << ' '                                             # Cod. verificador da agencia          1
+          segmento_r << ''.rjust(12, '0')                               # Conta corrente para débito           12
+          segmento_r << ' '                                             # Cod. verificador da conta            1
+          segmento_r << ' '                                             # Cod. verificador da Ag/Conta         1
+          segmento_r << '0'                                             # Aviso débito automático              1
+          segmento_r << ''.rjust(9, ' ')                                # Uso FEBRABAN                         9
+          segmento_r
+        end
+
+        def data_multa(pagamento)
+          return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
+          pagamento.data_vencimento.strftime('%d%m%Y')
         end
 
         # Retorna o nosso numero

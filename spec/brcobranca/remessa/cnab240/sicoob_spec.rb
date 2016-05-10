@@ -151,7 +151,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
   end
 
   context 'geracao remessa' do
-    it_behaves_like 'cnab240'
+    it_behaves_like 'cnab240_homologacao'
 
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
