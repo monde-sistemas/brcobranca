@@ -134,36 +134,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       expect(sicoob.complemento_header).to eq ''.rjust(29, ' ')
     end
 
-    it 'monta segmento R' do
-      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 4)
-      expect(segmento_r[0..2]).to eq "756"                    # codigo banco
-      expect(segmento_r[3..6]).to eq "0001"                   # lote de servico
-      expect(segmento_r[7]).to eq "3"                         # tipo de registro
-      expect(segmento_r[8..12]).to eq "00004"                 # nro seq. registro no lote
-      expect(segmento_r[13]).to eq "R"                        # cod. segmento
-      expect(segmento_r[14]).to eq " "                        # branco
-      expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
-      expect(segmento_r[17..40]).to eq "".rjust(24,  '0')     # desconto 2
-      expect(segmento_r[41..64]).to eq "".rjust(24,  '0')     # desconto 3
-      expect(segmento_r[65]).to eq '0'                        # cod. multa
-      expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
-      expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
-      expect(segmento_r[89..98]).to eq ''.rjust(10, ' ')      # info pagador
-      expect(segmento_r[99..138]).to eq ''.rjust(40, ' ')     # mensagem 3
-      expect(segmento_r[139..178]).to eq ''.rjust(40, ' ')    # mensagem 4
-      expect(segmento_r[179..198]).to eq ''.rjust(20, ' ')    # Exclusivo FEBRABAN
-      expect(segmento_r[199..206]).to eq ''.rjust(8, '0')     # Cod. Ocor Pagador
-      expect(segmento_r[207..209]).to eq ''.rjust(3, '0')     # Cod. do Banco conta débito
-      expect(segmento_r[210..214]).to eq ''.rjust(5, '0')     # Cod. da Agencia de  débito
-      expect(segmento_r[215]).to eq ' '                       # Cod. verificador da agencia
-      expect(segmento_r[216..227]).to eq ''.rjust(12, '0')    # Conta corrente para débito
-      expect(segmento_r[228]).to eq ' '                       # Cod. verificador da conta
-      expect(segmento_r[229]).to eq ' '                       # Cod. verificador da ag/conta
-      expect(segmento_r[230]).to eq '0'                       # Aviso débito automático
-      expect(segmento_r[231..239]).to eq ''.rjust(9, ' ')     # Exclusivo FEBRABAN
-
-    end
-
     it 'complemento trailer deve retornar espacos em branco com a totalização das cobranças' do
       total_cobranca_simples    = "00000100000000000005000"
       total_cobranca_vinculada  = "".rjust(23, "0")
@@ -181,7 +151,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
   end
 
   context 'geracao remessa' do
-    # it_behaves_like 'cnab240'
+    it_behaves_like 'cnab240_homologacao'
 
     context 'arquivo' do
       before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
