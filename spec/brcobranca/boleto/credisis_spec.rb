@@ -105,6 +105,13 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('09790.00007 01000.000008 27000.095185 6 37690000013500')
     expect(boleto_novo.conta_corrente_dv).to eql(7)
     expect(boleto_novo.nosso_numero_dv).to eql(7)
+
+    @valid_attributes[:codigo_cedente] = "6641"
+    segundo_boleto = described_class.new(@valid_attributes)
+
+    expect(segundo_boleto.codigo_barras_segunda_parte).to eql('0000001000000664100009518')
+    expect(segundo_boleto.codigo_barras).to eql('09792376900000135000000001000000664100009518')
+    expect(segundo_boleto.codigo_barras.linha_digitavel).to eql('09790.00007 01000.000669 41000.095186 2 37690000013500')
   end
 
   it 'Calcular agencia_dv' do
