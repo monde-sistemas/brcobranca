@@ -98,7 +98,7 @@ module Brcobranca
       # Segunda parte do código de barras.
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "#{@codigo_cedente[0..1]}#{convenio}00#{@codigo_cedente[2..3]}#{numero_documento}#{carteira}".rjust(25, '0')
+        "00#{convenio}#{codigo_cedente}#{numero_documento}#{carteira}".rjust(25, '0')
       end
     end
   end
