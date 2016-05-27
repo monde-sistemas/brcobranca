@@ -122,6 +122,13 @@ module Brcobranca
           "#{convenio.rjust(6, '0')}#{''.rjust(11, '0')}#{modalidade_carteira}#{pagamento.nosso_numero.to_s.rjust(15, '0')}"
         end
 
+        def complemento_r
+          segmento_r = ''
+          segmento_r << ''.rjust(50, ' ')  # e-mail do sacado     50
+          segmento_r << ''.rjust(11, ' ')  # exclusivo FEBRABAN   11
+          segmento_r
+        end
+
         def numero_documento(pagamento)
           "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
         end
