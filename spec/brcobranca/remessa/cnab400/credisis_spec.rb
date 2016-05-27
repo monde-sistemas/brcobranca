@@ -25,6 +25,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       codigo_cedente: '0027',
       documento_cedente: '12345678901234',
       digito_conta: '7',
+      sequencial_remessa: '3',
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       pagamentos: [pagamento]
     }
@@ -101,6 +102,14 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(credisis.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
       end
     end
+
+    context '@sequencial_remessa' do
+      it 'deve ser inválido se a sequencial remessa tiver mais de 7 dígitos' do
+        credisis.sequencial_remessa = '12345678'
+        expect(credisis.invalid?).to be true
+        expect(credisis.errors.full_messages).to include('Sequencial remessa deve ter 7 dígitos.')
+      end
+    end
   end
 
   context 'formatacoes dos valores' do
@@ -128,6 +137,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(header[2..8]).to eq 'REMESSA'                          # literal da operacao
         expect(header[26..45]).to eq credisis.info_conta              # informacoes da conta
         expect(header[76..78]).to eq '097'                            # codigo do banco
+        expect(header[100..106]).to eq '0000003'                      # sequencial da remessa
       end
     end
 

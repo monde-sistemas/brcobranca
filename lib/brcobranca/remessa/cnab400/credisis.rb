@@ -11,6 +11,7 @@ module Brcobranca
         validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
         validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
         validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :sequencial_remessa, maximum: 7, message: 'deve ter 7 dígitos.'
 
         # Nova instancia do CrediSIS
         def initialize(campos = {})
@@ -28,6 +29,10 @@ module Brcobranca
 
         def carteira=(valor)
           @carteira = valor.to_s.rjust(2, '0') if valor
+        end
+
+        def sequencial_remessa=(valor)
+          @sequencial_remessa = valor.to_s.rjust(7, '0') if valor
         end
 
         def cod_banco
@@ -53,12 +58,11 @@ module Brcobranca
         end
 
         # Complemento do header
-        # (no caso do Itau, sao apenas espacos em branco)
         #
         # @return [String]
         #
         def complemento
-          ''.rjust(294, ' ')
+          sequencial_remessa.to_s.ljust(294, ' ')
         end
 
         def formata_nosso_numero(nosso_numero)
@@ -94,7 +98,7 @@ module Brcobranca
           detalhe << ''.rjust(11, ' ')                                      # brancos                               X[11]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << ''.rjust(4, ' ')                                       # brancos                               X[04]
-          detalhe << pagamento.formata_valor_mora(4).ljust(6, '0')             # valor mora ao dia                     9[06]
+          detalhe << pagamento.formata_valor_mora(4).ljust(6, '0')          # valor mora ao dia                     9[06]
           detalhe << pagamento.formata_percentual_multa.ljust(6, '0')       # valor multa                           9[06]
           detalhe << ''.rjust(33, ' ')                                      # brancos                               X[33]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
