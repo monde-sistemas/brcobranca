@@ -29,6 +29,11 @@ shared_examples_for 'cnab240_homologacao' do
       mensagem_2: 'Campo destinado ao preenchimento no momento do pagamento.',
       pagamentos: [pagamento]
     }
+    if subject.class == Brcobranca::Remessa::Cnab240::Caixa
+      p.merge!(versao_aplicativo: '1234',
+        digito_agencia: '1')
+    end
+    p
   end
   let(:objeto) { subject.class.new(params) }
 
@@ -141,8 +146,8 @@ shared_examples_for 'cnab240_homologacao' do
     end
 
     it 'segmento R deve ter as informacoes nas posicoes corretas' do
-      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 4)
-      expect(segmento_r[0..2]).to eq "756"                    # codigo banco
+      segmento_r = objeto.monta_segmento_r(pagamento, 1, 4)
+      expect(segmento_r[0..2]).to eq objeto.cod_banco         # codigo banco
       expect(segmento_r[3..6]).to eq "0001"                   # lote de servico
       expect(segmento_r[7]).to eq "3"                         # tipo de registro
       expect(segmento_r[8..12]).to eq "00004"                 # nro seq. registro no lote
@@ -157,19 +162,8 @@ shared_examples_for 'cnab240_homologacao' do
       expect(segmento_r[89..98]).to eq ''.rjust(10, ' ')      # info pagador
       expect(segmento_r[99..138]).to eq ''.rjust(40, ' ')     # mensagem 3
       expect(segmento_r[139..178]).to eq ''.rjust(40, ' ')    # mensagem 4
-      expect(segmento_r[179..198]).to eq ''.rjust(20, ' ')    # Exclusivo FEBRABAN
-      expect(segmento_r[199..206]).to eq ''.rjust(8, '0')     # Cod. Ocor Pagador
-      expect(segmento_r[207..209]).to eq ''.rjust(3, '0')     # Cod. do Banco conta débito
-      expect(segmento_r[210..214]).to eq ''.rjust(5, '0')     # Cod. da Agencia de  débito
-      expect(segmento_r[215]).to eq ' '                       # Cod. verificador da agencia
-      expect(segmento_r[216..227]).to eq ''.rjust(12, '0')    # Conta corrente para débito
-      expect(segmento_r[228]).to eq ' '                       # Cod. verificador da conta
-      expect(segmento_r[229]).to eq ' '                       # Cod. verificador da ag/conta
-      expect(segmento_r[230]).to eq '0'                       # Aviso débito automático
-      expect(segmento_r[231..239]).to eq ''.rjust(9, ' ')     # Exclusivo FEBRABAN
-
+      expect(segmento_r[179..239]).to eq objeto.complemento_r # complemento do segmento
     end
-
   end
 
   context 'trailer lote' do
