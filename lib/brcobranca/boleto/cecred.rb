@@ -23,6 +23,12 @@ module Brcobranca
         '085'
       end
 
+      # Dígito verificador do banco
+      # @return [Integer] 1 caracteres numéricos.
+      def banco_dv
+        "1"
+      end
+
       # Convenio
       # @return [String] 6 caracteres numéricos.
       def convenio=(valor)
