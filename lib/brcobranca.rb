@@ -137,6 +137,7 @@ module Brcobranca
     module Cnab240
       autoload :Base,          'brcobranca/retorno/cnab240/base'
       autoload :Santander,     'brcobranca/retorno/cnab240/santander'
+      autoload :Cecred,        'brcobranca/retorno/cnab240/cecred'
       autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
     end
   end
