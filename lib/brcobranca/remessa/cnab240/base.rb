@@ -353,7 +353,9 @@ module Brcobranca
           segmentos = 2
           segmentos = 3 if SUPORTE_SEGMENTO_R.include? cod_banco
 
-          arquivo << monta_trailer_arquivo(contador, ((pagamentos.size * 2) + (contador * 2) + segmentos))
+          total_linhas = ((pagamentos.size * segmentos) + (contador * 2) + 2)
+
+          arquivo << monta_trailer_arquivo(contador, total_linhas)
 
           arquivo.join("\r\n").to_ascii.upcase
         end
