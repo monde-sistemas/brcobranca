@@ -32,6 +32,8 @@ shared_examples_for 'cnab240_homologacao' do
     if subject.class == Brcobranca::Remessa::Cnab240::Caixa
       p.merge!(versao_aplicativo: '1234',
         digito_agencia: '1')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
+      p.merge!(digito_agencia: '1')
     end
     p
   end
