@@ -43,7 +43,7 @@ module Brcobranca
         validates_length_of :emissao_boleto, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :distribuicao_boleto, is: 1, message: 'deve ter 1 dígito.'
 
-        SUPORTE_SEGMENTO_R = %w(104 756)
+        SUPORTE_SEGMENTO_R = %w(104 085 756)
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
