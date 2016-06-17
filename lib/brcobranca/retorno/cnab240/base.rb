@@ -15,6 +15,8 @@ module Brcobranca
           case codigo_banco
           when "033"
             Brcobranca::Retorno::Cnab240::Santander.load_lines(file, options)
+          when "085"
+            Brcobranca::Retorno::Cnab240::Cecred.load_lines(file, options)
           when "756"
             Brcobranca::Retorno::Cnab240::Sicoob.load_lines(file, options)
           else
