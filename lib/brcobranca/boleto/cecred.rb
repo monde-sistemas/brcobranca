@@ -29,6 +29,12 @@ module Brcobranca
         "1"
       end
 
+      # Dígito verificador da conta corrente
+      # @return [Integer] 1 caracteres numéricos.
+      def conta_corrente_dv
+        conta_corrente.modulo11(mapeamento: { 10 => 0 })
+      end
+
       # Convenio
       # @return [String] 6 caracteres numéricos.
       def convenio=(valor)
