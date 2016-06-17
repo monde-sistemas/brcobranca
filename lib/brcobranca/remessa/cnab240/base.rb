@@ -43,7 +43,7 @@ module Brcobranca
         validates_length_of :emissao_boleto, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :distribuicao_boleto, is: 1, message: 'deve ter 1 dígito.'
 
-        SUPORTE_SEGMENTO_R = %w(104 756)
+        SUPORTE_SEGMENTO_R = %w(104 085 756)
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
@@ -353,7 +353,9 @@ module Brcobranca
           segmentos = 2
           segmentos = 3 if SUPORTE_SEGMENTO_R.include? cod_banco
 
-          arquivo << monta_trailer_arquivo(contador, ((pagamentos.size * 2) + (contador * 2) + segmentos))
+          total_linhas = ((pagamentos.size * segmentos) + (contador * 2) + 2)
+
+          arquivo << monta_trailer_arquivo(contador, total_linhas)
 
           arquivo.join("\r\n").to_ascii.upcase
         end

@@ -138,6 +138,7 @@ module Brcobranca
     module Cnab240
       autoload :Base,          'brcobranca/retorno/cnab240/base'
       autoload :Santander,     'brcobranca/retorno/cnab240/santander'
+      autoload :Cecred,        'brcobranca/retorno/cnab240/cecred'
       autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
     end
   end
@@ -163,10 +164,11 @@ module Brcobranca
       autoload :Base,         'brcobranca/remessa/cnab240/base'
       autoload :BaseCorrespondente,'brcobranca/remessa/cnab240/base_correspondente'
       autoload :Caixa,        'brcobranca/remessa/cnab240/caixa'
+      autoload :Cecred,       'brcobranca/remessa/cnab240/cecred'
       autoload :BancoBrasil,  'brcobranca/remessa/cnab240/banco_brasil'
       autoload :Sicoob,       'brcobranca/remessa/cnab240/sicoob'
       autoload :SicoobBancoBrasil, 'brcobranca/remessa/cnab240/sicoob_banco_brasil'
-      autoload :Sicredi,       'brcobranca/remessa/cnab240/sicredi'
+      autoload :Sicredi,      'brcobranca/remessa/cnab240/sicredi'
     end
   end
 
