@@ -77,11 +77,11 @@ module Brcobranca
         end
 
         def conta_corrente_dv
-          conta_corrente.modulo11
+          conta_corrente.modulo11(mapeamento: { 10 => 0 })
         end
 
         def agencia_conta_corrente_dv
-          agencia_conta_corrente.modulo11
+          agencia_conta_corrente.modulo11(mapeamento: { 10 => 0 })
         end
 
         def complemento_header
