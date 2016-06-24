@@ -39,8 +39,8 @@ module Brcobranca
           # Modalidade carteira: 14 (título Registrado emissão Cedente)
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
-                     codigo_baixa: '1',
-                     dias_baixa: '120',
+                     codigo_baixa: '2',
+                     dias_baixa: '000',
                      distribuicao_boleto: '0',
                      especie_titulo: '99' }.merge!(campos)
           super(campos)
