@@ -106,7 +106,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       expect(info_conta[5]).to eq '1'                   # digito agencia
       expect(info_conta[6..17]).to eq '000123456789'    # conta corrente
       expect(info_conta[18]).to eq '7'                  # dv conta corrente
-      expect(info_conta[19]).to eq '8'                  # dv agencia/conta
+      expect(info_conta[19]).to eq ' '                  # dv agencia/conta
     end
 
     it 'complemento header deve retornar as informacoes nas posicoes corretas' do
