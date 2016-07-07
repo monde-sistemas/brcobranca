@@ -17,8 +17,9 @@ module Brcobranca
           campos = { emissao_boleto: '2',
                      forma_cadastramento: '0',
                      codigo_baixa: '1',
-                     distribuicao_boleto: '0',
-                     especie_titulo: '99' }.merge!(campos)
+                     dias_baixa: ''.rjust(3, ' '),
+                     distribuicao_boleto: '2',
+                     especie_titulo: '02' }.merge!(campos)
           super(campos)
         end
 
@@ -81,7 +82,7 @@ module Brcobranca
         end
 
         def agencia_conta_corrente_dv
-          agencia_conta_corrente.modulo11(mapeamento: { 10 => 0 })
+          " "
         end
 
         def complemento_header
@@ -93,7 +94,7 @@ module Brcobranca
         end
 
         def tipo_documento
-          "2"
+          "1"
         end
 
         def complemento_p(pagamento)
@@ -102,7 +103,7 @@ module Brcobranca
           # dv conta corrente     1
           # dv agencia/conta      1
           # ident. titulo         20
-          "#{conta_corrente}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{pagamento.nosso_numero.to_s.rjust(20, '0')}"
+          "#{conta_corrente}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{pagamento.nosso_numero.to_s.ljust(20, ' ')}"
         end
 
         def numero_documento(pagamento)
