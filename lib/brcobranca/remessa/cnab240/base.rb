@@ -325,7 +325,7 @@ module Brcobranca
             lote << monta_segmento_q(pagamento, nro_lote, contador)
             contador += 1
 
-            if SUPORTE_SEGMENTO_R.include? cod_banco
+            if deve_montar_segmento_r?
               lote << monta_segmento_r(pagamento, nro_lote, contador)
               contador += 1
             end
@@ -351,13 +351,17 @@ module Brcobranca
           arquivo.push monta_lote(contador)
 
           segmentos = 2
-          segmentos = 3 if SUPORTE_SEGMENTO_R.include? cod_banco
+          segmentos = 3 if deve_montar_segmento_r?
 
           total_linhas = ((pagamentos.size * segmentos) + (contador * 2) + 2)
 
           arquivo << monta_trailer_arquivo(contador, total_linhas)
 
           arquivo.join("\r\n").to_ascii.upcase
+        end
+
+        def deve_montar_segmento_r?
+          SUPORTE_SEGMENTO_R.include? cod_banco
         end
 
         # Complemento do registro

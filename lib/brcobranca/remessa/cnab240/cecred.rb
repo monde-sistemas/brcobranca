@@ -17,8 +17,9 @@ module Brcobranca
           campos = { emissao_boleto: '2',
                      forma_cadastramento: '0',
                      codigo_baixa: '1',
-                     distribuicao_boleto: '0',
-                     especie_titulo: '99' }.merge!(campos)
+                     dias_baixa: ''.rjust(3, ' '),
+                     distribuicao_boleto: '2',
+                     especie_titulo: '02' }.merge!(campos)
           super(campos)
         end
 
@@ -93,7 +94,7 @@ module Brcobranca
         end
 
         def tipo_documento
-          "2"
+          "1"
         end
 
         def complemento_p(pagamento)
