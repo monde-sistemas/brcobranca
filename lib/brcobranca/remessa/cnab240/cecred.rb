@@ -103,7 +103,7 @@ module Brcobranca
           # dv conta corrente     1
           # dv agencia/conta      1
           # ident. titulo         20
-          "#{conta_corrente}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{pagamento.nosso_numero.to_s.rjust(20, '0')}"
+          "#{conta_corrente}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{pagamento.nosso_numero.to_s.ljust(20, ' ')}"
         end
 
         def numero_documento(pagamento)

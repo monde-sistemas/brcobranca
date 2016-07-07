@@ -128,7 +128,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       expect(comp_p[0..11]).to eq '000123456789'        # conta corrente
       expect(comp_p[12]).to eq '7'                      # dv conta corrente
       expect(comp_p[13]).to eq ' '                      # dv agencia/conta
-      expect(comp_p[14..33]).to eq '123'.rjust(20, '0') # nosso numero
+      expect(comp_p[14..33]).to eq '123'.ljust(20, ' ') # nosso numero
     end
 
     it 'tipo do documento deve ser 1 - Tradicional' do
