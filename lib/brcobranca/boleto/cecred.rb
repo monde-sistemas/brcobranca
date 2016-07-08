@@ -12,7 +12,10 @@ module Brcobranca
       # Nova instancia do Cecred
       # @param (see Brcobranca::Boleto::Base#initialize)
       def initialize(campos = {})
-        campos = { carteira: '1' }.merge!(campos)
+        campos = {
+          carteira: '1',
+          local_pagamento: 'PAGÁVEL PREFERENCIALMENTE NAS COOPERATIVAS DO SISTEMA CECRED'
+        }.merge!(campos)
         super(campos)
       end
 
