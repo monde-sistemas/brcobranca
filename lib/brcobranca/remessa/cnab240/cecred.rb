@@ -16,7 +16,7 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
                      forma_cadastramento: '0',
-                     codigo_baixa: '1',
+                     codigo_baixa: '2',
                      dias_baixa: ''.rjust(3, ' '),
                      distribuicao_boleto: '2',
                      especie_titulo: '02' }.merge!(campos)
