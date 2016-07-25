@@ -91,12 +91,12 @@ module Brcobranca
         end
 
         def codigo_tipo_juros(pagamento)
-          return "50" if pagamento.valor_mora > 0
+          return "50" if pagamento.valor_mora.to_f > 0.0
           "00"
         end
 
         def codigo_tipo_desconto(pagamento)
-          return "52" if pagamento.valor_desconto > 0
+          return "52" if pagamento.valor_desconto.to_f > 0.0
           "00"
         end
 
