@@ -162,8 +162,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = unicred.monta_detalhe pagamento, 1
-        expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
-        expect(detalhe[69]).to eq '6'                                 # digito verificador
+        expect(detalhe[62..70]).to eq '160000123'                     # nosso numero
+        expect(detalhe[71]).to eq '6'                                 # digito verificador
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
