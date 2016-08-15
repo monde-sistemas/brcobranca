@@ -15,7 +15,6 @@ module Brcobranca
           super file, options
         end
 
-        # Fixed width layout for Bradesco
         fixed_width_layout do |parse|
           # Todos os campos descritos no documento em ordem
           # :tipo_de_registro, 0..0 # identificacao do registro transacao
