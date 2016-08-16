@@ -15,10 +15,8 @@ module Brcobranca
           super file, options
         end
 
-        # Fixed width layout for Bradesco
         fixed_width_layout do |parse|
           # Todos os campos descritos no documento em ordem
-          # :tipo_de_registro, 0..0 # identificacao do registro transacao
           parse.field :codigo_registro, 0..0
 
           # :codigo_de_inscricao, 1..2 # identificacao do tipo de inscricao/empresa
@@ -27,17 +25,12 @@ module Brcobranca
 
           # Identificacao da empresa no banco
           # :zeros, 20..20
-          # :carteira, 21..23
-          # :agencia_sem_dv, 24..28
-          # :cedente_com_dv 29..36
-          # :carteira, 21..23
-          # :agencia_sem_dv, 24..28
-          # :cedente_com_dv, 29..36
+          parse.field :agencia_sem_dv, 17..20
+          parse.field :cedente_com_dv, 23..30
 
           # :numero_controle_empresa, 37..61, # numero de controle da empresa
           # :zeros, 62..69
 
-          # :nosso_numero, 62..69 # identificacao do titulo no banco
           parse.field :nosso_numero, 62..69
 
           # :zeros, 82..91 # uso do banco
@@ -45,30 +38,32 @@ module Brcobranca
           # :indicador_de_rateio, 104..104 # indicador de rateio de credito
           # :zeros, 105..106
           # :carteira, 107..107 # de novo?
-          # :cod_de_ocorrencia, 108..109 # código de ocorrencia
-          # :data_de_ocorrencia, 110..115 # data de ocorrencia no banco (ddmmaa)
+          parse.field :carteira, 107..107
+          parse.field :codigo_ocorrencia, 108..109
+          parse.field :data_ocorrencia, 110..115
+
           # :n_do_documento, 116..125 # n umero do documento de cobranca (dupl, np etc)
           # :nosso_numero, 126..133 # confirmacao do numero do titulo no banco
           # :brancos, 134..145 # complemento de registro
 
           # :vencimento, 146..151 # data de vencimento do titulo (ddmmaa)
-          # :data_vencimento, 146..151
+          parse.field :data_vencimento, 146..151
 
           # :valor_do_titulo, 152..164 # valor nominal do titulo (ultimos 2 digitos, virgula decimal assumida)
-          # :valor_titulo, 152..164
+          parse.field :valor_titulo, 152..164
 
           # :codigo_do_banco, 165..167 # numero do banco na camara de compensacao
-          # :banco_recebedor, 165..167
+          parse.field :banco_recebedor, 165..167
 
           # :agencia_cobradora, 168..171 # agencia cobradora, ag de liquidacao ou baixa
           # :dac_ag_cobradora, 172..172 # dac da agencia cobradora
           # :agencia_recebedora_com_dv, 168..172
 
           # :especie, 173..174 # especie do titulo
-          # :especie_documento, 173..174
+          parse.field :especie_documento, 173..174
 
           # :tarifa_de_cobranca, 175..187 # valor da despesa de cobranca (ultimos 2 digitos, virgula decimal assumida)
-          # :valor_tarifa, 175..187
+          parse.field :valor_tarifa, 175..187
 
           # :outras_despesas 188..200, # valor de outras despesas ou custos do protesto
           # :juros_operacao_em_atraso, 201..213 # zeros?
@@ -77,16 +72,16 @@ module Brcobranca
           # :iof, 214..226
 
           # :valor_abatimento, 227..239 # valor do abatimento concedido (ultimos 2 digitos, virgula decimal assumida)
-          # :valor_abatimento, 227..239
+          parse.field :valor_abatimento, 227..239
 
           # :descontos, 240..252 # valor do desconto concedido (ultimos 2 digitos, virgula decimal assumida)
-          # :desconto, 240..252
+          parse.field :desconto, 240..252
 
           # :valor_recebido, 253..265 # valor lancado em conta corrente (ultimos 2 digitos, virgula decimal assumida)
           parse.field :valor_recebido, 253..265
 
           # :juros_mora, 266..278 # valor de mora e multa pagos pelo sacado (ultimos 2 digitos, virgula decimal assumida)
-          # :juros_mora, 266..278
+          parse.field :juros_mora, 266..278
 
           # :outros_creditos, 279..291 # valor de outros creditos (ultimos 2 digitos, virgula decimal assumida)
           # :outros_recebimento, 279..291
