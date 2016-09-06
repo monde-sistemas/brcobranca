@@ -7,6 +7,7 @@ module Brcobranca
         attr_accessor :documento_cedente
         # Codigo de transmissao fornecido pelo banco
         attr_accessor :codigo_transmissao
+        attr_accessor :posto, :byte_idt
 
         validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
         validates_presence_of :documento_cedente, :digito_conta, message: 'não pode estar em branco.'
