@@ -118,8 +118,15 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
     it 'complemento trailer deve retornar as informacoes nas posicoes corretas' do
       comp_trailer = cecred.complemento_trailer
       expect(comp_trailer.size).to eq 217
-      expect(comp_trailer[0..68]).to eq ''.rjust(69, '0')
-      expect(comp_trailer[69..216]).to eq ''.rjust(148, ' ')
+
+      total_cobranca_simples    = "00000100000000000019990"
+      total_cobranca_vinculada  = "".rjust(23, "0")
+      total_cobranca_caucionada = "".rjust(23, "0")
+      total_cobranca_descontada = "".rjust(23, "0")
+
+      expect(comp_trailer).to eq "#{total_cobranca_simples}#{total_cobranca_vinculada}"\
+                            "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
+
     end
 
     it 'complemento P deve retornar as informacoes nas posicoes corretas' do
