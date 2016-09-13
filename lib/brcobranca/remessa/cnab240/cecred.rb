@@ -113,6 +113,26 @@ module Brcobranca
         def identificacao_titulo_empresa(pagamento)
           pagamento.numero_documento.to_s.ljust(25, " ")
         end
+
+        def complemento_trailer
+          # CAMPO                               TAMANHO
+          # Qt. Títulos em Cobrança Simples     6
+          # Vl. Títulos em Carteira Simples     15 + 2 decimais
+          # Qt. Títulos em Cobrança Vinculada   6
+          # Vl. Títulos em Carteira Vinculada   15 + 2 decimais
+          # Qt. Títulos em Cobrança Caucionada  6
+          # Vl. Títulos em Carteira Caucionada  15 + 2 decimais
+          # Qt. Títulos em Cobrança Descontada  6
+          # Vl. Títulos em Carteira Descontada  15 + 2 decimais
+          total_cobranca_simples    = "#{quantidade_titulos_cobranca}#{valor_titulos_carteira}"
+          total_cobranca_vinculada  = "".rjust(23, "0")
+          total_cobranca_caucionada = "".rjust(23, "0")
+          total_cobranca_descontada = "".rjust(23, "0")
+
+          "#{total_cobranca_simples}#{total_cobranca_vinculada}#{total_cobranca_caucionada}"\
+            "#{total_cobranca_descontada}".ljust(217, ' ')
+        end
+
       end
     end
   end
