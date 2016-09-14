@@ -90,9 +90,12 @@ module Brcobranca
           ) { |total| 11 - (total % 11) }
         end
 
-        def informacao_multa(pagamento)
-          return "0" if pagamento.percentual_multa.blank?
-          pagamento.percentual_multa.to_i > 0 ? "4" : "0"
+        def ajusta_nosso_numero(nosso_numero)
+          "#{ano_geracao}#{nosso_numero.to_s.rjust(7, '0')}#{digito_nosso_numero(nosso_numero)}".rjust(20, ' ')
+        end
+
+        def ano_geracao
+          Time.now.strftime("%y")
         end
 
         def identificador_complemento
@@ -116,16 +119,8 @@ module Brcobranca
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
           detalhe << ''.rjust(25, ' ')                                      # numero de controle do participante    X[25]
-          detalhe << pagamento.nosso_numero.to_s.rjust(7, '0')              # nosso numero                          9[07]
-          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s       # dv do nosso numero                    9[01]
-          detalhe << pagamento.formata_data_segundo_desconto                # data do segundo desconto              9[06]
-          detalhe << ' '                                                    # branco                                X[01]
-          detalhe << informacao_multa(pagamento)                            # informação de multa                   9[01]
-          detalhe << pagamento.formata_percentual_multa                     # taxa - multa                          9[04]
-          detalhe << "00"                                                   # código da moeda                       9[02]
-          detalhe << ''.rjust(13, '0')                                      # valor do titulo em outra moeda        9[13]
-          detalhe << ''.rjust(4, ' ')                                       # brancos                               X[04]
-          detalhe << pagamento.formata_data_multa                           # data cobranca da multa                9[06]
+          detalhe << ajusta_nosso_numero(pagamento.nosso_numero)            # nosso numero                          X[20]
+          detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
           detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
           detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
           detalhe << pagamento.numero_documento.to_s.rjust(10, '0')         # numero do documento                   X[10]
@@ -137,11 +132,12 @@ module Brcobranca
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << "".rjust(4, "0")                                       # instrucao                             9[04]
-          detalhe << pagamento.formata_valor_mora                           # valor mora ao dia                     9[13]
+          detalhe << "0"                                                    # zero                                  9[01]
+          detalhe << pagamento.formata_valor_mora(12)                       # valor mora ao dia                     9[12]
           detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
           detalhe << pagamento.formata_valor_iof                            # valor do iof                          9[13]
-          detalhe << pagamento.formata_valor_abatimento                     # valor do abatimento                   9[11]
+          detalhe << pagamento.formata_valor_abatimento                     # valor do abatimento                   9[13]
           detalhe << pagamento.identificacao_sacado                         # identificacao do pagador              9[02]
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')         # documento do pagador                  9[14]
           detalhe << pagamento.nome_sacado.format_size(40)                  # nome do pagador                       X[40]
@@ -150,13 +146,9 @@ module Brcobranca
           detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
-          detalhe << pagamento.nome_avalista.format_size(30)                # nome do sacador/avalista              X[30]
-          detalhe << " "                                                    # brancos                               X[01]
-          detalhe << identificador_complemento                              # identificacao complemento             X[01]
-          detalhe << "".rjust(2, " ")                                       # complemento                           9[02]
-          detalhe << "".rjust(6, " ")                                       # brancos                               X[06]
-          detalhe << "00"                                                   # numero de dias para proteste          9[02]
-          detalhe << " "                                                    # brancos                               X[01]
+          detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[40]
+          detalhe << pagamento.dias_protesto                                # numero de dias para proteste          9[02]
+          detalhe << "9"                                                    # moeda                                 9[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
         end
