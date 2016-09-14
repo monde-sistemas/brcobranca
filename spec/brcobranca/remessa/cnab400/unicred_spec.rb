@@ -79,7 +79,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
         expect(object.errors.full_messages).to include('Carteira não pode estar em branco.')
       end
 
-      it 'deve ser inválido se a carteira tiver 2 dígitos' do
+      it 'deve ser inválido se a carteira tiver mais de 2 dígitos' do
         unicred.carteira = '123'
         expect(unicred.invalid?).to be true
         expect(unicred.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
@@ -162,8 +162,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = unicred.monta_detalhe pagamento, 1
-        expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
-        expect(detalhe[69]).to eq '6'                                 # digito verificador
+        expect(detalhe[62..81]).to eq '1600001236'.rjust(20, ' ')     # nosso numero
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
