@@ -132,7 +132,7 @@ module Brcobranca
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << "".rjust(4, "0")                                       # instrucao                             9[04]
           detalhe << "0"                                                    # zero                                  9[01]
-          detalhe << pagamento.formata_valor_mora(11)                       # valor mora ao dia                     9[11]
+          detalhe << pagamento.formata_valor_mora(12)                       # valor mora ao dia                     9[12]
           detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
           detalhe << pagamento.formata_valor_iof                            # valor do iof                          9[13]
@@ -146,8 +146,8 @@ module Brcobranca
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
           detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[40]
-          detalhe << "00"                                                   # numero de dias para proteste          9[02]
-          detalhe << "9 "                                                   # moeda                                 9[01]
+          detalhe << pagamento.dias_protesto                                # numero de dias para proteste          9[02]
+          detalhe << "9"                                                    # moeda                                 9[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
         end

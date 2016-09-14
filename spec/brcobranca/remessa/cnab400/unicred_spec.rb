@@ -167,8 +167,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
         expect(detalhe[156..159]).to eq '0000'                        # instrução
-        expect(detalhe[219..232]).to eq '00012345678901'              # documento do pagador
-        expect(detalhe[233..262]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+        expect(detalhe[220..233]).to eq '00012345678901'              # documento do pagador
+        expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
       end
     end
 
