@@ -90,7 +90,7 @@ module Brcobranca
         end
 
         def ajusta_nosso_numero(nosso_numero)
-          "#{ano_geracao}#{nosso_numero.to_s.rjust(7, '0')}#{digito_nosso_numero(nosso_numero)}".ljust(20, ' ')
+          "#{ano_geracao}#{nosso_numero.to_s.rjust(7, '0')}#{digito_nosso_numero(nosso_numero)}".rjust(20, ' ')
         end
 
         def ano_geracao
@@ -131,11 +131,12 @@ module Brcobranca
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << "".rjust(4, "0")                                       # instrucao                             9[04]
-          detalhe << pagamento.formata_valor_mora                           # valor mora ao dia                     9[13]
+          detalhe << "0"                                                    # zero                                  9[01]
+          detalhe << pagamento.formata_valor_mora(11)                       # valor mora ao dia                     9[11]
           detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
           detalhe << pagamento.formata_valor_iof                            # valor do iof                          9[13]
-          detalhe << pagamento.formata_valor_abatimento                     # valor do abatimento                   9[11]
+          detalhe << pagamento.formata_valor_abatimento                     # valor do abatimento                   9[13]
           detalhe << pagamento.identificacao_sacado                         # identificacao do pagador              9[02]
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')         # documento do pagador                  9[14]
           detalhe << pagamento.nome_sacado.format_size(40)                  # nome do pagador                       X[40]
@@ -144,13 +145,9 @@ module Brcobranca
           detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
-          detalhe << pagamento.nome_avalista.format_size(30)                # nome do sacador/avalista              X[30]
-          detalhe << " "                                                    # brancos                               X[01]
-          detalhe << identificador_complemento                              # identificacao complemento             X[01]
-          detalhe << "".rjust(2, " ")                                       # complemento                           9[02]
-          detalhe << "".rjust(6, " ")                                       # brancos                               X[06]
+          detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[40]
           detalhe << "00"                                                   # numero de dias para proteste          9[02]
-          detalhe << " "                                                    # brancos                               X[01]
+          detalhe << "9 "                                                   # moeda                                 9[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
         end
