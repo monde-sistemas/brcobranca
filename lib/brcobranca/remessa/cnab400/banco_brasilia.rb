@@ -3,6 +3,8 @@ module Brcobranca
   module Remessa
     module Cnab400
       class BancoBrasilia < Brcobranca::Remessa::Cnab400::Base
+        attr_accessor :convenio
+
         validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
         validates_presence_of :digito_conta, message: 'não pode estar em branco.'
         validates_length_of :agencia, maximum: 3, message: 'deve ter 3 dígitos.'

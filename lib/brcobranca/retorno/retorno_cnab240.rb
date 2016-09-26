@@ -40,8 +40,8 @@ module Brcobranca
       class Line < Base
         extend ParseLine::FixedWidth # Extendendo parseline
 
-        REGISTRO_T_FIELDS = %w(codigo_registro agencia_com_dv cedente_com_dv nosso_numero carteira data_vencimento valor_titulo banco_recebedor agencia_recebedora_com_dv sequencial valor_tarifa)
-        REGISTRO_U_FIELDS = %w(desconto_concedito valor_abatimento iof_desconto juros_mora valor_recebido outras_despesas outros_recebimento data_credito)
+        REGISTRO_T_FIELDS = %w(codigo_registro codigo_ocorrencia agencia_com_dv cedente_com_dv nosso_numero carteira data_vencimento valor_titulo banco_recebedor agencia_recebedora_com_dv sequencial valor_tarifa)
+        REGISTRO_U_FIELDS = %w(desconto_concedito valor_abatimento iof_desconto juros_mora valor_recebido outras_despesas outros_recebimento data_ocorrencia data_credito)
 
         attr_accessor :tipo_registro
 
@@ -49,6 +49,7 @@ module Brcobranca
           parse.field :codigo_registro, 7..7
           parse.field :tipo_registro, 13..13
           parse.field :sequencial, 8..12
+          parse.field :codigo_ocorrencia, 15..16
           parse.field :agencia_com_dv, 17..22
           parse.field :cedente_com_dv, 23..35
           parse.field :nosso_numero, 46..56
@@ -57,7 +58,7 @@ module Brcobranca
           parse.field :valor_titulo, 81..95
           parse.field :banco_recebedor, 96..98
           parse.field :agencia_recebedora_com_dv, 99..104
-          # parse.field :data_ocorrencia, 137..144
+          parse.field :data_ocorrencia, 137..144
           parse.field :data_credito, 145..152
           parse.field :outras_despesas, 107..121
           parse.field :iof_desconto, 62..76

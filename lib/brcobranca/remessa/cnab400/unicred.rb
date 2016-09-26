@@ -107,7 +107,7 @@ module Brcobranca
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
           detalhe << ''.rjust(25, ' ')                                      # numero de controle do participante    X[25]
-          detalhe << formata_nosso_numero(pagamento.nosso_numero)            # nosso numero                          X[20]
+          detalhe << formata_nosso_numero(pagamento.nosso_numero)           # nosso numero                          X[20]
           detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
           detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
           detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
