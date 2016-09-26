@@ -3,6 +3,8 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Unicred < Brcobranca::Remessa::Cnab400::Base
+        attr_accessor :posto, :byte_idt
+
         # documento do cedente
         attr_accessor :documento_cedente
         # Codigo de transmissao fornecido pelo banco
@@ -77,28 +79,15 @@ module Brcobranca
           codigo_carteira = carteira[1]
         end
 
-        # Dígito verificador do nosso número.
-        #
-        # @param nosso_numero
-        #
-        # @return [String] 1 caracteres numéricos.
-        def digito_nosso_numero(nosso_numero)
-          nosso_numero.to_s.rjust(7, '0').modulo11(
-            multiplicador: (2..9).to_a,
-            mapeamento: { 1 => 0, 10 => 1, 11 => 0 }
-          ) { |total| 11 - (total % 11) }
-        end
-
-        def ajusta_nosso_numero(nosso_numero)
-          "#{ano_geracao}#{nosso_numero.to_s.rjust(7, '0')}#{digito_nosso_numero(nosso_numero)}".rjust(20, ' ')
-        end
-
-        def ano_geracao
-          Time.now.strftime("%y")
-        end
-
         def identificador_complemento
           " "
+        end
+
+        # Retorna o nosso numero
+        #
+        # @return [String]
+        def formata_nosso_numero(nosso_numero)
+          nosso_numero.somente_numeros.rjust(20, ' ')
         end
 
         # Detalhe do arquivo
@@ -118,7 +107,7 @@ module Brcobranca
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
           detalhe << ''.rjust(25, ' ')                                      # numero de controle do participante    X[25]
-          detalhe << ajusta_nosso_numero(pagamento.nosso_numero)            # nosso numero                          X[20]
+          detalhe << formata_nosso_numero(pagamento.nosso_numero)            # nosso numero                          X[20]
           detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
           detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
           detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
