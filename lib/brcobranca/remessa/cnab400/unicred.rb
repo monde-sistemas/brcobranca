@@ -135,7 +135,7 @@ module Brcobranca
           detalhe << pagamento.cidade_sacado.format_size(15)                # cidade do pagador                     X[15]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
           detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[40]
-          detalhe << pagamento.dias_protesto                                # numero de dias para proteste          9[02]
+          detalhe << pagamento.dias_protesto.rjust(2, '0')                  # numero de dias para proteste          9[02]
           detalhe << "9"                                                    # moeda                                 9[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
