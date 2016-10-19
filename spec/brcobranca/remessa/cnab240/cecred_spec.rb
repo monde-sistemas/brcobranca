@@ -18,7 +18,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       agencia: '12345',
-      conta_corrente: '123456789',
+      conta_corrente: '1234567',
       documento_cedente: '12345678901',
       convenio: '123456',
       digito_agencia: '1',
@@ -63,10 +63,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
         expect(objeto.errors.full_messages).to include('Conta corrente não pode estar em branco.')
       end
 
-      it 'deve ser invalido se o conta corrente tiver mais de 12 digitos' do
-        cecred.conta_corrente = ''.rjust(13, '0')
+      it 'deve ser invalido se o conta corrente tiver mais de 7 digitos' do
+        cecred.conta_corrente = ''.rjust(8, '0')
         expect(cecred.invalid?).to be true
-        expect(cecred.errors.full_messages).to include('Conta corrente não deve ter mais de 12 dígitos.')
+        expect(cecred.errors.full_messages).to include('Conta corrente não deve ter mais de 7 dígitos.')
       end
     end
   end
@@ -104,8 +104,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       info_conta = cecred.info_conta
       expect(info_conta[0..4]).to eq '12345'            # agencia
       expect(info_conta[5]).to eq '1'                   # digito agencia
-      expect(info_conta[6..17]).to eq '000123456789'    # conta corrente
-      expect(info_conta[18]).to eq '7'                  # dv conta corrente
+      expect(info_conta[6..17]).to eq '000001234567'    # conta corrente
+      expect(info_conta[18]).to eq '9'                  # dv conta corrente
       expect(info_conta[19]).to eq ' '                  # dv agencia/conta
     end
 
@@ -132,10 +132,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
     it 'complemento P deve retornar as informacoes nas posicoes corretas' do
       comp_p = cecred.complemento_p pagamento
       expect(comp_p.size).to eq 34
-      expect(comp_p[0..11]).to eq '000123456789'        # conta corrente
-      expect(comp_p[12]).to eq '7'                      # dv conta corrente
+      expect(comp_p[0..11]).to eq '000001234567'        # conta corrente
+      expect(comp_p[12]).to eq '9'                      # dv conta corrente
       expect(comp_p[13]).to eq ' '                      # dv agencia/conta
-      expect(comp_p[14..33]).to eq '123'.ljust(20, ' ') # nosso numero
+      expect(comp_p[14..33]).to eq '12345679000000123'.ljust(20, ' ') # nosso numero
     end
 
     it 'tipo do documento deve ser 1 - Tradicional' do
