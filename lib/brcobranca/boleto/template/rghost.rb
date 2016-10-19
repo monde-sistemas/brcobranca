@@ -138,7 +138,7 @@ module Brcobranca
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 23.87
+          @y = 24.87
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
@@ -147,7 +147,7 @@ module Brcobranca
           move_more(doc, 4.84, 0.03)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
           # doc.moveto x: '7.5 cm', y: '23.9 cm'
-          move_more(doc, 2, 0)
+          move_more(doc, 2.3, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
           # doc.moveto x: '0.7 cm', y: '23.0 cm'
           move_more(doc, -6.8, -0.9)
@@ -157,15 +157,23 @@ module Brcobranca
           move_more(doc, 10.3, 0)
 
           doc.show boleto.agencia_conta_boleto
-          doc.moveto x: '14.2 cm', y: '23 cm'
+          # doc.moveto x: '14.2 cm', y: '23 cm'
+          move_more(doc, 3.2, 0)
+
           doc.show boleto.especie
-          doc.moveto x: '15.7 cm', y: '23 cm'
+          # doc.moveto x: '15.7 cm', y: '23 cm'
+          move_more(doc, 1.5, 0)
           doc.show boleto.quantidade
-          doc.moveto x: '0.7 cm', y: '22.2 cm'
+          # doc.moveto x: '0.7 cm', y: '22.2 cm'
+          move_more(doc, -15, -0.8)
           doc.show boleto.numero_documento
-          doc.moveto x: '7 cm', y: '22.2 cm'
+          # doc.moveto x: '7 cm', y: '22.2 cm'
+          move_more(doc, 6.3, 0)
+
           doc.show "#{boleto.documento_cedente.formata_documento}"
-          doc.moveto x: '12 cm', y: '22.2 cm'
+          # doc.moveto x: '12 cm', y: '22.2 cm'
+          move_more(doc, 5, 0)
+
           doc.show boleto.data_vencimento.to_s_br
           doc.moveto x: '16.5 cm', y: '23 cm'
           doc.show boleto.nosso_numero_boleto
