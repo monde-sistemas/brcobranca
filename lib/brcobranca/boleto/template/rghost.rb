@@ -97,7 +97,7 @@ module Brcobranca
         def modelo_generico_multipage(boletos, options = {})
           doc = Document.new paper: :A4 # 210x297
 
-          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico.eps')
+          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico1.eps')
 
           fail 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
@@ -124,6 +124,7 @@ module Brcobranca
 
           doc.define_tags do
             tag :grande, size: 13
+            tag :maior, size: 14
           end
         end
 
@@ -134,7 +135,7 @@ module Brcobranca
           doc.image boleto.logotipo, x: '0.36 cm', y: '23.87 cm'
           # Dados
           doc.moveto x: '5.2 cm', y: '23.9 cm'
-          doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :grande
+          doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
           doc.moveto x: '7.5 cm', y: '23.9 cm'
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
           doc.moveto x: '0.7 cm', y: '23.0 cm'
