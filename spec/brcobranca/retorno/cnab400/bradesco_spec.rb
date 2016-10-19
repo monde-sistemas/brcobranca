@@ -32,6 +32,8 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Bradesco do
     expect(pagamento.valor_recebido).to eql('0000000145000')
     expect(pagamento.juros_mora).to eql('0000000000000')
     expect(pagamento.outros_recebimento).to eql('0000000000000')
+    expect(pagamento.codigo_ocorrencia).to eql('02')
+    expect(pagamento.data_ocorrencia).to eql('150515')
     expect(pagamento.data_credito).to eql('150515')
     expect(pagamento.sequencial).to eql('000002')
 
