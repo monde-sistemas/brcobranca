@@ -129,18 +129,22 @@ module Brcobranca
         end
 
         def move_more(doc, x, y)
-          @x = @x + x || x
-          @y = @y + y || y
+          @x += x
+          @y += y
           doc.moveto x: "#{@x} cm", y: "#{@y} cm"
         end
         # Monta o cabeçalho do layout do boleto
         def modelo_generico_cabecalho(doc, boleto)
           # INICIO Primeira parte do BOLETO
+          # Pontos iniciais em x e y
+          @x = 0.36
+          @y = 23.87
           # LOGOTIPO do BANCO
-          doc.image boleto.logotipo, x: '0.36 cm', y: '23.87 cm'
+          doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
           # doc.moveto x: '5.2 cm', y: '23.9 cm'
-          move_more(doc, 5.2, 24.9)
+
+          move_more(doc, 4.84, 0.03)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
           # doc.moveto x: '7.5 cm', y: '23.9 cm'
           move_more(doc, 2, 0)
@@ -172,7 +176,9 @@ module Brcobranca
           doc.moveto x: '1.5 cm', y: '20.6 cm'
           doc.show "#{boleto.sacado_endereco}"
           #y:19.8
-          doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: '0.7 cm', y: '20.8 cm', row_height: '0.4 cm'
+          if boleto.demonstrativo
+            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: '0.7 cm', y: '20.8 cm', row_height: '0.4 cm'
+          end
           # FIM Primeira parte do BOLETO
         end
 
