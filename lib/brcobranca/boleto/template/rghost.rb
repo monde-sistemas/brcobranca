@@ -129,7 +129,9 @@ module Brcobranca
         end
 
         def move_more(doc, x, y)
-          doc.moveto x: "#{@x + x} cm", y: "#{@y + y} cm"
+          @x = @x + x || x
+          @y = @y + y || y
+          doc.moveto x: "#{@x} cm", y: "#{@y} cm"
         end
         # Monta o cabeçalho do layout do boleto
         def modelo_generico_cabecalho(doc, boleto)
