@@ -128,19 +128,28 @@ module Brcobranca
           end
         end
 
+        def move_more(doc, x, y)
+          doc.moveto x: "#{@x + x} cm", y: "#{@y + y} cm"
+        end
         # Monta o cabeçalho do layout do boleto
         def modelo_generico_cabecalho(doc, boleto)
           # INICIO Primeira parte do BOLETO
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: '0.36 cm', y: '23.87 cm'
           # Dados
-          doc.moveto x: '5.2 cm', y: '23.9 cm'
+          # doc.moveto x: '5.2 cm', y: '23.9 cm'
+          move_more(doc, 5.2, 24.9)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
-          doc.moveto x: '7.5 cm', y: '23.9 cm'
+          # doc.moveto x: '7.5 cm', y: '23.9 cm'
+          move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
-          doc.moveto x: '0.7 cm', y: '23.0 cm'
+          # doc.moveto x: '0.7 cm', y: '23.0 cm'
+          move_more(doc, -6.8, -0.9)
+
           doc.show boleto.cedente
-          doc.moveto x: '11 cm', y: '23 cm'
+          # doc.moveto x: '11 cm', y: '23 cm'
+          move_more(doc, 10.3, 0)
+
           doc.show boleto.agencia_conta_boleto
           doc.moveto x: '14.2 cm', y: '23 cm'
           doc.show boleto.especie
@@ -160,7 +169,8 @@ module Brcobranca
           doc.show "#{boleto.sacado} - #{boleto.sacado_documento.formata_documento}"
           doc.moveto x: '1.5 cm', y: '20.6 cm'
           doc.show "#{boleto.sacado_endereco}"
-          doc.text_area boleto.demonstrativo, width: '16.5 cm', text_align: :left, x: '0.7 cm', y: '19.8 cm', row_height: '0.4 cm'
+          #y:19.8
+          doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: '0.7 cm', y: '20.8 cm', row_height: '0.4 cm'
           # FIM Primeira parte do BOLETO
         end
 
