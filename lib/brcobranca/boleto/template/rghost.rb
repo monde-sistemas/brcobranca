@@ -138,7 +138,7 @@ module Brcobranca
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 24.37
+          @y = 24.17
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
@@ -193,7 +193,7 @@ module Brcobranca
           doc.show "#{boleto.sacado_endereco}"
           #y:19.8
           if boleto.demonstrativo
-            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 0.2} cm", row_height: '0.4 cm'
+            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 1.2} cm", row_height: '0.4 cm'
           end
           # FIM Primeira parte do BOLETO
         end
@@ -203,32 +203,50 @@ module Brcobranca
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 14.83
+          @y = 14.33
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # doc.moveto x: '5.2 cm', y: '16.9 cm'
           move_more(doc, 4.84, 0.07)
 
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :grande
-          doc.moveto x: '7.5 cm', y: '16.9 cm'
+          # doc.moveto x: '7.5 cm', y: '16.9 cm'
+          move_more(doc, 2.3, 0)
+
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
-          doc.moveto x: '0.7 cm', y: '16 cm'
+          # doc.moveto x: '6.8 cm', y: '16 cm'
+          move_more(doc, 2.3, -0.9)
+
           doc.show boleto.local_pagamento
-          doc.moveto x: '16.5 cm', y: '16 cm'
+          # doc.moveto x: '16.5 cm', y: '16 cm'
+          move_more(doc, 9.7, 0)
+
           doc.show boleto.data_vencimento.to_s_br if boleto.data_vencimento
-          doc.moveto x: '0.7 cm', y: '15.2 cm'
+          # doc.moveto x: '0.7 cm', y: '15.2 cm'
+          move_more(doc, -15.8, -0.8)
+
           if boleto.cedente_endereco
+            # move_more(doc, -15.8, -0.8)
             doc.show boleto.cedente_endereco
-            doc.moveto x: '1.9 cm', y: '15.5 cm'
+            # doc.moveto x: '1.9 cm', y: '15.5 cm'
+            move_more(doc, 1.2, 0.3)
             doc.show boleto.cedente
+            move_more(doc, -1.2, -0.3)
+
           else
             doc.show boleto.cedente
           end
-          doc.moveto x: '16.5 cm', y: '15.2 cm'
+          # doc.moveto x: '16.5 cm', y: '15.2 cm'
+          move_more(doc, 15.8, 0)
+
           doc.show boleto.agencia_conta_boleto
-          doc.moveto x: '0.7 cm', y: '14.4 cm'
+          # doc.moveto x: '0.7 cm', y: '14.4 cm'
+          move_more(doc, -15.1, -0.8)
+
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
-          doc.moveto x: '4.2 cm', y: '14.4 cm'
+          # doc.moveto x: '4.2 cm', y: '14.4 cm'
+          move_more(doc, 3.5, 0)
+
           doc.show boleto.numero_documento
           doc.moveto x: '10 cm', y: '14.4 cm'
           doc.show boleto.especie_documento
