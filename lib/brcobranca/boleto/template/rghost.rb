@@ -70,7 +70,7 @@ module Brcobranca
         def modelo_generico(boleto, options = {})
           doc = Document.new paper: :A4 # 210x297
 
-          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico1.eps')
+          template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico.eps')
 
           fail 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
@@ -105,10 +105,8 @@ module Brcobranca
             modelo_generico_template(doc, boleto, template_path)
             modelo_generico_cabecalho(doc, boleto)
             modelo_generico_rodape(doc, boleto)
-            # doc.moveto x: '2.4 cm', y: '7.47 cm'
 
             # Gerando codigo de barra com rghost_barcode
-            # doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: '0.7 cm', y: '5.8 cm') if boleto.codigo_barras
             doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: "#{@x - 1.7} cm", y: "#{@y - 1.67} cm") if boleto.codigo_barras
 
             # Cria nova página se não for o último boleto
@@ -268,7 +266,7 @@ module Brcobranca
 
           doc.show boleto.nosso_numero_boleto
           # doc.moveto x: '4.4 cm', y: '13.5 cm'
-          move_more(doc, -12.1, -0.9)
+          move_more(doc, -12.1, -0.8)
 
           if boleto.variacao
             doc.show "#{boleto.carteira}-#{boleto.variacao}"
@@ -288,7 +286,7 @@ module Brcobranca
 
           doc.show boleto.valor_documento.to_currency
           # doc.moveto x: '0.7 cm', y: '12.7 cm'
-          move_more(doc, -15.8, -0.8)
+          move_more(doc, -15.8, -0.9)
           doc.show boleto.instrucao1
           # doc.moveto x: '0.7 cm', y: '12.3 cm'
           move_more(doc, 0, -0.4)
