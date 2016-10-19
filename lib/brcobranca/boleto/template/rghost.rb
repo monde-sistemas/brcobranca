@@ -159,7 +159,7 @@ module Brcobranca
           doc.show "#{boleto.sacado} - #{boleto.sacado_documento.formata_documento}"
           doc.moveto x: '1.5 cm', y: '20.6 cm'
           doc.show "#{boleto.sacado_endereco}"
-          doc.text_area boleto.demonstrativo, width: '16.5 cm', text_align: :left, x: '0.7 cm', row_height: '0.4 cm'
+          doc.text_area boleto.demonstrativo, width: '16.5 cm', text_align: :left, x: '0.7 cm', y: '19.8 cm', row_height: '0.4 cm'
           # FIM Primeira parte do BOLETO
         end
 
