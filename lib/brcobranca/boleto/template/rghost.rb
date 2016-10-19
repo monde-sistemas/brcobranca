@@ -206,7 +206,7 @@ module Brcobranca
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 14.28
+          @y = 14.27
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # doc.moveto x: '5.2 cm', y: '16.9 cm'
@@ -226,7 +226,7 @@ module Brcobranca
 
           doc.show boleto.data_vencimento.to_s_br if boleto.data_vencimento
           # doc.moveto x: '0.7 cm', y: '15.2 cm'
-          move_more(doc, -15.8, -0.8)
+          move_more(doc, -15.8, -0.9)
 
           if boleto.cedente_endereco
             # move_more(doc, -15.8, -0.8)
@@ -244,7 +244,7 @@ module Brcobranca
 
           doc.show boleto.agencia_conta_boleto
           # doc.moveto x: '0.7 cm', y: '14.4 cm'
-          move_more(doc, -15.8 , -0.9)
+          move_more(doc, -15.8 , -0.8)
 
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
           # doc.moveto x: '4.2 cm', y: '14.4 cm'
