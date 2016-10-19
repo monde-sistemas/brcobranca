@@ -105,9 +105,12 @@ module Brcobranca
             modelo_generico_template(doc, boleto, template_path)
             modelo_generico_cabecalho(doc, boleto)
             modelo_generico_rodape(doc, boleto)
+            # doc.moveto x: '2.4 cm', y: '7.47 cm'
 
             # Gerando codigo de barra com rghost_barcode
-            doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: '0.7 cm', y: '5.8 cm') if boleto.codigo_barras
+            # doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: '0.7 cm', y: '5.8 cm') if boleto.codigo_barras
+            doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: "#{@x - 1.7} cm", y: "#{@y - 1.67} cm") if boleto.codigo_barras
+
             # Cria nova página se não for o último boleto
             doc.next_page unless index == boletos.length - 1
           end
@@ -124,7 +127,7 @@ module Brcobranca
 
           doc.define_tags do
             tag :grande, size: 13
-            tag :maior, size: 14
+            tag :maior, size: 15
           end
         end
 
@@ -138,7 +141,7 @@ module Brcobranca
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 24.17
+          @y = 24.2
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
@@ -193,7 +196,7 @@ module Brcobranca
           doc.show "#{boleto.sacado_endereco}"
           #y:19.8
           if boleto.demonstrativo
-            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 1.2} cm", row_height: '0.4 cm'
+            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 1} cm", row_height: '0.4 cm'
           end
           # FIM Primeira parte do BOLETO
         end
@@ -203,19 +206,19 @@ module Brcobranca
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 14.33
+          @y = 14.30
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # doc.moveto x: '5.2 cm', y: '16.9 cm'
           move_more(doc, 4.84, 0.07)
 
-          doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :grande
+          doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
           # doc.moveto x: '7.5 cm', y: '16.9 cm'
           move_more(doc, 2.3, 0)
 
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
           # doc.moveto x: '6.8 cm', y: '16 cm'
-          move_more(doc, 2.3, -0.9)
+          move_more(doc, -0.7, -0.9)
 
           doc.show boleto.local_pagamento
           # doc.moveto x: '16.5 cm', y: '16 cm'
@@ -248,47 +251,70 @@ module Brcobranca
           move_more(doc, 3.5, 0)
 
           doc.show boleto.numero_documento
-          doc.moveto x: '10 cm', y: '14.4 cm'
+          # doc.moveto x: '10 cm', y: '14.4 cm'
+          move_more(doc, 5.8, 0)
+
           doc.show boleto.especie_documento
-          doc.moveto x: '11.7 cm', y: '14.4 cm'
+          # doc.moveto x: '11.7 cm', y: '14.4 cm'
+          move_more(doc, 1.7, 0)
+
           doc.show boleto.aceite
-          doc.moveto x: '13 cm', y: '14.4 cm'
+          # doc.moveto x: '13 cm', y: '14.4 cm'
+          move_more(doc, 1.3, 0)
+
           doc.show boleto.data_processamento.to_s_br if boleto.data_processamento
-          doc.moveto x: '16.5 cm', y: '14.4 cm'
+          # doc.moveto x: '16.5 cm', y: '14.4 cm'
+          move_more(doc, 3.5, 0)
+
           doc.show boleto.nosso_numero_boleto
-          doc.moveto x: '4.4 cm', y: '13.5 cm'
+          # doc.moveto x: '4.4 cm', y: '13.5 cm'
+          move_more(doc, -12.1, -0.9)
+
           if boleto.variacao
             doc.show "#{boleto.carteira}-#{boleto.variacao}"
           else
             doc.show boleto.carteira
           end
-          doc.moveto x: '6.4 cm', y: '13.5 cm'
+          # doc.moveto x: '6.4 cm', y: '13.5 cm'
+          move_more(doc, 2, 0)
+
           doc.show boleto.especie
           # doc.moveto x: '8 cm', y: '13.5 cm'
           # doc.show boleto.quantidade
           # doc.moveto :x => '11 cm' , :y => '13.5 cm'
           # doc.show boleto.valor.to_currency
-          doc.moveto x: '16.5 cm', y: '13.5 cm'
+          # doc.moveto x: '16.5 cm', y: '13.5 cm'
+          move_more(doc, 10.1, 0)
+
           doc.show boleto.valor_documento.to_currency
-          doc.moveto x: '0.7 cm', y: '12.7 cm'
+          # doc.moveto x: '0.7 cm', y: '12.7 cm'
+          move_more(doc, -15.8, -0.8)
           doc.show boleto.instrucao1
-          doc.moveto x: '0.7 cm', y: '12.3 cm'
+          # doc.moveto x: '0.7 cm', y: '12.3 cm'
+          move_more(doc, 0, -0.4)
           doc.show boleto.instrucao2
-          doc.moveto x: '0.7 cm', y: '11.9 cm'
+          # doc.moveto x: '0.7 cm', y: '11.9 cm'
+          move_more(doc, 0, -0.4)
           doc.show boleto.instrucao3
-          doc.moveto x: '0.7 cm', y: '11.5 cm'
+          # doc.moveto x: '0.7 cm', y: '11.5 cm'
+          move_more(doc, 0, -0.4)
           doc.show boleto.instrucao4
-          doc.moveto x: '0.7 cm', y: '11.1 cm'
+          # doc.moveto x: '0.7 cm', y: '11.1 cm'
+          move_more(doc, 0, -0.4)
           doc.show boleto.instrucao5
-          doc.moveto x: '0.7 cm', y: '10.7 cm'
+          # doc.moveto x: '0.7 cm', y: '10.7 cm'
+          move_more(doc, 0, -0.4)
           doc.show boleto.instrucao6
-          doc.moveto x: '1.2 cm', y: '8.8 cm'
+          # doc.moveto x: '1.2 cm', y: '8.8 cm'
+          move_more(doc, 0.5, -1.9)
           doc.show "#{boleto.sacado} - CPF/CNPJ: #{boleto.sacado_documento.formata_documento}" if boleto.sacado && boleto.sacado_documento
-          doc.moveto x: '1.2 cm', y: '8.4 cm'
+          # doc.moveto x: '1.2 cm', y: '8.4 cm'
+          move_more(doc, 0, -0.4)
           doc.show "#{boleto.sacado_endereco}"
 
           if boleto.avalista && boleto.avalista_documento
-            doc.moveto x: '2.4 cm', y: '7.47 cm'
+            # doc.moveto x: '2.4 cm', y: '7.47 cm'
+            move_more(doc, 1.2, -0.93)
             doc.show "#{boleto.avalista} - #{boleto.avalista_documento}"
           end
           # FIM Segunda parte do BOLETO
