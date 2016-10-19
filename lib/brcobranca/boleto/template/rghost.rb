@@ -79,7 +79,7 @@ module Brcobranca
           modelo_generico_rodape(doc, boleto)
 
           # Gerando codigo de barra com rghost_barcode
-          doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: '0.7 cm', y: '5.8 cm') if boleto.codigo_barras
+          doc.barcode_interleaved2of5(boleto.codigo_barras, width: '10.3 cm', height: '1.3 cm', x: "#{@x - 1.7} cm", y: "#{@y - 1.67} cm") if boleto.codigo_barras
 
           # Gerando stream
           formato = (options.delete(:formato) || Brcobranca.configuration.formato)
@@ -196,7 +196,7 @@ module Brcobranca
           doc.show "#{boleto.sacado_endereco}"
           #y:19.8
           if boleto.demonstrativo
-            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 1} cm", row_height: '0.4 cm'
+            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 0.9} cm", row_height: '0.4 cm'
           end
           # FIM Primeira parte do BOLETO
         end
@@ -206,7 +206,7 @@ module Brcobranca
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 14.30
+          @y = 14.28
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # doc.moveto x: '5.2 cm', y: '16.9 cm'
@@ -244,7 +244,7 @@ module Brcobranca
 
           doc.show boleto.agencia_conta_boleto
           # doc.moveto x: '0.7 cm', y: '14.4 cm'
-          move_more(doc, -15.1, -0.8)
+          move_more(doc, -15.8 , -0.9)
 
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
           # doc.moveto x: '4.2 cm', y: '14.4 cm'
@@ -311,10 +311,9 @@ module Brcobranca
           # doc.moveto x: '1.2 cm', y: '8.4 cm'
           move_more(doc, 0, -0.4)
           doc.show "#{boleto.sacado_endereco}"
-
+          # doc.moveto x: '2.4 cm', y: '7.47 cm'
+          move_more(doc, 1.2, -0.93)
           if boleto.avalista && boleto.avalista_documento
-            # doc.moveto x: '2.4 cm', y: '7.47 cm'
-            move_more(doc, 1.2, -0.93)
             doc.show "#{boleto.avalista} - #{boleto.avalista_documento}"
           end
           # FIM Segunda parte do BOLETO
