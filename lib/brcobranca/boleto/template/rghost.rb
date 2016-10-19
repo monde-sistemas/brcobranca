@@ -138,7 +138,7 @@ module Brcobranca
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
           @x = 0.36
-          @y = 24.87
+          @y = 24.37
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
@@ -175,17 +175,25 @@ module Brcobranca
           move_more(doc, 5, 0)
 
           doc.show boleto.data_vencimento.to_s_br
-          doc.moveto x: '16.5 cm', y: '23 cm'
+          # doc.moveto x: '16.5 cm', y: '23 cm'
+          move_more(doc, 4.5, 0.8)
+
           doc.show boleto.nosso_numero_boleto
-          doc.moveto x: '16.5 cm', y: '22.2 cm'
+          # doc.moveto x: '16.5 cm', y: '22.2 cm'
+          move_more(doc, 0, -0.8)
+
           doc.show boleto.valor_documento.to_currency
-          doc.moveto x: '1.5 cm', y: '20.9 cm'
+          # doc.moveto x: '1.5 cm', y: '20.9 cm'
+          move_more(doc, -15, -1.3)
+
           doc.show "#{boleto.sacado} - #{boleto.sacado_documento.formata_documento}"
-          doc.moveto x: '1.5 cm', y: '20.6 cm'
+          # doc.moveto x: '1.5 cm', y: '20.6 cm'
+          move_more(doc, 0, -0.3)
+
           doc.show "#{boleto.sacado_endereco}"
           #y:19.8
           if boleto.demonstrativo
-            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: '0.7 cm', y: '20.8 cm', row_height: '0.4 cm'
+            doc.text_area boleto.demonstrativo, width: '18.5 cm', text_align: :left, x: "#{@x - 0.8} cm", y: "#{@y - 0.2} cm", row_height: '0.4 cm'
           end
           # FIM Primeira parte do BOLETO
         end
@@ -193,9 +201,14 @@ module Brcobranca
         # Monta o corpo e rodapé do layout do boleto
         def modelo_generico_rodape(doc, boleto)
           # INICIO Segunda parte do BOLETO BB
+          # Pontos iniciais em x e y
+          @x = 0.36
+          @y = 14.83
           # LOGOTIPO do BANCO
-          doc.image boleto.logotipo, x: '0.36 cm', y: '16.83 cm'
-          doc.moveto x: '5.2 cm', y: '16.9 cm'
+          doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
+          # doc.moveto x: '5.2 cm', y: '16.9 cm'
+          move_more(doc, 4.84, 0.07)
+
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :grande
           doc.moveto x: '7.5 cm', y: '16.9 cm'
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
