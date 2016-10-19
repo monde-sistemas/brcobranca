@@ -10,7 +10,7 @@ module Brcobranca
         validates_presence_of :convenio, message: 'não pode estar em branco.'
         validates_presence_of :conta_corrente, message: 'não pode estar em branco.'
         validates_length_of :convenio, maximum: 6, message: 'não deve ter mais de 6 dígitos.'
-        validates_length_of :conta_corrente, maximum: 12, message: 'não deve ter mais de 12 dígitos.'
+        validates_length_of :conta_corrente, maximum: 7, message: 'não deve ter mais de 7 dígitos.'
         validates_length_of :digito_agencia, is: 1, message: 'deve ter 1 dígito.'
 
         def initialize(campos = {})
@@ -28,7 +28,7 @@ module Brcobranca
         end
 
         def conta_corrente=(valor)
-          @conta_corrente = valor.to_s.rjust(12, '0') if valor
+          @conta_corrente = valor.to_s.rjust(7, '0') if valor
         end
 
         def cod_banco
@@ -74,7 +74,7 @@ module Brcobranca
         end
 
         def agencia_conta_corrente
-          "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{conta_corrente}#{conta_corrente_dv}"
+          "#{agencia.to_s.rjust(5, '0')}#{digito_agencia}#{conta_corrente.rjust(12, '0')}#{conta_corrente_dv}"
         end
 
         def conta_corrente_dv
@@ -103,7 +103,11 @@ module Brcobranca
           # dv conta corrente     1
           # dv agencia/conta      1
           # ident. titulo         20
-          "#{conta_corrente}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{pagamento.nosso_numero.to_s.ljust(20, ' ')}"
+          "#{conta_corrente.rjust(12, '0')}#{conta_corrente_dv}#{agencia_conta_corrente_dv}#{ajusta_nosso_numero(pagamento)}"
+        end
+
+        def ajusta_nosso_numero(pagamento)
+          "#{conta_corrente}#{conta_corrente_dv}#{pagamento.nosso_numero.to_s.rjust(9, '0')}".ljust(20, ' ')
         end
 
         def numero_documento(pagamento)
