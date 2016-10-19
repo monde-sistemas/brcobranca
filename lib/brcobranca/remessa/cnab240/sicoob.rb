@@ -27,9 +27,8 @@ module Brcobranca
 
         attr_accessor :subposto
         # Mantém a informação de um subposto de atendimento dentro da agência.
-        # Util para formar o nome do arquivo
 
-        validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, message: 'não pode estar em branco.'
+        validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, :convenio, message: 'não pode estar em branco.'
         # Remessa 400 - 8 digitos
         # Remessa 240 - 12 digitos
         validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
@@ -43,7 +42,8 @@ module Brcobranca
             tipo_formulario: '4',
             parcela: '01',
             modalidade_carteira: '01',
-            forma_cadastramento: '0'}.merge!(campos)
+            forma_cadastramento: '0',
+            subposto: '00'}.merge!(campos)
           super(campos)
         end
 
