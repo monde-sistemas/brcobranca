@@ -217,12 +217,12 @@ module Brcobranca
           move_more(doc, 2.3, 0)
 
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
-          # doc.moveto x: '6.8 cm', y: '16 cm'
-          move_more(doc, -0.7, -0.9)
+          # doc.moveto x: '0.7 cm', y: '16 cm'
+          move_more(doc, -6.8, -0.9)
 
           doc.show boleto.local_pagamento
           # doc.moveto x: '16.5 cm', y: '16 cm'
-          move_more(doc, 9.7, 0)
+          move_more(doc, 15.8, 0)
 
           doc.show boleto.data_vencimento.to_s_br if boleto.data_vencimento
           # doc.moveto x: '0.7 cm', y: '15.2 cm'
