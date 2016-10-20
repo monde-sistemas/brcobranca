@@ -17,7 +17,7 @@ RSpec.describe Brcobranca::Boleto::Base do
       agencia: '4042',
       conta_corrente: '61900',
       convenio: 12_387_989,
-      numero_documento: '777700168'
+      numero: '777700168'
     }
   end
 
@@ -55,7 +55,7 @@ RSpec.describe Brcobranca::Boleto::Base do
     expect(boleto_novo.conta_corrente).to eql('0061900')
     expect(boleto_novo.agencia).to eql('4042')
     expect(boleto_novo.convenio).to eql(12_387_989)
-    expect(boleto_novo.numero_documento).to eql('777700168')
+    expect(boleto_novo.numero).to eql('777700168')
     expect(boleto_novo.valid?).to be_truthy
   end
 

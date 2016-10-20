@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
       agencia: '4042',
       conta_corrente: '61900',
       convenio: 12_387_989,
-      numero_documento: '777700168'
+      numero: '777700168'
     }
   end
 
@@ -52,14 +52,14 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
     expect(boleto_novo.conta_corrente).to eql('0061900')
     expect(boleto_novo.agencia).to eql('4042')
     expect(boleto_novo.convenio).to eql(12_387_989)
-    expect(boleto_novo.numero_documento).to eql('0000777700168')
+    expect(boleto_novo.numero).to eql('0000777700168')
     expect(boleto_novo.carteira).to eql('CNR')
   end
 
   it 'Gerar boleto' do
     @valid_attributes[:valor] = 2952.95
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
-    @valid_attributes[:numero_documento] = '12345678'
+    @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -69,7 +69,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
 
     @valid_attributes[:valor] = 934.23
     @valid_attributes[:data_vencimento] = Date.parse('2004-09-03')
-    @valid_attributes[:numero_documento] = '07778899'
+    @valid_attributes[:numero] = '07778899'
     @valid_attributes[:conta_corrente] = '0016324'
     @valid_attributes[:agencia] = '1234'
     boleto_novo = described_class.new(@valid_attributes)
@@ -87,28 +87,28 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
 
   it 'Montar nosso número' do
     @valid_attributes[:data_vencimento] = Date.parse('2000-07-09')
-    @valid_attributes[:numero_documento] = '12345678'
+    @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
     boleto_novo = described_class.new(@valid_attributes)
 
     expect(boleto_novo.nosso_numero).to eql('0000012345678942')
 
     @valid_attributes[:data_vencimento] = Date.parse('2000-07-04')
-    @valid_attributes[:numero_documento] = '39104766'
+    @valid_attributes[:numero] = '39104766'
     @valid_attributes[:conta_corrente] = '351202'
     boleto_novo = described_class.new(@valid_attributes)
 
     expect(boleto_novo.nosso_numero).to eql('0000039104766340')
 
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-03')
-    @valid_attributes[:numero_documento] = '39104766'
+    @valid_attributes[:numero] = '39104766'
     @valid_attributes[:conta_corrente] = '351202'
     boleto_novo = described_class.new(@valid_attributes)
 
     expect(boleto_novo.nosso_numero).to eql('0000039104766346')
 
     @valid_attributes[:data_vencimento] = nil
-    @valid_attributes[:numero_documento] = '39104766'
+    @valid_attributes[:numero] = '39104766'
     @valid_attributes[:conta_corrente] = '351202'
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -119,12 +119,12 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
     @valid_attributes[:data_vencimento] = Date.parse('2009-08-15')
     boleto_novo = described_class.new(@valid_attributes)
 
-    boleto_novo.numero_documento = '4042'
+    boleto_novo.numero = '4042'
     boleto_novo.carteira = 'CNR'
     expect(boleto_novo.nosso_numero_boleto).to eql('0000000004042847')
     expect(boleto_novo.nosso_numero_dv).to eql(8)
 
-    boleto_novo.numero_documento = 4042
+    boleto_novo.numero = 4042
     boleto_novo.carteira = 'CNR'
     expect(boleto_novo.nosso_numero_boleto).to eql('0000000004042847')
     expect(boleto_novo.nosso_numero_dv).to eql(8)
@@ -153,7 +153,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
   it 'Gerar boleto nos formatos válidos com método to_' do
     @valid_attributes[:valor] = 2952.95
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
-    @valid_attributes[:numero_documento] = '12345678'
+    @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -172,7 +172,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
   it 'Gerar boleto nos formatos válidos' do
     @valid_attributes[:valor] = 2952.95
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
-    @valid_attributes[:numero_documento] = '12345678'
+    @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
     boleto_novo = described_class.new(@valid_attributes)
 
