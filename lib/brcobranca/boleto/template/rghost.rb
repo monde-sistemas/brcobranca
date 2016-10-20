@@ -225,7 +225,7 @@ module Brcobranca
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
 
           move_more(doc, 3.5, 0)
-          doc.show boleto.numero
+          doc.show boleto.documento || boleto.numero
 
           move_more(doc, 5.8, 0)
           doc.show boleto.especie_documento
