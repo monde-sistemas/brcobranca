@@ -15,7 +15,7 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
       agencia: "3007",
       conta_corrente: "417270",
       convenio: 318_957,
-      numero_documento: "240"
+      numero: "240"
     }
   end
 
@@ -57,7 +57,7 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     expect(boleto_novo.conta_corrente).to eql("0417270")
     expect(boleto_novo.agencia).to eql("3007")
     expect(boleto_novo.convenio).to eql("0318957")
-    expect(boleto_novo.numero_documento).to eql("0000240")
+    expect(boleto_novo.numero).to eql("0000240")
     expect(boleto_novo.nosso_numero_boleto).to eql("00002404")
     expect(boleto_novo.carteira).to eql("1")
     expect(boleto_novo.codigo_servico).to be_falsey
@@ -91,7 +91,7 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     @valid_attributes[:data_documento] = Date.parse("2008-02-01")
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
     @valid_attributes[:convenio] = 1_238_798
-    @valid_attributes[:numero_documento] = "240"
+    @valid_attributes[:numero] = "240"
 
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -113,7 +113,7 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     @valid_attributes[:data_documento] = Date.parse("2008-02-01")
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
     @valid_attributes[:convenio] = 1_238_798
-    @valid_attributes[:numero_documento] = "240"
+    @valid_attributes[:numero] = "240"
 
     boleto_novo = described_class.new(@valid_attributes)
 

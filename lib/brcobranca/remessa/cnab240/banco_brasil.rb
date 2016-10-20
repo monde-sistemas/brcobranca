@@ -170,7 +170,7 @@ module Brcobranca
           segmento_p << tipo_documento                                  # tipo de documento                     1
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
           segmento_p << distribuicao_boleto                             # indentificacao entrega                1
-          segmento_p << pagamento.numero_documento.to_s.rjust(15, '0')  # uso exclusivo                         4
+          segmento_p << pagamento.numero.to_s.rjust(15, '0')  # uso exclusivo                         4
           segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
@@ -218,7 +218,7 @@ module Brcobranca
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
           segmento_p << pagamento.formata_valor_abatimento(15)          # valor abatimento                      15
-          segmento_p << pagamento.numero_documento.to_s.rjust(25, ' ')  # identificacao titulo empresa          25
+          segmento_p << pagamento.numero.to_s.rjust(25, ' ')  # identificacao titulo empresa          25
           # O Banco do Brasil trata somente os códigos
           # '1' – Protestar dias corridos,
           # '2' – Protestar dias úteis, e
