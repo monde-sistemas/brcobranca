@@ -479,7 +479,7 @@ module Brcobranca
         end
 
         def identificacao_titulo_empresa(pagamento)
-          pagamento.documento_ou_numero.to_s.rjust(25, ' ')
+          ''.rjust(25, ' ')
         end
 
         # Campo exclusivo para serviço
