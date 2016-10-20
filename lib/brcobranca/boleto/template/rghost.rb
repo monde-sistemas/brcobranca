@@ -162,7 +162,7 @@ module Brcobranca
           doc.show boleto.quantidade
 
           move_more(doc, -15, -0.8)
-          doc.show boleto.documento || boleto.numero
+          doc.show boleto.documento_ou_numero
 
           move_more(doc, 6.3, 0)
           doc.show "#{boleto.documento_cedente.formata_documento}"
@@ -225,7 +225,7 @@ module Brcobranca
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
 
           move_more(doc, 3.5, 0)
-          doc.show boleto.documento || boleto.numero
+          doc.show boleto.documento_ou_numero
 
           move_more(doc, 5.8, 0)
           doc.show boleto.especie_documento
