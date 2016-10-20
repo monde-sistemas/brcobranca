@@ -115,7 +115,7 @@ module Brcobranca
         end
 
         def identificacao_titulo_empresa(pagamento)
-          pagamento.numero.to_s.ljust(25, " ")
+          pagamento.documento_ou_numero.to_s.ljust(25, " ")
         end
 
         def complemento_trailer
