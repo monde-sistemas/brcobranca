@@ -25,8 +25,8 @@ module Brcobranca
         attr_accessor :parcela
         #       Parcela - 02 posições (11 a 12) - "01" se parcela única
 
-        attr_accessor :subposto
-        # Mantém a informação de um subposto de atendimento dentro da agência.
+        attr_accessor :posto
+        # Mantém a informação do posto de atendimento dentro da agência.
 
         validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, :convenio, message: 'não pode estar em branco.'
         # Remessa 400 - 8 digitos
@@ -43,7 +43,7 @@ module Brcobranca
             parcela: '01',
             modalidade_carteira: '01',
             forma_cadastramento: '0',
-            subposto: '00'}.merge!(campos)
+            posto: '00'}.merge!(campos)
           super(campos)
         end
 
