@@ -137,6 +137,15 @@ module Brcobranca
             "#{total_cobranca_descontada}".ljust(217, ' ')
         end
 
+        def total_segmentos(pagamentos)
+          return pagamentos.size * 2 unless deve_montar_segmento_r?
+          pagamentos.inject(0) { |total, pagamento| total += pagamento.codigo_multa != '0' ? 3 : 2 }
+        end
+
+        def monta_segmento_r(pagamento, nro_lote, contador)
+          return nil if pagamento.codigo_multa == '0'
+          super(pagamento, nro_lote, contador)
+        end
       end
     end
   end
