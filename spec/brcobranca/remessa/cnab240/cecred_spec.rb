@@ -13,7 +13,9 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'SP')
+      uf_sacado: 'SP',
+      codigo_multa: '2',
+      percentual_multa: 2.0)
   end
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',

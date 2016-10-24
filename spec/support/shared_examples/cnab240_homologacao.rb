@@ -33,7 +33,9 @@ shared_examples_for 'cnab240_homologacao' do
       p.merge!(versao_aplicativo: '1234',
         digito_agencia: '1')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
-      p.merge!(digito_agencia: '1')
+      pagamento.codigo_multa = '2'
+      pagamento.percentual_multa =  2.00
+      p.merge!(digito_agencia: '1', pagamentos: [pagamento])
     end
     p
   end
@@ -158,9 +160,17 @@ shared_examples_for 'cnab240_homologacao' do
       expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
       expect(segmento_r[17..40]).to eq "".rjust(24,  '0')     # desconto 2
       expect(segmento_r[41..64]).to eq "".rjust(24,  '0')     # desconto 3
-      expect(segmento_r[65]).to eq '0'                        # cod. multa
-      expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
-      expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
+
+      if objeto.cod_banco == "085"
+        expect(segmento_r[65]).to eq '2'                        # cod. multa
+        expect(segmento_r[66..73]).to eq '24102016'             # data multa
+        expect(segmento_r[74..88]).to eq '000000000000200'      # valor multa
+      else
+        expect(segmento_r[65]).to eq '0'                        # cod. multa
+        expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
+        expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
+      end
+
       expect(segmento_r[89..98]).to eq ''.rjust(10, ' ')      # info pagador
       expect(segmento_r[99..138]).to eq ''.rjust(40, ' ')     # mensagem 3
       expect(segmento_r[139..178]).to eq ''.rjust(40, ' ')    # mensagem 4
