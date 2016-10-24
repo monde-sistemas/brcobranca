@@ -93,7 +93,7 @@ module Brcobranca
           detalhe << ''.rjust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
           detalhe << formata_nosso_numero(pagamento.nosso_numero.to_s)      # nosso numero                          9[11]
           detalhe << ''.rjust(37, ' ')                                      # brancos                               X[37]
-          detalhe << pagamento.numero_documento.to_s.rjust(10, '0')         # numero do documento                   X[10]
+          detalhe << pagamento.numero.to_s.rjust(10, '0')         # numero do documento                   X[10]
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    A[06]
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << ''.rjust(11, ' ')                                      # brancos                               X[11]

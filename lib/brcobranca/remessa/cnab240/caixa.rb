@@ -129,12 +129,12 @@ module Brcobranca
           segmento_r
         end
 
-        def numero_documento(pagamento)
-          "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
+        def numero(pagamento)
+          "#{pagamento.numero.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
         end
 
         def identificacao_titulo_empresa(pagamento)
-          "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(14, ' ')}"
+          "#{pagamento.documento_ou_numero.to_s.rjust(11, "0")}#{''.rjust(14, ' ')}"
         end
 
         def data_multa(pagamento)

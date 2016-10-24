@@ -4,7 +4,7 @@ module Brcobranca
     class Hsbc < Base # Banco HSBC
       validates_inclusion_of :carteira, in: %w( CNR CSB ), message: 'não existente para este banco.'
       validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :numero_documento, maximum: 13, message: 'deve ser menor ou igual a 13 dígitos.'
+      validates_length_of :numero, maximum: 13, message: 'deve ser menor ou igual a 13 dígitos.'
       validates_length_of :conta_corrente, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
 
       # Nova instancia do Hsbc
@@ -23,8 +23,8 @@ module Brcobranca
 
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 13 caracteres numéricos.
-      def numero_documento=(valor)
-        @numero_documento = valor.to_s.rjust(13, '0') if valor
+      def numero=(valor)
+        @numero = valor.to_s.rjust(13, '0') if valor
       end
 
       # Número seqüencial utilizado para identificar o boleto.
@@ -50,7 +50,7 @@ module Brcobranca
             ano = data_vencimento.year.to_s[2..3]
             data = "#{dia}#{mes}#{ano}"
 
-            parte_1 = "#{numero_documento}#{numero_documento.modulo11(mapeamento: { 10 => 0 })}#{codigo_servico}"
+            parte_1 = "#{numero}#{numero.modulo11(mapeamento: { 10 => 0 })}#{codigo_servico}"
             soma = parte_1.to_i + conta_corrente.to_i + data.to_i
             "#{parte_1}#{soma.to_s.modulo11(mapeamento: { 10 => 0 })}"
           else
@@ -63,7 +63,7 @@ module Brcobranca
           fail Brcobranca::NaoImplementado.new('Tipo de carteira não implementado.')
           # TODO - Verificar outras carteiras.
           # self.codigo_servico = "5"
-          # parte_1 = "#{self.numero_documento}#{self.numero_documento.modulo11(mapeamento: { 10 => 0 })}#{self.codigo_servico}"
+          # parte_1 = "#{self.numero}#{self.numero.modulo11(mapeamento: { 10 => 0 })}#{self.codigo_servico}"
           # soma = parte_1.to_i + self.conta_corrente.to_i
           # numero = "#{parte_1}#{soma.to_s.modulo11(mapeamento: { 10 => 0 })}"
           # numero
@@ -97,7 +97,7 @@ module Brcobranca
         case carteira
         when 'CNR'
           dias_julianos = data_vencimento.to_juliano
-          "#{conta_corrente}#{numero_documento}#{dias_julianos}2"
+          "#{conta_corrente}#{numero}#{dias_julianos}2"
         when 'CSB'
           fail Brcobranca::NaoImplementado.new('Nosso número não definido.') unless @nosso_numero
           "#{nosso_numero}#{agencia}#{conta_corrente}001"

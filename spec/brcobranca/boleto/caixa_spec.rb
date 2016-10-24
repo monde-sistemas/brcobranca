@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Caixa do #:nodoc:[all]
       agencia: '1825',
       conta_corrente: '0000528',
       convenio: '245274',
-      numero_documento: '000000000000001'
+      numero: '000000000000001'
     }
   end
 
@@ -89,13 +89,13 @@ RSpec.describe Brcobranca::Boleto::Caixa do #:nodoc:[all]
   end
 
   it 'Tamanho do número documento deve ser de 15 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(numero_documento: '1234567891234567')
+    boleto_novo = described_class.new @valid_attributes.merge(numero: '1234567891234567')
     expect(boleto_novo).not_to be_valid
   end
 
   it 'Número do documento deve ser preenchido com zeros à esquerda quando menor que 15 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(numero_documento: '1')
-    expect(boleto_novo.numero_documento).to eq('000000000000001')
+    boleto_novo = described_class.new @valid_attributes.merge(numero: '1')
+    expect(boleto_novo.numero).to eq('000000000000001')
     expect(boleto_novo).to be_valid
   end
 
@@ -125,7 +125,7 @@ RSpec.describe Brcobranca::Boleto::Caixa do #:nodoc:[all]
     @valid_attributes[:valor] = 135.00
     @valid_attributes[:data_documento] = Date.parse('2008-02-01')
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
-    @valid_attributes[:numero_documento] = '000000077700168'
+    @valid_attributes[:numero] = '000000077700168'
     boleto_novo = described_class.new(@valid_attributes)
     %w(pdf jpg tif png).each do |format|
       file_body = boleto_novo.send("to_#{format}".to_sym)
@@ -143,7 +143,7 @@ RSpec.describe Brcobranca::Boleto::Caixa do #:nodoc:[all]
     @valid_attributes[:valor] = 135.00
     @valid_attributes[:data_documento] = Date.parse('2008-02-01')
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
-    @valid_attributes[:numero_documento] = '000000077700168'
+    @valid_attributes[:numero] = '000000077700168'
     boleto_novo = described_class.new(@valid_attributes)
     %w(pdf jpg tif png).each do |format|
       file_body = boleto_novo.to(format)

@@ -54,7 +54,9 @@ module Brcobranca
       # Informação utilizada para referenciar a identificação do documento objeto de cobrança.
       # Poderá conter número de duplicata, no caso de cobrança de duplicatas; número da apólice,
       # no caso de cobrança de seguros, etc
-      attr_accessor :numero_documento
+      attr_accessor :numero
+      # <b>OPCIONAL</b>: Número utilizado para controle do beneficiário/cedente
+      attr_accessor :documento
       # <b>OPCIONAL</b>: data limite para o desconto
       attr_accessor :data_segundo_desconto
       # <b>OPCIONAL</b>: valor a ser concedido de desconto
@@ -184,6 +186,10 @@ module Brcobranca
       #
       def formata_valor(tamanho = 13)
         format_value(valor, tamanho)
+      end
+
+      def documento_ou_numero
+        documento.present? ? documento : numero
       end
 
       # Formata o campo valor da mora

@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
     sacado_documento: "12345678900",
     agencia: "274",
     conta_corrente: "14542047",
-    numero_documento: "69240101"
+    numero: "69240101"
   } }
 
   it "Criar nova instancia com atributos padrões" do
@@ -50,7 +50,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
     expect(boleto_novo.sacado_documento).to eql("12345678900")
     expect(boleto_novo.conta_corrente).to eql("00014542047")
     expect(boleto_novo.agencia).to eql("0274")
-    expect(boleto_novo.numero_documento).to eql("69240101")
+    expect(boleto_novo.numero).to eql("69240101")
     expect(boleto_novo.nosso_numero_boleto).to eql("69240101-68")
     expect(boleto_novo.carteira).to eql("11")
     expect(boleto_novo.codigo_barras).to eql("02191647100001278906924010100014542047202198")
@@ -76,7 +76,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
   it "Gerar boleto nos formatos válidos com método to_" do
     valid_attributes[:valor] = 135.00
     valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
-    valid_attributes[:numero_documento] = "240"
+    valid_attributes[:numero] = "240"
 
     boleto_novo = described_class.new(valid_attributes)
 
@@ -96,7 +96,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
   it "Gerar boleto nos formatos válidos" do
     valid_attributes[:valor] = 135.00
     valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
-    valid_attributes[:numero_documento] = "240"
+    valid_attributes[:numero] = "240"
 
     boleto_novo = described_class.new(valid_attributes)
 

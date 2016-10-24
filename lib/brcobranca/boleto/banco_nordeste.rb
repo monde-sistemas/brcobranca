@@ -5,7 +5,7 @@ module Brcobranca
       validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
       validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
       validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
-      validates_length_of :numero_documento, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :numero, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
 
       # Nova instancia do Banco do Nordeste
       # @param (see Brcobranca::Boleto::Base#initialize)
@@ -35,14 +35,14 @@ module Brcobranca
 
       # Número sequencial utilizado para identificar o boleto.
       # @return [String] 8 caracteres numéricos.
-      def numero_documento=(valor)
-        @numero_documento = valor.to_s.rjust(7, '0') if valor
+      def numero=(valor)
+        @numero = valor.to_s.rjust(7, '0') if valor
       end
 
       # Dígito verificador do nosso número.
       # @return [String] 1 caracteres numéricos.
       def nosso_numero_dv
-        nosso_numero = numero_documento.to_s.rjust(7, '0') unless numero_documento.nil?
+        nosso_numero = numero.to_s.rjust(7, '0') unless numero.nil?
         nosso_numero.modulo11(
           multiplicador: (2..8).to_a,
           mapeamento: { 10 => 0, 11 => 0 }
@@ -54,7 +54,7 @@ module Brcobranca
       # @example
       #  boleto.nosso_numero_boleto #=> "0020572-9"
       def nosso_numero_boleto
-        nosso_numero = numero_documento.to_s.rjust(7, '0') unless numero_documento.nil?
+        nosso_numero = numero.to_s.rjust(7, '0') unless numero.nil?
         "#{nosso_numero}-#{nosso_numero_dv}   #{carteira}"
       end
 
@@ -85,7 +85,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "#{agencia}#{convenio}#{convenio_dv}#{numero_documento}#{nosso_numero_dv}#{carteira}000"
+        "#{agencia}#{convenio}#{convenio_dv}#{numero}#{nosso_numero_dv}#{carteira}000"
       end
     end
   end

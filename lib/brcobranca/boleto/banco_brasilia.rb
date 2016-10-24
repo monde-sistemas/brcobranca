@@ -7,7 +7,7 @@ module Brcobranca
       # Modalidade/Carteira de Cobrança (1-Sem Registro | 2-Registrada)
       validates_length_of :carteira, is: 1, message: 'deve possuir 1 dígito.'
       validates_length_of :convenio, is: 7, message: 'deve possuir 7 dígitos.'
-      validates_length_of :numero_documento, is: 6, message: 'deve possuir 6 dígitos.'
+      validates_length_of :numero, is: 6, message: 'deve possuir 6 dígitos.'
 
       # Nova instância da BancoBrasilia
       # @param (see Brcobranca::Boleto::Base#initialize)
@@ -41,8 +41,8 @@ module Brcobranca
 
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 6 caracteres numéricos.
-      def numero_documento=(valor)
-        @numero_documento = valor.to_s.rjust(6, '0') if valor
+      def numero=(valor)
+        @numero = valor.to_s.rjust(6, '0') if valor
       end
 
       # Nosso número, 7 dígitos
@@ -55,7 +55,7 @@ module Brcobranca
       #  1 à 2: carteira
       #  3 à 12: campo_livre
       def nosso_numero
-        "#{carteira}00000#{numero_documento}"
+        "#{carteira}00000#{numero}"
       end
 
       # Dígito verificador do Nosso Número
@@ -89,7 +89,7 @@ module Brcobranca
       #
       # @return [String]
       def codigo_barras_segunda_parte
-        chave = "000#{agencia}#{conta_corrente}#{carteira}#{numero_documento}#{banco}"
+        chave = "000#{agencia}#{conta_corrente}#{carteira}#{numero}#{banco}"
 
         chave << chave.modulo10.to_s
         chave << chave.modulo11(
