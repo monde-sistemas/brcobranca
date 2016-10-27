@@ -149,7 +149,7 @@ module Brcobranca
           segmento_p << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote   5
           segmento_p << 'P'                                             # cod. segmento                         1
           segmento_p << ' '                                             # uso exclusivo                         1
-          segmento_p << '01'                                            # cod. movimento remessa                2
+          segmento_p << pagamento.identificacao_ocorrencia              # cod. movimento remessa                2
           segmento_p << agencia.to_s.rjust(5, '0')                      # agencia                               5
           segmento_p << digito_agencia.to_s                             # dv agencia                            1
           segmento_p << complemento_p(pagamento)                        # informacoes da conta                  34
@@ -158,7 +158,7 @@ module Brcobranca
           segmento_p << tipo_documento                                  # tipo de documento                     1
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
           segmento_p << distribuicao_boleto                             # indentificacao entrega                1
-          segmento_p << numero(pagamento)                     # uso exclusivo                         4
+          segmento_p << numero(pagamento)                               # uso exclusivo                         4
           segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
@@ -204,7 +204,7 @@ module Brcobranca
           segmento_q << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
           segmento_q << 'Q'                                             # cod. segmento                        1
           segmento_q << ' '                                             # uso exclusivo                        1
-          segmento_q << '01'                                            # cod. movimento remessa               2
+          segmento_q << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
           segmento_q << pagamento.identificacao_sacado(false)           # tipo insc. sacado                    1
           segmento_q << pagamento.documento_sacado.to_s.rjust(15, '0')  # documento sacado                     14
           segmento_q << pagamento.nome_sacado.format_size(40)           # nome cliente                         40
@@ -242,7 +242,7 @@ module Brcobranca
           segmento_r << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
-          segmento_r << '01'                                            # cod. movimento remessa               2
+          segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
           segmento_r << "0"                                             # cod. desconto 2                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
