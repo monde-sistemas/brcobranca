@@ -145,6 +145,9 @@ shared_examples_for 'cnab240_homologacao' do
   end
 
   context 'segmento R' do
+    before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+    after { Timecop.return }
+
     it 'segmento R deve ter 240 posicoes' do
       expect(objeto.monta_segmento_r(pagamento, 1, 4).size).to eq 240
     end
@@ -163,7 +166,7 @@ shared_examples_for 'cnab240_homologacao' do
 
       if objeto.cod_banco == "085"
         expect(segmento_r[65]).to eq '2'                        # cod. multa
-        expect(segmento_r[66..73]).to eq '24102016'             # data multa
+        expect(segmento_r[66..73]).to eq '14072015'             # data multa
         expect(segmento_r[74..88]).to eq '000000000000200'      # valor multa
       else
         expect(segmento_r[65]).to eq '0'                        # cod. multa
