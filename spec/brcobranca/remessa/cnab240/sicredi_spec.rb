@@ -183,7 +183,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
   end
 
   context 'geracao remessa' do
-    it_behaves_like 'cnab240'
+    it_behaves_like 'cnab240_homologacao'
 
     context 'arquivo' do
       it { expect(sicredi.gera_arquivo).to eq(read_remessa('remessa-sicredi-cnab240.rem', sicredi.gera_arquivo)) }
