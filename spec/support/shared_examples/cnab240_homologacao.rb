@@ -32,6 +32,9 @@ shared_examples_for 'cnab240_homologacao' do
     if subject.class == Brcobranca::Remessa::Cnab240::Caixa
       p.merge!(versao_aplicativo: '1234',
         digito_agencia: '1')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::BancoBrasil
+      p.merge!(carteira: '12',
+        variacao: '123')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
       pagamento.codigo_multa = '2'
       pagamento.percentual_multa =  2.00

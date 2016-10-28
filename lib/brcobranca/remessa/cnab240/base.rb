@@ -43,7 +43,7 @@ module Brcobranca
         validates_length_of :emissao_boleto, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :distribuicao_boleto, is: 1, message: 'deve ter 1 dígito.'
 
-        SUPORTE_SEGMENTO_R = %w(104 085 756)
+        SUPORTE_SEGMENTO_R = %w(001 104 085 756)
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
@@ -238,7 +238,7 @@ module Brcobranca
           segmento_r = ''                                               # CAMPO                                TAMANHO
           segmento_r << cod_banco                                       # codigo banco                         3
           segmento_r << nro_lote.to_s.rjust(4, '0')                     # lote de servico                      4
-          segmento_r << '3'                                             # lote de servico                      1
+          segmento_r << '3'                                             # tipo do registro                     1
           segmento_r << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
