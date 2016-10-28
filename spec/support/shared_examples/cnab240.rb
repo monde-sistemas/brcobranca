@@ -15,7 +15,7 @@ shared_examples_for 'cnab240' do
       valor_abatimento: 24.35,
       documento_avalista: '12345678901',
       nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
-      numero_documento: '00000000123')
+      numero: '00000000123')
   end
   let(:params) do
     p = {

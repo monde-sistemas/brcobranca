@@ -25,7 +25,10 @@ module Brcobranca
         attr_accessor :parcela
         #       Parcela - 02 posições (11 a 12) - "01" se parcela única
 
-        validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, message: 'não pode estar em branco.'
+        attr_accessor :posto
+        # Mantém a informação do posto de atendimento dentro da agência.
+
+        validates_presence_of :modalidade_carteira, :tipo_formulario, :parcela, :convenio, message: 'não pode estar em branco.'
         # Remessa 400 - 8 digitos
         # Remessa 240 - 12 digitos
         validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
@@ -39,7 +42,8 @@ module Brcobranca
             tipo_formulario: '4',
             parcela: '01',
             modalidade_carteira: '01',
-            forma_cadastramento: '0'}.merge!(campos)
+            forma_cadastramento: '0',
+            posto: '00'}.merge!(campos)
           super(campos)
         end
 
@@ -91,19 +95,6 @@ module Brcobranca
 
         def complemento_header
           ''.rjust(29, ' ')
-        end
-
-        def quantidade_titulos_cobranca
-          pagamentos.length.to_s.rjust(6, "0")
-        end
-
-        def totaliza_valor_titulos
-          pagamentos.inject(0) { |sum, pag| sum += pag.valor.to_f }
-        end
-
-        def valor_titulos_carteira
-          total = sprintf "%.2f", totaliza_valor_titulos
-          total.somente_numeros.rjust(17, "0")
         end
 
         def complemento_trailer

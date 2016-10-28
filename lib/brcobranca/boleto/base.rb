@@ -37,8 +37,10 @@ module Brcobranca
       attr_accessor :cedente
       # <b>REQUERIDO</b>: Documento do proprietario da conta corrente (CPF ou CNPJ)
       attr_accessor :documento_cedente
-      # <b>OPCIONAL</b>: Número sequencial utilizado para identificar o boleto
-      attr_accessor :numero_documento
+      # <b>REQUERIDO</b>: Número sequencial utilizado para identificar o boleto
+      attr_accessor :numero
+      # <b>OPCIONAL</b>: Número utilizado para controle do beneficiário/cedente
+      attr_accessor :documento
       # <b>REQUERIDO</b>: Símbolo da moeda utilizada (R$ no brasil)
       attr_accessor :especie
       # <b>REQUERIDO</b>: Tipo do documento (Geralmente DM que quer dizer Duplicata Mercantil)
@@ -49,6 +51,8 @@ module Brcobranca
       attr_accessor :data_vencimento
       # <b>OPCIONAL</b>: Código utilizado para identificar o tipo de serviço cobrado
       attr_accessor :codigo_servico
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      attr_accessor :demonstrativo
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
       attr_accessor :instrucao1
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
@@ -81,8 +85,8 @@ module Brcobranca
       attr_accessor :cedente_endereco
 
       # Validações
-      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero_documento, message: 'não pode estar em branco.'
-      validates_numericality_of :convenio, :agencia, :conta_corrente, :numero_documento, message: 'não é um número.', allow_nil: true
+      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero, message: 'não pode estar em branco.'
+      validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, message: 'não é um número.', allow_nil: true
 
       # Nova instancia da classe Base
       # @param [Hash] campos
@@ -135,10 +139,19 @@ module Brcobranca
         conta_corrente.modulo11
       end
 
+
+      def documento_ou_numero
+        documento.present? ? documento : numero
+      end
+
       # Dígito verificador do nosso número
       # @return [Integer] 1 caracteres numéricos.
       def nosso_numero_dv
-        numero_documento.modulo11
+        numero.modulo11
+      end
+
+      def numero_documento
+        fail Brcobranca::NaoImplementado.new('Utilize numero no lugar de numero_documento')
       end
 
       # @abstract Deverá ser sobreescrito para cada banco.

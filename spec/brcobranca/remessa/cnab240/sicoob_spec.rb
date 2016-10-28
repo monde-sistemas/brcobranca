@@ -26,6 +26,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       conta_corrente: '03666',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
+      convenio: '512231',
       pagamentos: [pagamento]
     }
   end
@@ -62,6 +63,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
         sicoob.agencia = '12345'
         expect(sicoob.invalid?).to be true
         expect(sicoob.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
+      end
+    end
+
+    context '@convenio' do
+      it 'deve ser invalido se nao possuir o convenio' do
+        sicoob.convenio = nil
+        expect(sicoob.invalid?).to be true
+        expect(sicoob.errors.full_messages).to include('Convenio não pode estar em branco.')
       end
     end
 

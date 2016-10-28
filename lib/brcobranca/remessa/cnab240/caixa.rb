@@ -39,8 +39,8 @@ module Brcobranca
           # Modalidade carteira: 14 (título Registrado emissão Cedente)
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
-                     codigo_baixa: '1',
-                     dias_baixa: '120',
+                     codigo_baixa: '2',
+                     dias_baixa: '000',
                      distribuicao_boleto: '0',
                      especie_titulo: '99' }.merge!(campos)
           super(campos)
@@ -129,12 +129,24 @@ module Brcobranca
           segmento_r
         end
 
-        def numero_documento(pagamento)
-          "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
+        def numero(pagamento)
+          "#{pagamento.numero.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
         end
 
         def identificacao_titulo_empresa(pagamento)
-          "#{pagamento.numero_documento.to_s.rjust(11, "0")}#{''.rjust(14, ' ')}"
+          "#{pagamento.documento_ou_numero.to_s.rjust(11, "0")}#{''.rjust(14, ' ')}"
+        end
+
+        def data_multa(pagamento)
+          return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
+          data_multa = pagamento.data_vencimento + 1
+          data_multa.strftime('%d%m%Y')
+        end
+
+        def data_mora(pagamento)
+          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
+          data_mora = pagamento.data_vencimento + 1
+          data_mora.strftime("%d%m%Y")
         end
       end
     end

@@ -84,7 +84,7 @@ module Brcobranca
           detalhe << ''.rjust(7, '0')                                 # conta corrente (op)                         9[07]       013 a 019
           detalhe << ''.rjust(1, '0')                                 # digito da conta corrente (op)               X[01]       020 a 020
           detalhe << identificacao_empresa                            # identficacao da empresa                     X[17]       021 a 037
-          detalhe << ''.rjust(25, ' ')                                # num. controle                               X[25]       038 a 062
+          detalhe << pagamento.numero.to_s.ljust(25, ' ')   # num. controle                               X[25]       038 a 062
           detalhe << ''.rjust(3, '0')                                 # codigo do banco (debito automatico apenas)  9[03]       063 a 065
           detalhe << ''.rjust(1, '0')                                 # campo da multa                              9[01]       066 a 066 *
           detalhe << ''.rjust(4, '0')                                 # percentual multa                            9[04]       067 a 070 *
@@ -98,12 +98,12 @@ module Brcobranca
           detalhe << '2'                                              # endereco para aviso debito (op 2 = ignora)  9[01]       106 a 106
           detalhe << ''.rjust(2, ' ')                                 # brancos                                     X[02]       107 a 108
           detalhe << pagamento.identificacao_ocorrencia               # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero_documento.to_s.rjust(10, ' ')   # numero do documento alfanum.                X[10]       111 a 120
+          detalhe << pagamento.numero.to_s.ljust(10, ' ')   # numero do documento alfanum.                X[10]       111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')     # data de vencimento                          9[06]       121 a 126
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
           detalhe << ''.rjust(3, '0')                                 # banco encarregado (zeros)                   9[03]       140 a 142
           detalhe << ''.rjust(5, '0')                                 # agencia depositaria (zeros)                 9[05]       143 a 147
-          detalhe << '99'                                             # especie do titulo                           9[02]       148 a 149
+          detalhe << '01'                                             # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
           detalhe << ''.rjust(2, '0')                                 # 1a instrucao                                9[02]       157 a 158

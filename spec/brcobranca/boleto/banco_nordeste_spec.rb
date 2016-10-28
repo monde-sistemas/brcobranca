@@ -13,7 +13,7 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
       agencia: '0016',
       conta_corrente: '0001193',
       convenio: '0001193',
-      numero_documento: '0000053'
+      numero: '0000053'
     }
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
     expect(boleto_novo.sacado_documento).to eql('12345678900')
     expect(boleto_novo.agencia).to eql('0016')
     expect(boleto_novo.convenio).to eql('0001193')
-    expect(boleto_novo.numero_documento).to eql('0000053')
+    expect(boleto_novo.numero).to eql('0000053')
     expect(boleto_novo.carteira).to eql('21')
   end
 
@@ -65,7 +65,7 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('00490.01605 00119.320000 00531.210003 1 43970000100000')
 
     @valid_attributes[:valor] = 54.00
-    @valid_attributes[:numero_documento] = '0002720'
+    @valid_attributes[:numero] = '0002720'
     @valid_attributes[:data_vencimento] = Date.parse('2012/09/08')
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('0016000119320002720021000')
@@ -80,30 +80,30 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
   end
 
   it 'Montar nosso_numero_dv' do
-    @valid_attributes[:numero_documento] = '0000010'
+    @valid_attributes[:numero] = '0000010'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_dv).to eql(8)
 
-    @valid_attributes[:numero_documento] = '0020572'
+    @valid_attributes[:numero] = '0020572'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_dv).to eql(9)
 
-    @valid_attributes[:numero_documento] = '1961005'
+    @valid_attributes[:numero] = '1961005'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_dv).to eql(0)
 
-    @valid_attributes[:numero_documento] = '0000053'
+    @valid_attributes[:numero] = '0000053'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_dv).to eql(1)
 
   end
 
   it 'Montar nosso_numero_boleto' do
-    @valid_attributes[:numero_documento] = '0000010'
+    @valid_attributes[:numero] = '0000010'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_boleto).to eql('0000010-8   21')
 
-    @valid_attributes[:numero_documento] = '0020572'
+    @valid_attributes[:numero] = '0020572'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.nosso_numero_boleto).to eql('0020572-9   21')
   end

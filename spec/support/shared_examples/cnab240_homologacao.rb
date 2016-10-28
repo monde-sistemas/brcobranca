@@ -15,7 +15,7 @@ shared_examples_for 'cnab240_homologacao' do
       valor_abatimento: 24.35,
       documento_avalista: '12345678901',
       nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
-      numero_documento: '00000000123')
+      numero: '00000000123')
   end
   let(:params) do
     p = {
@@ -32,6 +32,10 @@ shared_examples_for 'cnab240_homologacao' do
     if subject.class == Brcobranca::Remessa::Cnab240::Caixa
       p.merge!(versao_aplicativo: '1234',
         digito_agencia: '1')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
+      pagamento.codigo_multa = '2'
+      pagamento.percentual_multa =  2.00
+      p.merge!(digito_agencia: '1', pagamentos: [pagamento])
     end
     p
   end
@@ -141,6 +145,9 @@ shared_examples_for 'cnab240_homologacao' do
   end
 
   context 'segmento R' do
+    before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+    after { Timecop.return }
+
     it 'segmento R deve ter 240 posicoes' do
       expect(objeto.monta_segmento_r(pagamento, 1, 4).size).to eq 240
     end
@@ -156,9 +163,17 @@ shared_examples_for 'cnab240_homologacao' do
       expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
       expect(segmento_r[17..40]).to eq "".rjust(24,  '0')     # desconto 2
       expect(segmento_r[41..64]).to eq "".rjust(24,  '0')     # desconto 3
-      expect(segmento_r[65]).to eq '0'                        # cod. multa
-      expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
-      expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
+
+      if objeto.cod_banco == "085"
+        expect(segmento_r[65]).to eq '2'                        # cod. multa
+        expect(segmento_r[66..73]).to eq '14072015'             # data multa
+        expect(segmento_r[74..88]).to eq '000000000000200'      # valor multa
+      else
+        expect(segmento_r[65]).to eq '0'                        # cod. multa
+        expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
+        expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
+      end
+
       expect(segmento_r[89..98]).to eq ''.rjust(10, ' ')      # info pagador
       expect(segmento_r[99..138]).to eq ''.rjust(40, ' ')     # mensagem 3
       expect(segmento_r[139..178]).to eq ''.rjust(40, ' ')    # mensagem 4

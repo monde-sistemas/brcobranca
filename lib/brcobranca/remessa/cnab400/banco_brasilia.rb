@@ -3,6 +3,8 @@ module Brcobranca
   module Remessa
     module Cnab400
       class BancoBrasilia < Brcobranca::Remessa::Cnab400::Base
+        attr_accessor :convenio
+
         validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
         validates_presence_of :digito_conta, message: 'não pode estar em branco.'
         validates_length_of :agencia, maximum: 3, message: 'deve ter 3 dígitos.'
@@ -91,12 +93,12 @@ module Brcobranca
         end
 
         def codigo_tipo_juros(pagamento)
-          return "50" if pagamento.valor_mora > 0
+          return "50" if pagamento.valor_mora.to_f > 0.0
           "00"
         end
 
         def codigo_tipo_desconto(pagamento)
-          return "52" if pagamento.valor_desconto > 0
+          return "52" if pagamento.valor_desconto.to_f > 0.0
           "00"
         end
 

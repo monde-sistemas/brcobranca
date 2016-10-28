@@ -43,7 +43,7 @@ module Brcobranca
         validates_length_of :emissao_boleto, is: 1, message: 'deve ter 1 dígito.'
         validates_length_of :distribuicao_boleto, is: 1, message: 'deve ter 1 dígito.'
 
-        SUPORTE_SEGMENTO_R = %w(104 756)
+        SUPORTE_SEGMENTO_R = %w(104 085 756)
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
@@ -149,7 +149,7 @@ module Brcobranca
           segmento_p << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote   5
           segmento_p << 'P'                                             # cod. segmento                         1
           segmento_p << ' '                                             # uso exclusivo                         1
-          segmento_p << '01'                                            # cod. movimento remessa                2
+          segmento_p << pagamento.identificacao_ocorrencia              # cod. movimento remessa                2
           segmento_p << agencia.to_s.rjust(5, '0')                      # agencia                               5
           segmento_p << digito_agencia.to_s                             # dv agencia                            1
           segmento_p << complemento_p(pagamento)                        # informacoes da conta                  34
@@ -158,7 +158,7 @@ module Brcobranca
           segmento_p << tipo_documento                                  # tipo de documento                     1
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
           segmento_p << distribuicao_boleto                             # indentificacao entrega                1
-          segmento_p << numero_documento(pagamento)                     # uso exclusivo                         4
+          segmento_p << numero(pagamento)                               # uso exclusivo                         4
           segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
@@ -204,7 +204,7 @@ module Brcobranca
           segmento_q << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
           segmento_q << 'Q'                                             # cod. segmento                        1
           segmento_q << ' '                                             # uso exclusivo                        1
-          segmento_q << '01'                                            # cod. movimento remessa               2
+          segmento_q << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
           segmento_q << pagamento.identificacao_sacado(false)           # tipo insc. sacado                    1
           segmento_q << pagamento.documento_sacado.to_s.rjust(15, '0')  # documento sacado                     14
           segmento_q << pagamento.nome_sacado.format_size(40)           # nome cliente                         40
@@ -242,7 +242,7 @@ module Brcobranca
           segmento_r << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
-          segmento_r << '01'                                            # cod. movimento remessa               2
+          segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
           segmento_r << "0"                                             # cod. desconto 2                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
@@ -325,9 +325,13 @@ module Brcobranca
             lote << monta_segmento_q(pagamento, nro_lote, contador)
             contador += 1
 
-            if SUPORTE_SEGMENTO_R.include? cod_banco
-              lote << monta_segmento_r(pagamento, nro_lote, contador)
-              contador += 1
+            if deve_montar_segmento_r?
+              seg_r = monta_segmento_r(pagamento, nro_lote, contador)
+
+              if seg_r.present?
+                lote << seg_r
+                contador += 1
+              end
             end
           end
           contador += 1 #trailer
@@ -350,12 +354,20 @@ module Brcobranca
           contador = 1
           arquivo.push monta_lote(contador)
 
-          segmentos = 2
-          segmentos = 3 if SUPORTE_SEGMENTO_R.include? cod_banco
+          total_linhas = (total_segmentos(pagamentos) + (contador * 2) + 2)
 
-          arquivo << monta_trailer_arquivo(contador, ((pagamentos.size * 2) + (contador * 2) + segmentos))
+          arquivo << monta_trailer_arquivo(contador, total_linhas)
 
           arquivo.join("\r\n").to_ascii.upcase
+        end
+
+        def deve_montar_segmento_r?
+          SUPORTE_SEGMENTO_R.include? cod_banco
+        end
+
+        def total_segmentos(pagamentos)
+          return pagamentos.size * 2 unless deve_montar_segmento_r?
+          pagamentos.size * 3
         end
 
         # Complemento do registro
@@ -468,8 +480,8 @@ module Brcobranca
         # Identificacao do titulo da empresa
         #
         # Sobreescreva caso necessário
-        def numero_documento(pagamento)
-          pagamento.numero_documento.to_s.rjust(15, '0')
+        def numero(pagamento)
+          pagamento.numero.to_s.rjust(15, '0')
         end
 
         def identificacao_titulo_empresa(pagamento)
