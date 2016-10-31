@@ -153,7 +153,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
   end
 
   context 'geracao remessa' do
-    it_behaves_like 'cnab240_homologacao'
+    it_behaves_like 'cnab240'
 
     context 'arquivo' do
       it { expect(caixa.gera_arquivo).to eq(read_remessa('remessa-caixa-cnab240.rem', caixa.gera_arquivo)) }

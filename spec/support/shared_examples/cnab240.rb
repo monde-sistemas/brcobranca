@@ -37,6 +37,10 @@ shared_examples_for 'cnab240' do
         variacao: '123')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Sicredi
       p.merge!(byte_idt: '2', posto: '14', digito_conta: '5')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
+      pagamento.codigo_multa = '2'
+      pagamento.percentual_multa =  2.00
+      p.merge!(digito_agencia: '1', pagamentos: [pagamento])
     end
     p
   end
@@ -145,6 +149,43 @@ shared_examples_for 'cnab240' do
     end
   end
 
+  context 'segmento R' do
+    before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+    after { Timecop.return }
+
+    it 'segmento R deve ter 240 posicoes' do
+      expect(objeto.monta_segmento_r(pagamento, 1, 4).size).to eq 240
+    end
+
+    it 'segmento R deve ter as informacoes nas posicoes corretas' do
+      segmento_r = objeto.monta_segmento_r(pagamento, 1, 4)
+      expect(segmento_r[0..2]).to eq objeto.cod_banco         # codigo banco
+      expect(segmento_r[3..6]).to eq "0001"                   # lote de servico
+      expect(segmento_r[7]).to eq "3"                         # tipo de registro
+      expect(segmento_r[8..12]).to eq "00004"                 # nro seq. registro no lote
+      expect(segmento_r[13]).to eq "R"                        # cod. segmento
+      expect(segmento_r[14]).to eq " "                        # branco
+      expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
+      expect(segmento_r[17..40]).to eq "".rjust(24,  '0')     # desconto 2
+      expect(segmento_r[41..64]).to eq "".rjust(24,  '0')     # desconto 3
+
+      if objeto.cod_banco == "085"
+        expect(segmento_r[65]).to eq '2'                        # cod. multa
+        expect(segmento_r[66..73]).to eq '14072015'             # data multa
+        expect(segmento_r[74..88]).to eq '000000000000200'      # valor multa
+      else
+        expect(segmento_r[65]).to eq '0'                        # cod. multa
+        expect(segmento_r[66..73]).to eq ''.rjust(8, '0')       # data multa
+        expect(segmento_r[74..88]).to eq ''.rjust(15, '0')      # valor multa
+      end
+
+      expect(segmento_r[89..98]).to eq ''.rjust(10, ' ')      # info pagador
+      expect(segmento_r[99..138]).to eq ''.rjust(40, ' ')     # mensagem 3
+      expect(segmento_r[139..178]).to eq ''.rjust(40, ' ')    # mensagem 4
+      expect(segmento_r[179..239]).to eq objeto.complemento_r # complemento do segmento
+    end
+  end
+
   context 'trailer lote' do
     it 'trailer lote deve ter 240 posicoes' do
       expect(objeto.monta_trailer_lote(1, 4).size).to eq 240
@@ -177,7 +218,7 @@ shared_examples_for 'cnab240' do
       lote = objeto.monta_lote(1)
 
       expect(lote.is_a?(Array)).to be true
-      expect(lote.count).to be 4 # header, segmento p, segmento q e trailer
+      expect(lote.count).to be 5 # header, segmento p, segmento q, segmento r e trailer
     end
 
     it 'contador de registros deve acrescer 1 a cada registro' do
@@ -185,7 +226,8 @@ shared_examples_for 'cnab240' do
 
       expect(lote[1][8..12]).to eq '00001' # segmento P
       expect(lote[2][8..12]).to eq '00002' # segmento Q
-      expect(lote[3][17..22]).to eq '000004' # trailer do lote
+      expect(lote[3][8..12]).to eq '00003' # segmento R
+      expect(lote[4][17..22]).to eq '000005' # trailer do lote
     end
   end
 
@@ -197,7 +239,7 @@ shared_examples_for 'cnab240' do
     it 'remessa deve conter os registros mais as quebras de linha' do
       remessa = objeto.gera_arquivo
 
-      expect(remessa.size).to eq 1450
+      expect(remessa.size).to eq 1692
       # quebras de linha
       expect(remessa[240..241]).to eq "\r\n"
       expect(remessa[482..483]).to eq "\r\n"

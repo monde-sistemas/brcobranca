@@ -138,7 +138,6 @@ module Brcobranca
         end
 
         def total_segmentos(pagamentos)
-          return pagamentos.size * 2 unless deve_montar_segmento_r?
           pagamentos.inject(0) { |total, pagamento| total += pagamento.codigo_multa != '0' ? 3 : 2 }
         end
 
