@@ -120,7 +120,7 @@ module Brcobranca
 
         # Define o template a ser usado no boleto
         def modelo_generico_template(doc, _boleto, template_path)
-          doc.define_template(:template, template_path, x: '0.3 cm', y: '1 cm')
+          doc.define_template(:template, template_path, x: '0.25 cm', y: '1.5 cm')
           doc.use_template :template
 
           doc.define_tags do
@@ -138,17 +138,17 @@ module Brcobranca
         def modelo_generico_cabecalho(doc, boleto)
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
-          @x = 0.36
-          @y = 28.2
+          @x = 0.50
+          @y = 28.15
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
 
           move_more(doc, 4.84, 0.07)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
-          move_more(doc, 2.3, 0)
+          move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
-          move_more(doc, -6.8, -0.83)
+          move_more(doc, -6.5, -0.83)
 
           doc.show boleto.cedente
 
@@ -191,18 +191,18 @@ module Brcobranca
         def modelo_generico_rodape(doc, boleto)
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
-          @x = 0.36
-          @y = 12.46
+          @x = 0.50
+          @y = 12.96
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
 
           move_more(doc, 4.84, 0.07)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
 
-          move_more(doc, 2.3, 0)
+          move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
 
-          move_more(doc, -6.8, -1)
+          move_more(doc, -6.5, -1)
           doc.show boleto.local_pagamento
 
           move_more(doc, 15.8, 0)
