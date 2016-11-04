@@ -40,7 +40,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       it 'deve ser invalido se a agencia tiver mais de 4 digitos' do
         unicred.agencia = '12345'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
+        expect(unicred.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
         unicred.digito_conta = '12'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(unicred.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
         unicred.conta_corrente = '123456'
 
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
+        expect(unicred.errors.full_messages).to include('Conta corrente é muito longo (máximo: 5 caracteres).')
       end
     end
 
@@ -83,7 +83,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       it 'deve ser inválido se a carteira tiver mais de 2 dígitos' do
         unicred.carteira = '123'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
+        expect(unicred.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
       end
     end
 
@@ -97,7 +97,11 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       it 'deve ser invalido se o documento do cedente nao tiver entre 11 e 14 digitos' do
         unicred.documento_cedente = '123'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Documento cedente deve ter entre 11 e 14 dígitos.')
+        expect(unicred.errors.full_messages).to include('Documento cedente é muito curto (mínimo: 11 caracteres).')
+
+        unicred.documento_cedente = '123456789012345'
+        expect(unicred.invalid?).to be true
+        expect(unicred.errors.full_messages).to include('Documento cedente é muito longo (máximo: 14 caracteres).')
       end
     end
 
@@ -111,7 +115,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
       it 'deve ser inválido quando não possuir até 20 dígitos' do
         object = subject.class.new(params.merge!(codigo_transmissao: '123456789012345678901'))
         expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Codigo transmissao deve ter 20 dígitos.')
+        expect(object.errors.full_messages).to include('Codigo transmissao é muito longo (máximo: 20 caracteres).')
       end
     end
   end
@@ -143,7 +147,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
 
       unicred.carteira = '09'
       expect(unicred.invalid?).to be true
-      expect(unicred.errors.full_messages).to include('Carteira não é válida.')
+      expect(unicred.errors.full_messages).to include('Carteira não existente para este banco.')
     end
   end
 

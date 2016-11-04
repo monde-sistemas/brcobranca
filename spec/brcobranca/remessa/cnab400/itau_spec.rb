@@ -36,7 +36,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       it 'deve ser invalido se a agencia tiver mais de 4 digitos' do
         itau.agencia = '12345'
         expect(itau.invalid?).to be true
-        expect(itau.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
+        expect(itau.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
       end
     end
 
@@ -50,7 +50,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       it 'deve ser invalido se a carteira tiver mais de 1 digito' do
         itau.digito_conta = '12'
         expect(itau.invalid?).to be true
-        expect(itau.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(itau.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
         itau.conta_corrente = '123456'
         expect(itau.invalid?).to be true
-        expect(itau.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
+        expect(itau.errors.full_messages).to include('Conta corrente é muito longo (máximo: 5 caracteres).')
       end
     end
 
@@ -78,7 +78,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       it 'deve ser invalido se a carteira tiver mais de 3 digitos' do
         itau.carteira = '1234'
         expect(itau.invalid?).to be true
-        expect(itau.errors.full_messages).to include('Carteira deve ter no máximo 3 dígitos.')
+        expect(itau.errors.full_messages).to include('Carteira é muito longo (máximo: 3 caracteres).')
       end
     end
 
@@ -92,7 +92,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       it 'deve ser invalido se o documento do cedente nao tiver entre 11 e 14 digitos' do
         itau.documento_cedente = '123'
         expect(itau.invalid?).to be true
-        expect(itau.errors.full_messages).to include('Documento cedente deve ter entre 11 e 14 dígitos.')
+        expect(itau.errors.full_messages).to include('Documento cedente é muito curto (mínimo: 11 caracteres).')
       end
     end
   end

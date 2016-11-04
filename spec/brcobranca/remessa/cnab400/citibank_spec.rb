@@ -36,7 +36,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
       it 'deve ser invalido se a carteira tiver mais de 3 digitos' do
         citibank.carteira = '1234'
         expect(citibank.invalid?).to be true
-        expect(citibank.errors.full_messages).to include('Carteira deve ter no máximo 1 dígito.')
+        expect(citibank.errors.full_messages).to include('Carteira é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -50,7 +50,11 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
       it 'deve ser invalido se o documento do cedente nao tiver entre 11 e 14 digitos' do
         citibank.documento_cedente = '123'
         expect(citibank.invalid?).to be true
-        expect(citibank.errors.full_messages).to include('Documento cedente deve ter entre 11 e 14 dígitos.')
+        expect(citibank.errors.full_messages).to include('Documento cedente é muito curto (mínimo: 11 caracteres).')
+
+        citibank.documento_cedente = '123456789012345'
+        expect(citibank.invalid?).to be true
+        expect(citibank.errors.full_messages).to include('Documento cedente é muito longo (máximo: 14 caracteres).')
       end
     end
 
@@ -64,7 +68,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
       it 'deve ser invalido se o deve ter no máximo 20 dígitos.' do
         citibank.portfolio = '123456789012345678901'
         expect(citibank.invalid?).to be true
-        expect(citibank.errors.full_messages).to include('Portfolio deve ter no máximo 20 dígitos.')
+        expect(citibank.errors.full_messages).to include('Portfolio é muito longo (máximo: 20 caracteres).')
       end
     end
   end

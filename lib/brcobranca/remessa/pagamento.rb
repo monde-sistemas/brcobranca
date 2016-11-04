@@ -2,7 +2,7 @@
 module Brcobranca
   module Remessa
     class Pagamento
-      # Validações do Rails 3
+      extend ActiveModel::Translation
       include ActiveModel::Validations
 
       # <b>REQUERIDO</b>: nosso numero

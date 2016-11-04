@@ -5,14 +5,12 @@ module Brcobranca
       class Credisis < Brcobranca::Remessa::Cnab400::Base
         attr_accessor :codigo_cedente, :documento_cedente, :convenio
 
-        validates_presence_of :agencia, :conta_corrente, :codigo_cedente, message: 'não pode estar em branco.'
-        validates_presence_of :digito_conta, message: 'não pode estar em branco.'
-        validates_length_of :agencia, :codigo_cedente, maximum: 4, message: 'deve ter 4 dígitos.'
-        validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
-        validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
-        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
-        validates_length_of :sequencial_remessa, maximum: 7, message: 'deve ter 7 dígitos.'
-        validates_length_of :convenio, maximum: 7, message: 'deve ter 7 dígitos.'
+        validates_presence_of :agencia, :conta_corrente, :codigo_cedente, :digito_conta
+        validates_length_of :agencia, :codigo_cedente, maximum: 4
+        validates_length_of :conta_corrente, maximum: 8
+        validates_length_of :carteira, maximum: 2
+        validates_length_of :digito_conta, maximum: 1
+        validates_length_of :sequencial_remessa, :convenio, maximum: 7
 
         # Nova instancia do CrediSIS
         def initialize(campos = {})

@@ -9,14 +9,14 @@ module Brcobranca
         # 2 - Emitido pelo cliente
         attr_accessor :emissao_boleto
 
-        validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
-        validates_presence_of :documento_cedente, :digito_conta, message: 'não pode estar em branco.'
-        validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
-        validates_length_of :conta_corrente, maximum: 7, message: 'deve ter 7 dígitos.'
-        validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
-        validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
-        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
-        validates_inclusion_of :carteira, in: %w(21 41 51), message: 'não é válida.'
+        validates_presence_of :agencia, :conta_corrente
+        validates_presence_of :documento_cedente, :digito_conta
+        validates_length_of :agencia, maximum: 4
+        validates_length_of :conta_corrente, maximum: 7
+        validates_length_of :documento_cedente, in: 11..14
+        validates_length_of :carteira, maximum: 2
+        validates_length_of :digito_conta, maximum: 1
+        validates_inclusion_of :carteira, in: %w(21 41 51)
 
         # Nova instancia do Banco do Nordeste
         def initialize(campos = {})

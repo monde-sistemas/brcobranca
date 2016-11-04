@@ -38,7 +38,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se a agencia tiver mais de 4 digitos' do
         banco_nordeste.agencia = '12345'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
+        expect(banco_nordeste.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
         banco_nordeste.digito_conta = '12'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(banco_nordeste.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se a conta corrente tiver mais de 7 digitos' do
         banco_nordeste.conta_corrente = '12345678'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Conta corrente deve ter 7 dígitos.')
+        expect(banco_nordeste.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser inválido se a carteira tiver 2 dígitos' do
         banco_nordeste.carteira = '123'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
+        expect(banco_nordeste.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
       end
     end
 
@@ -94,7 +94,11 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se o documento do cedente nao tiver entre 11 e 14 digitos' do
         banco_nordeste.documento_cedente = '123'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Documento cedente deve ter entre 11 e 14 dígitos.')
+        expect(banco_nordeste.errors.full_messages).to include('Documento cedente é muito curto (mínimo: 11 caracteres).')
+
+        banco_nordeste.documento_cedente = '123456789012345'
+        expect(banco_nordeste.invalid?).to be true
+        expect(banco_nordeste.errors.full_messages).to include('Documento cedente é muito longo (máximo: 14 caracteres).')
       end
     end
   end
@@ -144,7 +148,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
 
       banco_nordeste.carteira = 99
       expect(banco_nordeste.invalid?).to be true
-      expect(banco_nordeste.errors.full_messages).to include('Carteira não é válida.')
+      expect(banco_nordeste.errors.full_messages).to include('Carteira não existente para este banco.')
     end
   end
 

@@ -38,7 +38,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se a agencia tiver mais de 5 digitos' do
         bradesco.agencia = '123456'
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Agencia deve ter 5 dígitos.')
+        expect(bradesco.errors.full_messages).to include('Agencia é muito longo (máximo: 5 caracteres).')
       end
     end
 
@@ -52,7 +52,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se a carteira tiver mais de 1 digito' do
         bradesco.digito_conta = '12'
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(bradesco.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -66,7 +66,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se a conta corrente tiver mais de 8 digitos' do
         bradesco.conta_corrente = '12345678'
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Conta corrente deve ter 7 dígitos.')
+        expect(bradesco.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
       end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se a carteira tiver mais de 2 digitos' do
         bradesco.carteira = '123'
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Carteira deve ter no máximo 2 dígitos.')
+        expect(bradesco.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
       end
     end
 
@@ -94,7 +94,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se sequencial de remessa tiver mais de 8 digitos' do
         bradesco.sequencial_remessa = '12345678'
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Sequencial remessa deve ter 7 dígitos.')
+        expect(bradesco.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
       end
     end
 
@@ -108,7 +108,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'deve ser invalido se codigo da empresa tiver mais de 20 digitos' do
         bradesco.codigo_empresa = ''.rjust(21, '0')
         expect(bradesco.invalid?).to be true
-        expect(bradesco.errors.full_messages).to include('Codigo empresa deve ser menor ou igual a 20 dígitos.')
+        expect(bradesco.errors.full_messages).to include('Codigo empresa é muito longo (máximo: 20 caracteres).')
       end
     end
   end

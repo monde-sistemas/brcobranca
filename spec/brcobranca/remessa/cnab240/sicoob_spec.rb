@@ -78,7 +78,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       it 'deve ser invalido se a conta corrente tiver mais de 8 digitos' do
         sicoob.conta_corrente = '123456789'
         expect(sicoob.invalid?).to be true
-        expect(sicoob.errors.full_messages).to include('Conta corrente deve ter 8 dígitos.')
+        expect(sicoob.errors.full_messages).to include('Conta corrente é muito longo (máximo: 8 caracteres).')
       end
     end
   end

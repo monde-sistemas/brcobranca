@@ -47,7 +47,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se o codigo cobranca tiver mais de 7 digitos' do
         sicoob_banco_brasil.codigo_cobranca = '12345678'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca deve ter até 7 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca é muito longo (máximo: 7 caracteres).')
       end
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a convenio tiver mais de 10 digitos' do
         sicoob_banco_brasil.convenio = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio deve ter até 10 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio é muito longo (máximo: 10 caracteres).')
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a conta corrente tiver mais de 10 digitos' do
         sicoob_banco_brasil.conta_corrente = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente deve ter até 10 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente é muito longo (máximo: 10 caracteres).')
       end
     end
 
@@ -71,13 +71,13 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se não for informado' do
         sicoob_banco_brasil.sequencial_remessa = nil
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa deve ser informado.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa não pode estar em branco.')
       end
 
       it 'deve ser invalido se o sequencial remessa tiver mais de 8 digitos' do
         sicoob_banco_brasil.sequencial_remessa = '123456789'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa deve ter até 8 dígitos.')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 8 caracteres).')
       end
     end
 

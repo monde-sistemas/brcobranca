@@ -37,7 +37,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       it 'deve ser invalido se a agencia tiver mais de 3 digitos' do
         banco_brasilia.agencia = '1234'
         expect(banco_brasilia.invalid?).to be true
-        expect(banco_brasilia.errors.full_messages).to include('Agencia deve ter 3 dígitos.')
+        expect(banco_brasilia.errors.full_messages).to include('Agencia é muito longo (máximo: 3 caracteres).')
       end
     end
 
@@ -51,7 +51,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
         banco_brasilia.digito_conta = '12'
         expect(banco_brasilia.invalid?).to be true
-        expect(banco_brasilia.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(banco_brasilia.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       it 'deve ser invalido se a conta corrente tiver mais de 7 digitos' do
         banco_brasilia.conta_corrente = '12345678'
         expect(banco_brasilia.invalid?).to be true
-        expect(banco_brasilia.errors.full_messages).to include('Conta corrente deve ter 7 dígitos.')
+        expect(banco_brasilia.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
       end
     end
 
@@ -79,7 +79,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
       it 'deve ser inválido se a carteira tiver 1 dígito' do
         banco_brasilia.carteira = '12'
         expect(banco_brasilia.invalid?).to be true
-        expect(banco_brasilia.errors.full_messages).to include('Carteira deve ter 1 dígito.')
+        expect(banco_brasilia.errors.full_messages).to include('Carteira é muito longo (máximo: 1 caracteres).')
       end
     end
   end

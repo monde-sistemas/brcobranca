@@ -10,18 +10,17 @@ module Brcobranca
         # Codigo de transmissao fornecido pelo banco
         attr_accessor :codigo_transmissao
 
-        validates_presence_of :agencia, :conta_corrente, message: 'não pode estar em branco.'
-        validates_presence_of :documento_cedente, :digito_conta, message: 'não pode estar em branco.'
-        validates_presence_of :codigo_transmissao, message: 'não pode estar em branco.'
+        validates_presence_of :agencia, :conta_corrente, :documento_cedente,
+                              :digito_conta, :codigo_transmissao
 
-        validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
-        validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
-        validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
-        validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
-        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
-        validates_length_of :codigo_transmissao, maximum: 20, message: 'deve ter 20 dígitos.'
+        validates_length_of :agencia, maximum: 4
+        validates_length_of :conta_corrente, maximum: 5
+        validates_length_of :documento_cedente, in: 11..14
+        validates_length_of :carteira, maximum: 2
+        validates_length_of :digito_conta, maximum: 1
+        validates_length_of :codigo_transmissao, maximum: 20
 
-        validates_inclusion_of :carteira, in: %w(01 03 04 05 06 07), message: 'não é válida.'
+        validates_inclusion_of :carteira, in: %w(01 03 04 05 06 07)
 
         # Nova instancia do Unicred
         def initialize(campos = {})
