@@ -92,6 +92,8 @@ module Brcobranca
       # Nova instancia da classe Base
       # @param [Hash] campos
       def initialize(campos = {})
+        Brcobranca.i18n
+
         padrao = {
           moeda: '9', data_documento: Date.today, data_vencimento: Date.today, quantidade: 1,
           especie_documento: 'DM', especie: 'R$', aceite: 'S', valor: 0.0,
