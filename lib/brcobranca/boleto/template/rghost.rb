@@ -120,7 +120,7 @@ module Brcobranca
 
         # Define o template a ser usado no boleto
         def modelo_generico_template(doc, _boleto, template_path)
-          doc.define_template(:template, template_path, x: '0.3 cm', y: '0 cm')
+          doc.define_template(:template, template_path, x: '0.25 cm', y: '1.5 cm')
           doc.use_template :template
 
           doc.define_tags do
@@ -138,30 +138,30 @@ module Brcobranca
         def modelo_generico_cabecalho(doc, boleto)
           # INICIO Primeira parte do BOLETO
           # Pontos iniciais em x e y
-          @x = 0.36
-          @y = 24.2
+          @x = 0.50
+          @y = 28.15
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
 
-          move_more(doc, 4.84, 0.03)
+          move_more(doc, 4.84, 0.07)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
-          move_more(doc, 2.3, 0)
+          move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
-          move_more(doc, -6.8, -0.9)
+          move_more(doc, -6.5, -0.83)
 
           doc.show boleto.cedente
 
-          move_more(doc, 10.3, 0)
+          move_more(doc, 9.3, 0)
           doc.show boleto.agencia_conta_boleto
 
-          move_more(doc, 3.2, 0)
+          move_more(doc, 4.2, 0)
           doc.show boleto.especie
 
           move_more(doc, 1.5, 0)
           doc.show boleto.quantidade
 
-          move_more(doc, -15, -0.8)
+          move_more(doc, -15, -0.9)
           doc.show boleto.documento_ou_numero
 
           move_more(doc, 6.3, 0)
@@ -170,10 +170,10 @@ module Brcobranca
           move_more(doc, 5, 0)
           doc.show boleto.data_vencimento.to_s_br
 
-          move_more(doc, 4.5, 0.8)
+          move_more(doc, 4.5, 0.9)
           doc.show boleto.nosso_numero_boleto
 
-          move_more(doc, 0, -0.8)
+          move_more(doc, 0, -0.9)
           doc.show boleto.valor_documento.to_currency
 
           move_more(doc, -15, -1.3)
@@ -191,24 +191,24 @@ module Brcobranca
         def modelo_generico_rodape(doc, boleto)
           # INICIO Segunda parte do BOLETO BB
           # Pontos iniciais em x e y
-          @x = 0.36
-          @y = 14.27
+          @x = 0.50
+          @y = 12.96
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
 
           move_more(doc, 4.84, 0.07)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
 
-          move_more(doc, 2.3, 0)
+          move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
 
-          move_more(doc, -6.8, -0.9)
+          move_more(doc, -6.5, -1)
           doc.show boleto.local_pagamento
 
           move_more(doc, 15.8, 0)
           doc.show boleto.data_vencimento.to_s_br if boleto.data_vencimento
 
-          move_more(doc, -15.8, -0.9)
+          move_more(doc, -15.8, -0.8)
           if boleto.cedente_endereco
             doc.show boleto.cedente_endereco
             move_more(doc, 1.2, 0.3)
