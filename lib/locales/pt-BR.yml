@@ -1,0 +1,16 @@
+pt-BR:
+  errors: &errors
+    format: ! '%{attribute} %{message}'
+    messages:
+      blank: não pode estar em branco.
+      not_a_number: não é um número.
+      inclusion: não existente para este banco.
+      greater_than: deve ser maior que %{count}.
+      greater_than_or_equal_to: deve ser maior ou igual a %{count}.
+      less_than: deve ser menor que %{count}.
+      less_than_or_equal_to: deve ser menor ou igual a %{count}.
+      too_long: ! 'é muito longo (máximo: %{count} caracteres).'
+      too_short: ! 'é muito curto (mínimo: %{count} caracteres).'
+      wrong_length:
+        one: deve ter 1 dígito.
+        other: deve ter %{count} dígitos.
