@@ -2,12 +2,12 @@
 module Brcobranca
   module Boleto
     class Cecred < Base # Cecred
-      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :conta_corrente, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
-      validates_length_of :carteira, is: 2, message: 'deve ser igual a 2 dígitos.'
-      validates_length_of :convenio, is: 6, message: 'deve ser igual a 6 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :conta_corrente, maximum: 7
+      validates_length_of :carteira, is: 2
+      validates_length_of :convenio, is: 6
 
-      validates_length_of :numero, maximum: 9, message: 'deve ser menor ou igual a 9 dígitos.'
+      validates_length_of :numero, maximum: 9
 
       # Nova instancia do Cecred
       # @param (see Brcobranca::Boleto::Base#initialize)

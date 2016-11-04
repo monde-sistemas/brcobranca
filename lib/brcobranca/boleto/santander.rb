@@ -4,9 +4,9 @@
 module Brcobranca
   module Boleto
     class Santander < Base # Banco Santander
-      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
-      validates_length_of :numero, maximum: 12, message: 'deve ser menor ou igual a 12 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :convenio, maximum: 7
+      validates_length_of :numero, maximum: 12
 
       # Nova instancia do Santander
       # @param (see Brcobranca::Boleto::Base#initialize)

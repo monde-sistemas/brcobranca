@@ -6,13 +6,13 @@ module Brcobranca
 
       validates_presence_of :codigo_cedente
 
-      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :conta_corrente, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
-      validates_length_of :codigo_cedente, is: 4, message: 'deve ser igual a 4 dígitos.'
-      validates_length_of :carteira, is: 2, message: 'deve ser igual a 2 dígitos.'
-      validates_length_of :convenio, is: 7, message: 'deve ser igual a 7 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :conta_corrente, maximum: 7
+      validates_length_of :codigo_cedente, is: 4
+      validates_length_of :carteira, is: 2
+      validates_length_of :convenio, is: 7
 
-      validates_length_of :numero, maximum: 6, message: 'deve ser menor ou igual a 6 dígitos.'
+      validates_length_of :numero, maximum: 6
 
       # Nova instancia do CrediSIS
       # @param (see Brcobranca::Boleto::Base#initialize)

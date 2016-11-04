@@ -2,11 +2,11 @@
 module Brcobranca
   module Boleto
     class Banestes < Base # Sicoob (Bancoob)
-      validates_length_of :agencia, maximum: 4, message: "deve ser menor ou igual a 4 dígitos."
-      validates_length_of :conta_corrente, maximum: 11, message: "deve ser menor ou igual a 11 dígitos."
-      validates_length_of :numero, maximum: 8, message: "deve ser menor ou igual a 8 dígitos."
-      validates_length_of :variacao, maximum: 1, message: 'deve ser menor ou igual a 1 dígitos.'
-      validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :conta_corrente, maximum: 11
+      validates_length_of :numero, maximum: 8
+      validates_length_of :variacao, maximum: 1
+      validates_length_of :carteira, maximum: 2
 
       def initialize(campos = {})
         campos = { carteira: "11", variacao: '2' }.merge!(campos)

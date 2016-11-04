@@ -4,6 +4,7 @@ module Brcobranca
   module Boleto
     # Classe base para todas as classes de boletos
     class Base
+      extend ActiveModel::Translation
       extend Template::Base
 
       # Configura gerador de arquivo de boleto e código de barras.
@@ -85,8 +86,8 @@ module Brcobranca
       attr_accessor :cedente_endereco
 
       # Validações
-      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero, message: 'não pode estar em branco.'
-      validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, message: 'não é um número.', allow_nil: true
+      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero
+      validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, allow_nil: true
 
       # Nova instancia da classe Base
       # @param [Hash] campos

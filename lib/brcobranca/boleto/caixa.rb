@@ -14,9 +14,9 @@ module Brcobranca
       #Modalidade/Carteira de Cobrança (RG-Registrada | SR-Sem Registro)
       validates_inclusion_of :carteira, in: %w( RG SR ), message: 'não existente para esse banco.'
       # Emissão do boleto (4-Beneficiário)
-      validates_length_of :emissao, is: 1, message: 'deve possuir 1 dígitos.'
-      validates_length_of :convenio, is: 6, message: 'deve possuir 6 dígitos.'
-      validates_length_of :numero, is: 15, message: 'deve possuir 15 dígitos.'
+      validates_length_of :emissao, is: 1
+      validates_length_of :convenio, is: 6
+      validates_length_of :numero, is: 15
 
       # Nova instância da CaixaEconomica
       # @param (see Brcobranca::Boleto::Base#initialize)
