@@ -253,23 +253,29 @@ module Brcobranca
           move_more(doc, 10.1, 0)
           doc.show boleto.valor_documento.to_currency
 
-          move_more(doc, -15.8, -0.9)
-          doc.show boleto.instrucao1
+          if boleto.instrucoes_pagamento
+            doc.text_area boleto.instrucoes_pagamento, width: '14 cm', text_align: :left, x: "#{@x -= 15.8} cm", y: "#{@y -= 0.9} cm", row_height: '0.4 cm'
+            move_more(doc, 0, -2)
+          else
+            move_more(doc, -15.8, -0.9)
+            doc.show boleto.instrucao1
 
-          move_more(doc, 0, -0.4)
-          doc.show boleto.instrucao2
+            move_more(doc, 0, -0.4)
+            doc.show boleto.instrucao2
 
-          move_more(doc, 0, -0.4)
-          doc.show boleto.instrucao3
+            move_more(doc, 0, -0.4)
+            doc.show boleto.instrucao3
 
-          move_more(doc, 0, -0.4)
-          doc.show boleto.instrucao4
+            move_more(doc, 0, -0.4)
+            doc.show boleto.instrucao4
 
-          move_more(doc, 0, -0.4)
-          doc.show boleto.instrucao5
+            move_more(doc, 0, -0.4)
+            doc.show boleto.instrucao5
 
-          move_more(doc, 0, -0.4)
-          doc.show boleto.instrucao6
+            move_more(doc, 0, -0.4)
+            doc.show boleto.instrucao6
+          end
+
 
           move_more(doc, 0.5, -1.9)
           doc.show "#{boleto.sacado} - CPF/CNPJ: #{boleto.sacado_documento.formata_documento}" if boleto.sacado && boleto.sacado_documento
