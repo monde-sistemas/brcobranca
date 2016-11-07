@@ -10,12 +10,11 @@ module Brcobranca
         # identificacao da distribuicao do boleto (attr na classe base)
         #   campo nao tratado pelo sistema do Banco do Brasil
 
-        validates_presence_of :carteira, :variacao, message: 'não pode estar em branco.'
-        validates_presence_of :convenio, message: 'não pode estar em branco.'
-        validates_length_of :conta_corrente, maximum: 12, message: 'deve ter 12 dígitos.'
-        validates_length_of :agencia, maximum: 5, message: 'deve ter 5 dígitos.'
-        validates_length_of :carteira, is: 2, message: 'deve ter 2 dígitos.'
-        validates_length_of :variacao, is: 3, message: 'deve ter 3 dígitos.'
+        validates_presence_of :carteira, :variacao, :convenio
+        validates_length_of :conta_corrente, maximum: 12
+        validates_length_of :agencia, maximum: 5
+        validates_length_of :carteira, is: 2
+        validates_length_of :variacao, is: 3
         validates_length_of :convenio, in: 4..7, message: 'deve ter de 4 a 7 dígitos.'
 
         def initialize(campos = {})

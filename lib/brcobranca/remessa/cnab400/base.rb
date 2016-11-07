@@ -3,7 +3,7 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Base < Brcobranca::Remessa::Base
-        validates_presence_of :carteira, message: 'não pode estar em branco.'
+        validates_presence_of :carteira
 
         # Data da geracao do arquivo seguindo o padrao DDMMAA
         #

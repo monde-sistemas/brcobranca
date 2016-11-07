@@ -12,11 +12,9 @@ module Brcobranca
       # <b>REQUERIDO</b>: Byte de identificação do cedente do bloqueto utilizado para compor o nosso número.
       attr_accessor :byte_idt
 
-      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :numero, maximum: 5, message: 'deve ser menor ou igual a 5 dígitos.'
-      validates_length_of :conta_corrente, maximum: 5, message: 'deve ser menor ou igual a 5 dígitos.'
-      validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
-      validates_length_of :posto, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :numero, :conta_corrente, maximum: 5
+      validates_length_of :carteira, :posto, maximum: 2
       validates_length_of :byte_idt, is: 1, message: 'deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário'
 
       # Nova instancia do Bradesco

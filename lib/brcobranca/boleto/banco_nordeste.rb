@@ -2,10 +2,10 @@
 module Brcobranca
   module Boleto
     class BancoNordeste < Base # Banco do Nordeste
-      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
-      validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
-      validates_length_of :carteira, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
-      validates_length_of :numero, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :agencia, maximum: 4
+      validates_length_of :convenio, maximum: 7
+      validates_length_of :carteira, maximum: 2
+      validates_length_of :numero, maximum: 7
 
       # Nova instancia do Banco do Nordeste
       # @param (see Brcobranca::Boleto::Base#initialize)

@@ -43,7 +43,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser invalido se a agencia tiver mais de 4 dígitos' do
         credisis.agencia = '12345'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
+        expect(credisis.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
         credisis.digito_conta = '12'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
+        expect(credisis.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
       end
     end
 
@@ -71,7 +71,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser inválido se a conta corrente tiver mais de 8 dígitos' do
         credisis.conta_corrente = '123456789'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Conta corrente deve ter 8 dígitos.')
+        expect(credisis.errors.full_messages).to include('Conta corrente é muito longo (máximo: 8 caracteres).')
       end
     end
 
@@ -85,7 +85,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser inválido se o código do cedente tiver mais de 4 dígitos' do
         credisis.codigo_cedente = '12345'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Codigo cedente deve ter 4 dígitos.')
+        expect(credisis.errors.full_messages).to include('Codigo cedente é muito longo (máximo: 4 caracteres).')
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser inválido se a carteira tiver mais de 2 dígitos' do
         credisis.carteira = '123'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
+        expect(credisis.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
       end
     end
 
@@ -107,7 +107,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       it 'deve ser inválido se a sequencial remessa tiver mais de 7 dígitos' do
         credisis.sequencial_remessa = '12345678'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Sequencial remessa deve ter 7 dígitos.')
+        expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
       end
     end
   end

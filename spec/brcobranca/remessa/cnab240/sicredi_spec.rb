@@ -48,7 +48,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       it 'deve ser invalido se o posto tiver mais de 2 dígitos' do
         sicredi.posto = '123'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Posto deve ser menor ou igual a 2 dígitos.')
+        expect(sicredi.errors.full_messages).to include('Posto é muito longo (máximo: 2 caracteres).')
       end
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
         sicredi.conta_corrente = '123456'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
+        expect(sicredi.errors.full_messages).to include('Conta corrente é muito longo (máximo: 5 caracteres).')
       end
     end
 
@@ -109,7 +109,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       it 'deve ser inválido se o dígito conta tiver mais de 1 dígito' do
         sicredi.digito_conta = '12'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Digito conta deve ser igual a 1 dígito.')
+        expect(sicredi.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
       end
     end
   end

@@ -4,6 +4,8 @@ require 'unidecoder'
 module Brcobranca
   module Remessa
     class Base
+      extend ActiveModel::Translation
+
       # pagamentos da remessa (cada pagamento representa um registro detalhe no arquivo)
       attr_accessor :pagamentos
       # empresa mae (razao social)
@@ -24,7 +26,7 @@ module Brcobranca
       # Validações do Rails 3
       include ActiveModel::Validations
 
-      validates_presence_of :pagamentos, :empresa_mae, message: 'não pode estar em branco.'
+      validates_presence_of :pagamentos, :empresa_mae
 
       validates_each :pagamentos do |record, attr, value|
         if value.is_a? Array
@@ -48,6 +50,8 @@ module Brcobranca
       # @param campos [Hash]
       #
       def initialize(campos = {})
+        Brcobranca.i18n
+
         campos = { aceite: 'N' }.merge!(campos)
         campos.each do |campo, valor|
           send "#{campo}=", valor

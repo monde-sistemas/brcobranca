@@ -54,7 +54,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       it 'deve ser invalido se o convenio tiver mais de 6 digitos' do
         cecred.convenio = '1234567'
         expect(cecred.invalid?).to be true
-        expect(cecred.errors.full_messages).to include('Convenio não deve ter mais de 6 dígitos.')
+        expect(cecred.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
       end
     end
 
@@ -68,7 +68,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       it 'deve ser invalido se o conta corrente tiver mais de 7 digitos' do
         cecred.conta_corrente = ''.rjust(8, '0')
         expect(cecred.invalid?).to be true
-        expect(cecred.errors.full_messages).to include('Conta corrente não deve ter mais de 7 dígitos.')
+        expect(cecred.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
       end
     end
   end

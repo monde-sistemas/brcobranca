@@ -6,12 +6,10 @@ module Brcobranca
         # digito da agencia
         attr_accessor :digito_agencia
 
-        validates_presence_of :digito_agencia, message: 'não pode estar em branco.'
-        validates_presence_of :convenio, message: 'não pode estar em branco.'
-        validates_presence_of :conta_corrente, message: 'não pode estar em branco.'
-        validates_length_of :convenio, maximum: 6, message: 'não deve ter mais de 6 dígitos.'
-        validates_length_of :conta_corrente, maximum: 7, message: 'não deve ter mais de 7 dígitos.'
-        validates_length_of :digito_agencia, is: 1, message: 'deve ter 1 dígito.'
+        validates_presence_of :digito_agencia, :convenio, :conta_corrente
+        validates_length_of :convenio, maximum: 6
+        validates_length_of :conta_corrente, maximum: 7
+        validates_length_of :digito_agencia, is: 1
 
         def initialize(campos = {})
           campos = { emissao_boleto: '2',

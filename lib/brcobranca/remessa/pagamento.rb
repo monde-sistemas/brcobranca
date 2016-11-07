@@ -2,7 +2,7 @@
 module Brcobranca
   module Remessa
     class Pagamento
-      # Validações do Rails 3
+      extend ActiveModel::Translation
       include ActiveModel::Validations
 
       # <b>REQUERIDO</b>: nosso numero
@@ -84,11 +84,11 @@ module Brcobranca
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
         :documento_sacado, :nome_sacado, :endereco_sacado,
-        :cep_sacado, :cidade_sacado, :uf_sacado, message: 'não pode estar em branco.'
-      validates_length_of :cep_sacado, is: 8, message: 'deve ter 8 dígitos.'
-      validates_length_of :cod_desconto, is: 1, message: 'deve ter 1 dígito.'
-      validates_length_of :especie_titulo, is: 2, message: 'deve ter 2 dígitos.', allow_blank: true
-      validates_length_of :identificacao_ocorrencia, is: 2, message: 'deve ter 2 dígitos.'
+        :cep_sacado, :cidade_sacado, :uf_sacado
+      validates_length_of :cep_sacado, is: 8
+      validates_length_of :cod_desconto, is: 1
+      validates_length_of :especie_titulo, is: 2, allow_blank: true
+      validates_length_of :identificacao_ocorrencia, is: 2
 
       # Nova instancia da classe Pagamento
       #

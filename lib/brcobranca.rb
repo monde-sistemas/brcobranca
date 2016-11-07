@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'active_model'
+require 'i18n'
 require 'brcobranca/calculo'
 require 'brcobranca/limpeza'
 require 'brcobranca/formatacao'
@@ -74,7 +75,7 @@ module Brcobranca
     attr_accessor :external_encoding
 
     # Atribui valores padrões de configuração
-    def initialize
+    def initialize 
       self.gerador = :rghost
       self.formato = :pdf
       self.resolucao = 150
@@ -90,6 +91,12 @@ module Brcobranca
   # Bloco para realizar configurações customizadas.
   def self.setup
     yield(configuration)
+  end
+
+  def self.i18n
+    I18n.load_path += Dir.glob(File.dirname(__FILE__) + "/locales/pt-BR.yml")
+    I18n.available_locales = [:en, 'pt-BR']
+    I18n.locale = 'pt-BR'
   end
 
   # Módulo para classes de boletos
