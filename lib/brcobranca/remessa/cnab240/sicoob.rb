@@ -43,6 +43,7 @@ module Brcobranca
             parcela: '01',
             modalidade_carteira: '01',
             forma_cadastramento: '0',
+            dias_baixa: ''.rjust(3, ' '),
             posto: '00'}.merge!(campos)
           super(campos)
         end
@@ -63,6 +64,14 @@ module Brcobranca
           '040'
         end
 
+        def uso_exclusivo_banco
+          ''.rjust(20, ' ')
+        end
+
+        def uso_exclusivo_empresa
+          ''.rjust(20, ' ')
+        end
+
         def digito_agencia
           # utilizando a agencia com 4 digitos
           # para calcular o digito
@@ -73,6 +82,10 @@ module Brcobranca
           # utilizando a conta corrente com 5 digitos
           # para calcular o digito
           conta_corrente.modulo11(mapeamento: { 10 => '0' }).to_s
+        end
+
+        def dv_agencia_cobradora
+          ' '
         end
 
         def codigo_convenio
