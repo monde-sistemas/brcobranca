@@ -56,7 +56,7 @@ module Brcobranca
       attr_accessor :demonstrativo
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
       # O método abaixo tem prioridade nas instruções
-      attr_accessor :instrucoes_pagamento
+      attr_accessor :instrucoes
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
       attr_accessor :instrucao1
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
