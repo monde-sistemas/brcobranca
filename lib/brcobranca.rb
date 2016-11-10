@@ -104,6 +104,7 @@ module Brcobranca
     autoload :Base,          'brcobranca/boleto/base'
     autoload :BancoNordeste, 'brcobranca/boleto/banco_nordeste'
     autoload :BancoBrasil,   'brcobranca/boleto/banco_brasil'
+    autoload :Banrisul,      'brcobranca/boleto/banrisul'
     autoload :BancoBrasilia, 'brcobranca/boleto/banco_brasilia'
     autoload :Itau,          'brcobranca/boleto/itau'
     autoload :Hsbc,          'brcobranca/boleto/hsbc'
