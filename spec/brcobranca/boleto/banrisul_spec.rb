@@ -3,17 +3,16 @@ require 'spec_helper'
 
 RSpec.describe Brcobranca::Boleto::Banrisul do
   let(:valid_attributes) {{
-    valor: 550.0,
+    valor: 0.0,
     local_pagamento: 'Pagável em qualquer banco até o vencimento',
     cedente: 'Kivanio Barbosa',
     documento_cedente: '12345678912',
     sacado: 'Claudio Pozzebom',
     sacado_documento: '12345678900',
-    agencia: '1102', # 1102.48
-    conta_corrente: '0614533220',
-    convenio: '9000150', # 900015.0.46
-    numero: '22832563',  # 22832563.51
-    documento: 21144
+    agencia: '1102',
+    conta_corrente: '',
+    convenio: '9000150',
+    numero: '22832563'
   }}
 
   it 'Criar nova instancia com atributos padrões' do
@@ -42,8 +41,8 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     expect(boleto_novo.data_vencimento).to eql(Date.today)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
-    expect(boleto_novo.valor).to eql(550.0)
-    expect(boleto_novo.valor_documento).to eql(550.0)
+    expect(boleto_novo.valor).to eql(0.0)
+    expect(boleto_novo.valor_documento).to eql(0.0)
     expect(boleto_novo.local_pagamento).to eql('Pagável em qualquer banco até o vencimento')
     expect(boleto_novo.cedente).to eql('Kivanio Barbosa')
     expect(boleto_novo.documento_cedente).to eql('12345678912')
@@ -57,32 +56,14 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   end
 
   it 'Montar código de barras para carteira número 06' do
-    valid_attributes[:valor] = 2952.95
-    valid_attributes[:data_documento] = Date.parse('2009-04-30')
-    valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
-    valid_attributes[:numero] = '75896452'
-    valid_attributes[:conta_corrente] = '0403005'
-    valid_attributes[:agencia] = '1172'
+    valid_attributes[:valor] = 550.0
+    valid_attributes[:data_documento] = Date.parse('2000-07-04')
+    valid_attributes[:data_vencimento] = Date.parse('2000-07-04')
     boleto_novo = described_class.new(valid_attributes)
 
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('1172060007589645204030050')
     expect(boleto_novo.codigo_barras).to eql('23795422300002952951172060007589645204030050')
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('23791.17209 60007.589645 52040.300502 5 42230000295295')
-  end
-
-  it 'Montar código de barras para carteira número 03' do
-    valid_attributes[:valor] = 135.00
-    valid_attributes[:data_vencimento] = Date.parse('2008-02-02')
-    valid_attributes[:data_documento] = Date.parse('2008-02-01')
-    valid_attributes[:numero] = '777700168'
-    valid_attributes[:conta_corrente] = '61900'
-    valid_attributes[:agencia] = '4042'
-    valid_attributes[:carteira] = '03'
-    boleto_novo = described_class.new(valid_attributes)
-
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('4042030077770016800619000')
-    expect(boleto_novo.codigo_barras).to eql('23791377000000135004042030077770016800619000')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('23794.04201 30077.770011 68006.190000 1 37700000013500')
   end
 
   it 'Não permitir gerar boleto com atributos inválido' do
@@ -94,41 +75,18 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   it 'Montar nosso_numero_boleto' do
     boleto_novo = described_class.new(valid_attributes)
 
-    boleto_novo.numero = '00000000525'
-    boleto_novo.carteira = '06'
-    expect(boleto_novo.nosso_numero_boleto).to eql('06/00000000525-P')
-    expect(boleto_novo.nosso_numero_dv).to eql('P')
+    boleto_novo.numero = '525'
+    expect(boleto_novo.nosso_numero_boleto).to eql('00000525-66')
+    expect(boleto_novo.nosso_numero_dv).to eql('66')
 
-    boleto_novo.numero = '00000000001'
-    boleto_novo.carteira = '09'
-    expect(boleto_novo.nosso_numero_boleto).to eql('09/00000000001-1')
-    expect(boleto_novo.nosso_numero_dv).to eql(1)
-
-    boleto_novo.numero = '00000000002'
-    boleto_novo.carteira = '19'
-    expect(boleto_novo.nosso_numero_boleto).to eql('19/00000000002-8')
-    expect(boleto_novo.nosso_numero_dv).to eql(8)
-
-    boleto_novo.numero = 6
-    boleto_novo.carteira = '19'
-    expect(boleto_novo.nosso_numero_boleto).to eql('19/00000000006-0')
-    expect(boleto_novo.nosso_numero_dv).to eql(0)
-
-    boleto_novo.numero = '00000000001'
-    boleto_novo.carteira = '19'
-    expect(boleto_novo.nosso_numero_boleto).to eql('19/00000000001-P')
-    expect(boleto_novo.nosso_numero_dv).to eql('P')
+    boleto_novo.numero = '2808'
+    expect(boleto_novo.nosso_numero_boleto).to eql('00002808-44')
+    expect(boleto_novo.nosso_numero_dv).to eql('44')
   end
 
   it 'Montar agencia_conta_boleto' do
     boleto_novo = described_class.new(valid_attributes)
-
-    expect(boleto_novo.agencia_conta_boleto).to eql('0567.82/00000001-0')
-    boleto_novo.agencia = '0719'
-    expect(boleto_novo.agencia_conta_boleto).to eql('0719-6 / 0061900-0')
-    boleto_novo.agencia = '0548'
-    boleto_novo.conta_corrente = '1448'
-    expect(boleto_novo.agencia_conta_boleto).to eql('0548-7 / 0001448-6')
+    expect(boleto_novo.agencia_conta_boleto).to eql('1102.48/9000150-96')
   end
 
   describe 'Busca logotipo do banco' do

@@ -3,8 +3,8 @@ module Brcobranca
   module Boleto
     class Banrisul < Base # Banco BANRISUL
       validates_length_of :agencia, maximum: 4
-      validates_length_of :numero, maximum: 10
-      validates_length_of :convenio, maximum: 13
+      validates_length_of :numero, maximum: 8
+      validates_length_of :convenio, maximum: 7
       validates_length_of :carteira, is: 1
 
       # Nova instancia do Banrisul
@@ -25,9 +25,9 @@ module Brcobranca
       end
 
       # Número seqüencial utilizado para identificar o boleto.
-      # @return [String] 10 caracteres numéricos.
+      # @return [String] 8 caracteres numéricos.
       def numero=(valor)
-        @numero = valor.to_s.rjust(10, '0') if valor
+        @numero = valor.to_s.rjust(8, '0') if valor
       end
 
       # Nosso número para exibir no boleto.
@@ -38,13 +38,17 @@ module Brcobranca
         "#{numero}-#{nosso_numero_dv}"
       end
 
-      def gerar_dac_dvs(campo)
+      def gerar_numero_controle(campo)
         primeiro_digito = campo.modulo10
-        segundo_digito = "#{campo}#{primeiro_digito}".modulo11
+        segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
+          multiplicador: [7, 6, 5, 4, 3, 2]
+        )
 
         if segundo_digito == 10
           primeiro_digito += 1
-          segundo_digito = "#{campo}#{primeiro_digito}".modulo11
+          segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
+            multiplicador: [7, 6, 5, 4, 3, 2]
+          )
         end
 
         "#{primeiro_digito}#{segundo_digito}"
@@ -53,25 +57,25 @@ module Brcobranca
       # Dígito verificador da agência
       # @return [Integer] 2 caracteres numéricos.
       def agencia_dv
-        gerar_dac_dvs(agencia)
+        gerar_numero_controle(agencia)
       end
 
       # Dígito verificador do nosso número
       # @return [Integer] 1 caracteres numéricos.
       def nosso_numero_dv
-        gerar_dac_dvs(numero)
+        gerar_numero_controle(numero)
       end
 
       # Dígito verificador do convenio
       # @return [Integer] 2 caracteres numéricos.
       def convenio_dv
-        gerar_dac_dvs(convenio)
+        gerar_numero_controle("#{agencia}#{convenio}")
       end
 
       # Agência + convênio do cliente para exibir no boleto.
       # @return [String]
       # @example
-      #  boleto.agencia_conta_boleto #=> "0548.23/00001448-26"
+      #  boleto.agencia_conta_boleto #=> "0548.23/0000140-26"
       def agencia_conta_boleto
         "#{agencia}.#{agencia_dv}/#{convenio}-#{convenio_dv}"
       end
@@ -79,15 +83,18 @@ module Brcobranca
       # Segunda parte do código de barras.
       #
       # Posição | Tamanho | Conteúdo<br/>
-      # 20 a 23 | 4 |  Agência Cedente (Sem o digito verificador, completar com zeros a esquerda quando  necessário)<br/>
-      # 24 a 25 | 2 |  Carteira<br/>
-      # 26 a 36 | 11 |  Número do Nosso Número(Sem o digito verificador)<br/>
-      # 37 a 43 | 7 |  Conta do Cedente (Sem o digito verificador, completar com zeros a esquerda quando necessário)<br/>
-      # 44 a 44 | 1 |  Zero<br/>
+      # 20        1         Constante 2, identifica o Produto
+      # 21        1         Constante 1, identifica o Sistema
+      # 22 a 25   4         Agência do Beneficiário, sem NC
+      # 26 a 32   7         Código do Cedente, sem NC
+      # 33 a 40   8         Nosso Número, sem NC
+      # 41 a 42   2         Constante 40
+      # 43 a 44   2         Número de controle (cálculo através dos modulos 10 e 11)
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "#{agencia}#{carteira}#{numero}#{convenio}"
+        codigo_sem_nc = "21#{agencia}#{convenio}#{numero}40"
+        "#{codigo_sem_nc}#{gerar_numero_controle(codigo_sem_nc)}"
       end
     end
   end
