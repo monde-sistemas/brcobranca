@@ -2,18 +2,20 @@
 require 'spec_helper'
 
 RSpec.describe Brcobranca::Boleto::Banrisul do
-  let(:valid_attributes) {{
-    valor: 0.0,
-    local_pagamento: 'Pagável em qualquer banco até o vencimento',
-    cedente: 'Kivanio Barbosa',
-    documento_cedente: '12345678912',
-    sacado: 'Claudio Pozzebom',
-    sacado_documento: '12345678900',
-    agencia: '1102',
-    conta_corrente: '',
-    convenio: '9000150',
-    numero: '22832563'
-  }}
+  before do
+    @valid_attributes = {
+      valor: 0.0,
+      local_pagamento: 'Pagável em qualquer banco até o vencimento',
+      cedente: 'Kivanio Barbosa',
+      documento_cedente: '12345678912',
+      sacado: 'Claudio Pozzebom',
+      sacado_documento: '12345678900',
+      agencia: '1102',
+      conta_corrente: '',
+      convenio: '9000150',
+      numero: '22832563'
+    }
+  end
 
   it 'Criar nova instancia com atributos padrões' do
     boleto_novo = described_class.new
@@ -32,7 +34,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   end
 
   it 'Criar nova instancia com atributos válidos' do
-    boleto_novo = described_class.new(valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.banco).to eql('041')
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
@@ -48,22 +50,22 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     expect(boleto_novo.documento_cedente).to eql('12345678912')
     expect(boleto_novo.sacado).to eql('Claudio Pozzebom')
     expect(boleto_novo.sacado_documento).to eql('12345678900')
-    expect(boleto_novo.conta_corrente).to eql('0614533220')
+    expect(boleto_novo.convenio).to eql('9000150')
     expect(boleto_novo.agencia).to eql('1102')
     expect(boleto_novo.convenio).to eql("9000150")
-    expect(boleto_novo.numero).to eql('0022832563')
+    expect(boleto_novo.numero).to eql('22832563')
     expect(boleto_novo.carteira).to eql('1')
   end
 
-  it 'Montar código de barras para carteira número 06' do
-    valid_attributes[:valor] = 550.0
-    valid_attributes[:data_documento] = Date.parse('2000-07-04')
-    valid_attributes[:data_vencimento] = Date.parse('2000-07-04')
-    boleto_novo = described_class.new(valid_attributes)
+  it 'Montar código de barras' do
+    @valid_attributes[:valor] = 550.0
+    @valid_attributes[:data_documento] = Date.parse('2000-07-04')
+    @valid_attributes[:data_vencimento] = Date.parse('2000-07-04')
+    boleto_novo = described_class.new(@valid_attributes)
 
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('1172060007589645204030050')
-    expect(boleto_novo.codigo_barras).to eql('23795422300002952951172060007589645204030050')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('23791.17209 60007.589645 52040.300502 5 42230000295295')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('2111029000150228325634059')
+    expect(boleto_novo.codigo_barras).to eql('04198100100000550002111029000150228325634059')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('04192.11107 29000.150226 83256.340593 8 10010000055000')
   end
 
   it 'Não permitir gerar boleto com atributos inválido' do
@@ -73,7 +75,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   end
 
   it 'Montar nosso_numero_boleto' do
-    boleto_novo = described_class.new(valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
 
     boleto_novo.numero = '525'
     expect(boleto_novo.nosso_numero_boleto).to eql('00000525-66')
@@ -85,54 +87,8 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   end
 
   it 'Montar agencia_conta_boleto' do
-    boleto_novo = described_class.new(valid_attributes)
-    expect(boleto_novo.agencia_conta_boleto).to eql('1102.48/9000150-96')
-  end
-
-  describe 'Busca logotipo do banco' do
-    it_behaves_like 'busca_logotipo'
-  end
-
-  it 'Gerar boleto nos formatos válidos com método to_' do
-    valid_attributes[:valor] = 2952.95
-    valid_attributes[:data_documento] = Date.parse('2009-04-30')
-    valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
-    valid_attributes[:numero] = '75896452'
-    valid_attributes[:conta_corrente] = '0403005'
-    valid_attributes[:agencia] = '1172'
-    boleto_novo = described_class.new(valid_attributes)
-
-    %w(pdf jpg tif png).each do |format|
-      file_body = boleto_novo.send("to_#{format}".to_sym)
-      tmp_file = Tempfile.new('foobar.' << format)
-      tmp_file.puts file_body
-      tmp_file.close
-      expect(File.exist?(tmp_file.path)).to be_truthy
-      expect(File.stat(tmp_file.path).zero?).to be_falsey
-      expect(File.delete(tmp_file.path)).to eql(1)
-      expect(File.exist?(tmp_file.path)).to be_falsey
-    end
-  end
-
-  it 'Gerar boleto nos formatos válidos' do
-    valid_attributes[:valor] = 2952.95
-    valid_attributes[:data_documento] = Date.parse('2009-04-30')
-    valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
-    valid_attributes[:numero] = '75896452'
-    valid_attributes[:conta_corrente] = '0403005'
-    valid_attributes[:agencia] = '1172'
-    boleto_novo = described_class.new(valid_attributes)
-
-    %w(pdf jpg tif png).each do |format|
-      file_body = boleto_novo.to(format)
-      tmp_file = Tempfile.new('foobar.' << format)
-      tmp_file.puts file_body
-      tmp_file.close
-      expect(File.exist?(tmp_file.path)).to be_truthy
-      expect(File.stat(tmp_file.path).zero?).to be_falsey
-      expect(File.delete(tmp_file.path)).to eql(1)
-      expect(File.exist?(tmp_file.path)).to be_falsey
-    end
+    boleto_novo = described_class.new(@valid_attributes)
+    expect(boleto_novo.agencia_conta_boleto).to eql('1102.48 / 9000150-46')
   end
 
   describe "#agencia_dv" do
@@ -149,7 +105,32 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     it { expect(described_class.new(agencia: "0039").agencia_dv).to eq("80") }
   end
 
-  describe "#conta_corrente_dv" do
-    # it { expect(described_class.new(conta_corrente: "0301357").conta_corrente_dv).to eq("P") }
+  describe "#convenio_dv" do
+    it { expect(described_class.new(convenio: "9000150").convenio_dv).to eq("46") }
+    it { expect(described_class.new(convenio: "8503410").convenio_dv).to eq("60") }
+    it { expect(described_class.new(convenio: "8557540").convenio_dv).to eq("53") }
+  end
+
+  describe "#nosso_numero_dv" do
+    it { expect(described_class.new(numero: "22832563").nosso_numero_dv).to eq("51") }
+    it { expect(described_class.new(numero: "84736").nosso_numero_dv).to eq("84") }
+    it { expect(described_class.new(numero: "00649").nosso_numero_dv).to eq("47") }
+  end
+
+  describe 'Busca logotipo do banco' do
+    it_behaves_like 'busca_logotipo'
+  end
+
+  describe 'Formato do boleto' do
+    before do
+      @valid_attributes[:valor] = 2952.95
+      @valid_attributes[:data_documento] = Date.parse('2009-04-30')
+      @valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
+      @valid_attributes[:numero] = '75896452'
+      @valid_attributes[:conta_corrente] = '0403005'
+      @valid_attributes[:agencia] = '1172'
+    end
+
+    it_behaves_like 'formatos_validos'
   end
 end

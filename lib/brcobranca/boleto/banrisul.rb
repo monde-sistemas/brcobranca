@@ -41,14 +41,16 @@ module Brcobranca
       def gerar_numero_controle(campo)
         primeiro_digito = campo.modulo10
         segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
-          multiplicador: [7, 6, 5, 4, 3, 2]
-        )
+          multiplicador: (2..7).to_a,
+          mapeamento: { 0 => 1, 11 => 0 }
+        ) { |total| 11 - (total % 11) }
 
         if segundo_digito == 10
           primeiro_digito += 1
           segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
-            multiplicador: [7, 6, 5, 4, 3, 2]
-          )
+            multiplicador: (2..7).to_a,
+            mapeamento: { 0 => 1, 11 => 0 }
+          ) { |total| 11 - (total % 11) }
         end
 
         "#{primeiro_digito}#{segundo_digito}"
@@ -69,7 +71,7 @@ module Brcobranca
       # Dígito verificador do convenio
       # @return [Integer] 2 caracteres numéricos.
       def convenio_dv
-        gerar_numero_controle("#{agencia}#{convenio}")
+        gerar_numero_controle("#{convenio}")
       end
 
       # Agência + convênio do cliente para exibir no boleto.
@@ -77,7 +79,7 @@ module Brcobranca
       # @example
       #  boleto.agencia_conta_boleto #=> "0548.23/0000140-26"
       def agencia_conta_boleto
-        "#{agencia}.#{agencia_dv}/#{convenio}-#{convenio_dv}"
+        "#{agencia}.#{agencia_dv} / #{convenio}-#{convenio_dv}"
       end
 
       # Segunda parte do código de barras.
