@@ -38,19 +38,20 @@ module Brcobranca
         "#{numero}-#{nosso_numero_dv}"
       end
 
-      def gerar_numero_controle(campo)
-        primeiro_digito = campo.modulo10
-        segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
+      def calculo_dv_modulo11(campo_com_primeiro_dv)
+        campo_com_primeiro_dv.modulo11(
           multiplicador: (2..7).to_a,
           mapeamento: { 0 => 1, 11 => 0 }
         ) { |total| 11 - (total % 11) }
+      end
+
+      def gerar_numero_controle(campo)
+        primeiro_digito = campo.modulo10
+        segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
 
         if segundo_digito == 10
           primeiro_digito += 1
-          segundo_digito = "#{campo}#{primeiro_digito}".modulo11(
-            multiplicador: (2..7).to_a,
-            mapeamento: { 0 => 1, 11 => 0 }
-          ) { |total| 11 - (total % 11) }
+          segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
         end
 
         "#{primeiro_digito}#{segundo_digito}"
