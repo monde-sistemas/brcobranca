@@ -70,6 +70,16 @@ shared_examples_for 'cnab400' do
         documento_cedente: '12345678910',
         pagamentos: [pagamento]
       }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Banrisul
+      {
+        carteira: '1',
+        agencia: '1102',
+        convenio: '9000150',
+        digito_conta: '96',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        sequencial_remessa: '1',
+        pagamentos: [pagamento]
+      }
     else
       { carteira: '123',
         agencia: '1234',
