@@ -104,7 +104,7 @@ module Brcobranca
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # Código de Transmissão                 9[20]
-          detalhe << ''.rjust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
           detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')              # nosso numero                          9[8]
           detalhe << pagamento.formata_data_segundo_desconto                # data limite para o segundo desconto   9[06]
           detalhe << ''.rjust(1, ' ')                                       # brancos                               X[1]
