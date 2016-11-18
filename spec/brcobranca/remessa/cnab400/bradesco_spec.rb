@@ -7,6 +7,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       data_vencimento: Date.today,
       numero: 1,
       nosso_numero: 123,
+      documento: 6969,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -175,6 +176,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = bradesco.monta_detalhe pagamento, 1
+        expect(detalhe[37..61]).to eq "6969".ljust(25)
         expect(detalhe[70..80]).to eq '00000000123' # nosso numero
         expect(detalhe[81]).to eq 'P' # digito nosso numero (para nosso numero 123 o digito e P)
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
