@@ -23,7 +23,7 @@ module Brcobranca
         end
 
         def info_conta
-          ''.rjust(20, ' ')
+          codigo_cedente.ljust(20, ' ')
         end
 
         def cod_banco
@@ -38,81 +38,88 @@ module Brcobranca
           ''.rjust(294, ' ')
         end
 
-        def identificacao_empresa
-          # identificacao da empresa no banco
-          identificacao = '0'                            # vazio                       [1]
-          identificacao << carteira.to_s.rjust(3, '0')   # carteira                    [3]
-          identificacao << agencia                       # código da agência (sem dv)  [5]
-          identificacao << convenio                      # código da cedente (convênio)[7]
-          identificacao << '96'                          # dígitos da convênio         [2]
+        def codigo_cedente
+          "#{agencia}#{convenio}#{numero_controle(convenio)}"
         end
 
-        def digito_nosso_numero(nosso_numero)
-          "#{carteira}#{nosso_numero.to_s.rjust(11, '0')}".modulo11(
-            multiplicador: [2, 3, 4, 5, 6, 7],
-            mapeamento: { 10 => 'P', 11 => 0 }
+        def calculo_dv_modulo11(campo_com_primeiro_dv)
+          campo_com_primeiro_dv.modulo11(
+            multiplicador: (2..7).to_a,
+            mapeamento: { 0 => 1, 11 => 0 }
           ) { |total| 11 - (total % 11) }
         end
 
-        # Formata o endereco do sacado
-        # de acordo com os caracteres disponiveis (40)
-        # concatenando o endereco, cidade e uf
-        #
-        def formata_endereco_sacado(pgto)
-          endereco = "#{pgto.endereco_sacado}, #{pgto.cidade_sacado}/#{pgto.uf_sacado}"
-          return endereco.ljust(40, ' ') if endereco.size <= 40
-          "#{pgto.endereco_sacado[0..19]} #{pgto.cidade_sacado[0..14]}/#{pgto.uf_sacado}".format_size(40)
+        def numero_controle(campo)
+          primeiro_digito = campo.modulo10
+          segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
+
+          if segundo_digito == 10
+            primeiro_digito += 1
+            segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
+          end
+
+          "#{primeiro_digito}#{segundo_digito}"
+        end
+
+        def digito_nosso_numero(nosso_numero)
+          numero_controle(nosso_numero)
         end
 
         def monta_detalhe(pagamento, sequencial)
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
-          detalhe = '1'                                               # identificacao do registro                   9[01]       001 a 001
-          detalhe << ''.rjust(5, '0')                                 # agencia de debito (op)                      9[05]       002 a 006
-          detalhe << ''.rjust(1, '0')                                 # digito da agencia de debito (op)            X[01]       007 a 007
-          detalhe << ''.rjust(5, '0')                                 # razao da conta corrente de debito (op)      9[05]       008 a 012
-          detalhe << ''.rjust(7, '0')                                 # conta corrente (op)                         9[07]       013 a 019
-          detalhe << ''.rjust(1, '0')                                 # digito da conta corrente (op)               X[01]       020 a 020
-          detalhe << identificacao_empresa                            # identficacao da empresa                     X[17]       021 a 037
-          detalhe << pagamento.numero.to_s.ljust(25, ' ')   # num. controle                               X[25]       038 a 062
-          detalhe << ''.rjust(3, '0')                                 # codigo do banco (debito automatico apenas)  9[03]       063 a 065
-          detalhe << ''.rjust(1, '0')                                 # campo da multa                              9[01]       066 a 066 *
-          detalhe << ''.rjust(4, '0')                                 # percentual multa                            9[04]       067 a 070 *
-          detalhe << pagamento.nosso_numero.to_s.rjust(11, '0')       # identificacao do titulo (nosso numero)      9[11]       071 a 081
-          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s # digito de conferencia do nosso numero (dv)  X[01]       082 a 082
-          detalhe << ''.rjust(10, '0')                                # desconto por dia                            9[10]       083 a 092
-          detalhe << '2'                                              # condicao emissao boleto (2 = cliente)       9[01]       093 a 093
-          detalhe << 'N'                                              # emite boleto para debito                    X[01]       094 a 094
-          detalhe << ''.rjust(10, ' ')                                # operacao no banco (brancos)                 X[10]       095 a 104
-          detalhe << ' '                                              # indicador rateio                            X[01]       105 a 105
-          detalhe << '2'                                              # endereco para aviso debito (op 2 = ignora)  9[01]       106 a 106
-          detalhe << ''.rjust(2, ' ')                                 # brancos                                     X[02]       107 a 108
-          detalhe << pagamento.identificacao_ocorrencia               # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero.to_s.ljust(10, ' ')   # numero do documento alfanum.                X[10]       111 a 120
+          detalhe = '1'                                               # identificação do registro                   9[01]       001 a 001
+          detalhe << ''.rjust(16, ' ')                                # brancos                                     9[16]       002 a 017
+          detalhe << codigo_cedente.rjust(13, ' ')                    # código do cedente                           X[13]       018 a 030
+          detalhe << ''.rjust(7, ' ')                                 # brancos                                     X[07]       031 a 037
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')# num. controle                               X[25]       038 a 062
+          detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')        # identificação do título (nosso número)      9[08]       063 a 070
+          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s # dígitos de conferência do nosso número (dv) 9[02]       071 a 072
+          detalhe << ''.rjust(32, ' ')                                # mensagem no bloqueto                        X[32]       073 a 104
+          detalhe << ''.rjust(3, ' ')                                 # brancos                                     X[03]       105 a 107
+          detalhe << carteira                                         # carteira                                    9[01]       108 a 108
+          detalhe << pagamento.identificacao_ocorrencia               # identificacao ocorrencia                    9[02]       109 a 110
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ')# numero do documento alfanum.                X[10]       111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')     # data de vencimento                          9[06]       121 a 126
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
-          detalhe << ''.rjust(3, '0')                                 # banco encarregado (zeros)                   9[03]       140 a 142
-          detalhe << ''.rjust(5, '0')                                 # agencia depositaria (zeros)                 9[05]       143 a 147
-          detalhe << '01'                                             # especie do titulo                           9[02]       148 a 149
+          detalhe << cod_banco                                        # banco encarregado                           9[03]       140 a 142
+          detalhe << ''.rjust(5, ' ')                                 # agencia depositaria (brancos)               9[05]       143 a 147
+          detalhe << '08'                                             # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
           detalhe << ''.rjust(2, '0')                                 # 1a instrucao                                9[02]       157 a 158
           detalhe << ''.rjust(2, '0')                                 # 2a instrucao                                9[02]       159 a 160
-          detalhe << pagamento.formata_valor_mora                     # mora                                        9[13]       161 a 173
+          detalhe << tipo_mora(pagamento)                             # tipo de mora (diária ou mensal)             9[13]       161 a 161
+          detalhe << pagamento.formata_valor_mora(12)                 # mora                                        9[13]       162 a 173
           detalhe << pagamento.formata_data_desconto                  # data desconto                               9[06]       174 a 179
           detalhe << pagamento.formata_valor_desconto                 # valor desconto                              9[13]       180 a 192
           detalhe << pagamento.formata_valor_iof                      # valor iof                                   9[13]       193 a 205
           detalhe << pagamento.formata_valor_abatimento               # valor abatimento                            9[13]       206 a 218
           detalhe << pagamento.identificacao_sacado                   # identificacao do pagador                    9[02]       219 a 220
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0')   # cpf/cnpj do pagador                         9[14]       221 a 234
-          detalhe << pagamento.nome_sacado.format_size(40)            # nome do pagador                             9[40]       235 a 274
-          detalhe << formata_endereco_sacado(pagamento)               # endereco do pagador                         X[40]       275 a 314
-          detalhe << ''.rjust(12, ' ')                                # 1a mensagem                                 X[12]       315 a 326
-          detalhe << pagamento.cep_sacado[0..4]                       # cep do pagador                              9[05]       327 a 331
-          detalhe << pagamento.cep_sacado[5..7]                       # sufixo do cep do pagador                    9[03]       332 a 334
-          detalhe << ''.rjust(60, ' ')                                # sacador/2a mensagem - verificar             X[60]       335 a 394
+          detalhe << pagamento.nome_sacado.format_size(35)            # nome do pagador                             9[35]       235 a 269
+          detalhe << ''.rjust(5, ' ')                                 # brancos                                     9[05]       270 a 274
+          detalhe << pagamento.endereco_sacado.format_size(40)        # endereco do pagador                         X[40]       275 a 314
+          detalhe << ''.rjust(7, ' ')                                 # brancos                                     X[07]       315 a 321
+          detalhe << pagamento.formata_percentual_multa(3)            # percentual multa                            X[02]       322 a 324
+          detalhe << '00'                                             # num.dias para a multa após o vencimento     9[02]       325 a 326
+          detalhe << pagamento.cep_sacado                             # cep do pagador                              9[08]       327 a 334
+          detalhe << pagamento.cidade_sacado.format_size(15)          # cidade do pagador                           9[15]       335 a 349
+          detalhe << pagamento.uf_sacado                              # uf do pagador                               9[02]       350 a 351
+          detalhe << '0000'                                           # taxa ao dia para pag. antecipado            9[04]       352 a 355
+          detalhe << ' '                                              # branco                                      9[01]       356 a 356
+          detalhe << ''.rjust(13, '0')                                # valor para cálc. do desconto                9[13]       357 a 369
+          detalhe << pagamento.dias_protesto.format_size(2)           # dias para protesto                          9[02]       370 a 371
+          detalhe << ''.rjust(23, ' ')                                # brancos                                     X[23]       370 a 394
           detalhe << sequencial.to_s.rjust(6, '0')                    # numero do registro do arquivo               9[06]       395 a 400
           detalhe
+        end
+
+        private
+
+        def tipo_mora(pagamento)
+          return ' ' if pagamento.tipo_mora == '3'
+          pagamento.tipo_mora
         end
       end
     end

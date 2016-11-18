@@ -5,8 +5,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
-      numero: 1,
-      nosso_numero: 123,
+      nosso_numero: 22832563,
+      documento: '1',
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -106,27 +106,15 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       expect(banrisul.info_conta.size).to eq 20
     end
 
-    it 'identificacao da empresa deve ter as informações nas posicoes corretas' do
-      id_empresa = banrisul.identificacao_empresa
-      expect(id_empresa[1..3]).to eq '001'         # carteira (com 3 dígitos)
-      expect(id_empresa[4..7]).to eq '1102'        # agência
-      expect(id_empresa[8..14]).to eq '9000150'    # convênio
-      expect(id_empresa[15..16]).to eq '96'        # dígitos do convênio
+    it 'código do cedente deve ter as informações nas posicoes corretas' do
+      id_empresa = banrisul.codigo_cedente
+      expect(id_empresa[0..3]).to eq '1102'        # agência
+      expect(id_empresa[4..10]).to eq '9000150'    # convênio
+      expect(id_empresa[11..12]).to eq '46'        # dígitos do convênio
     end
 
     it 'calcula o dígito verificador do nosso número' do
-      # Calculo do dígito:
-      # * multiplicar o nosso número acrescido da carteira a esquerda
-      #   pelo modulo 11, com base 7
-      #
-      # carteira(2) + nosso número(11)
-      # => 0 1 0 0 0 0 0 0 0 0 1 2 3
-      # x  2 7 6 5 4 3 2 7 6 5 4 3 2
-      # =  0 7 0 0 0 0 0 0 0 0 4 6 6 = 23
-      # 23/11 = 2 com resto 1
-      # quando resto 1 codigo sera P
-      #
-      expect(banrisul.digito_nosso_numero(123)).to eq 'P'
+      expect(banrisul.digito_nosso_numero(22832563)).to eq("51")
     end
   end
 
@@ -136,23 +124,58 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
     context 'header' do
       it 'informações devem estar posicionadas corretamente no header' do
         header = banrisul.monta_header
-        expect(header[1]).to eq '1'                      # tipo operacao (1 = remessa)
-        expect(header[2..8]).to eq 'REMESSA'             # literal da operacao
+        expect(header[1]).to eq '1'                      # tipo operação (1 = remessa)
+        expect(header[2..8]).to eq 'REMESSA'             # literal da operação
         expect(header[26..45]).to eq banrisul.info_conta # informações da conta
-        expect(header[76..78]).to eq '041'               # codigo do banco
+        expect(header[76..78]).to eq '041'               # código do banco
       end
     end
 
     context 'detalhe' do
       it 'informações devem estar posicionadas corretamente no detalhe' do
         detalhe = banrisul.monta_detalhe pagamento, 1
-        expect(detalhe[70..80]).to eq '00000000123'                                  # nosso número
-        expect(detalhe[81]).to eq 'P'                                                # dígito nosso número
+        expect(detalhe[0]).to eq '1'                                                 # tipo do registro
+        expect(detalhe[1..16]).to eq ''.rjust(16, ' ')                               # brancos
+        expect(detalhe[17..29]).to eq '1102900015046'                                # código do cedente
+        expect(detalhe[30..36]).to eq ''.rjust(7, ' ')                               # brancos
+        expect(detalhe[37..61]).to eq '1'.ljust(25, ' ')                             # num. controle
+        expect(detalhe[62..69]).to eq '22832563'                                     # nosso número
+        expect(detalhe[70..71]).to eq '51'                                           # dígitos nosso número
+        expect(detalhe[72..103]).to eq ''.rjust(32, ' ')                             # mensagem bloqueto
+        expect(detalhe[104..106]).to eq ''.rjust(3, ' ')                             # branco
+        expect(detalhe[107]).to eq '1'                                               # carteira
+        expect(detalhe[108..109]).to eq '01'                                         # código da ocorrência
+        expect(detalhe[110..119]).to eq '1'.ljust(10, ' ')                           # seu número
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y')                # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'                              # valor do documento
-        expect(detalhe[220..233]).to eq '00012345678901'                             # documento do pagador
-        expect(detalhe[234..273]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'   # nome do pagador
-        expect(detalhe[274..313]).to eq banrisul.formata_endereco_sacado(pagamento)  # endereço do pagador
+        expect(detalhe[139..141]).to eq '041'                                        # banco cobrador
+        expect(detalhe[142..146]).to eq ''.rjust(5, ' ')                             # brancos
+        expect(detalhe[147..148]).to eq '08'                                         # tipo de documento (08 - Cobrança Credenciada Banrisul - CCB)
+        expect(detalhe[149]).to eq 'N'                                               # código de aceite
+        expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')                # data de emissão
+        expect(detalhe[156..157]).to eq '00'                                         # código da 1a instrução
+        expect(detalhe[158..159]).to eq '00'                                         # código da 2a instrução
+        expect(detalhe[160]).to eq ' '                                               # código da mora
+        expect(detalhe[161..172]).to eq ''.rjust(12, '0')                            # valor ao dia ou mensal de juros
+        expect(detalhe[173..178]).to eq ''.rjust(6, '0')                             # data para concessão do desconto
+        expect(detalhe[179..191]).to eq ''.rjust(13, '0')                            # valor do desconto a ser concedido
+        expect(detalhe[192..204]).to eq ''.rjust(13, '0')                            # valor do iof
+        expect(detalhe[205..217]).to eq ''.rjust(13, '0')                            # valor do abatimento
+        expect(detalhe[218..219]).to eq '01'                                         # tipo de insc. do pagador
+        expect(detalhe[220..233]).to eq '00012345678901'                             # num. da insc. do pagador
+        expect(detalhe[234..268]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA'        # nome do pagador
+        expect(detalhe[274..313]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas ca'   # endereço do pagador
+        expect(detalhe[314..320]).to eq ''.rjust(7, ' ')                             # brancos
+        expect(detalhe[321..323]).to eq '000'                                        # multa
+        expect(detalhe[324..325]).to eq '00'                                         # num. dias para a multa após o vencimento
+        expect(detalhe[326..333]).to eq '12345678'                                   # cep do pagador
+        expect(detalhe[334..348]).to eq 'Santa rita de c'                            # cidade do pagador
+        expect(detalhe[349..350]).to eq 'SP'                                         # uf do pagador
+        expect(detalhe[351..354]).to eq '0000'                                       # taxa ao dia para pag. antecipado
+        expect(detalhe[355]).to eq ' '                                               # branco
+        expect(detalhe[356..368]).to eq ''.rjust(13, '0')                            # valor para cálc. do desconto
+        expect(detalhe[369..370]).to eq '00'                                         # dias para protesto
+        expect(detalhe[371..393]).to eq ''.rjust(23, ' ')                            # brancos
       end
     end
 
