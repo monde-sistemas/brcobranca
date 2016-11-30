@@ -249,8 +249,8 @@ module Brcobranca
         self.class.to_s.split('::').last.downcase
       end
 
-      # Nome da classe do boleto
-      # @return [String]
+      # Valida data de vencimento
+      # @return [boolean]
       def data_vencimento_maior_que_data_documento
         if data_vencimento.present? && data_documento.present? && data_vencimento < data_documento
           errors.add(:data_vencimento, "deve ser maior que a data do boleto.")
