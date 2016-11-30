@@ -89,7 +89,7 @@ module Brcobranca
       attr_accessor :cedente_endereco
 
       # Validações
-      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero
+      validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero, :data_vencimento, :data_documento
       validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, allow_nil: true
       validate :data_vencimento_maior_que_data_documento
 
@@ -252,7 +252,7 @@ module Brcobranca
       # Valida data de vencimento
       # @return [boolean]
       def data_vencimento_maior_que_data_documento
-        if data_vencimento.present? && data_documento.present? && data_vencimento < data_documento
+        if data_vencimento < data_documento
           errors.add(:data_vencimento, "deve ser maior que a data do boleto.")
         end
       end
