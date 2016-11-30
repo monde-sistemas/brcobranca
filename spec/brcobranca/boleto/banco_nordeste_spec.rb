@@ -59,6 +59,7 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
   it 'Gerar boleto' do
     @valid_attributes[:valor] = 1000.00
     @valid_attributes[:data_vencimento] = Date.parse('2009/10/21')
+    @valid_attributes[:data_documento] = Date.parse('2009/10/20')
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('0016000119320000053121000')
     expect(boleto_novo.codigo_barras).to eql('00491439700001000000016000119320000053121000')

@@ -58,6 +58,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
 
   it 'Gerar boleto' do
     @valid_attributes[:valor] = 2952.95
+    @valid_attributes[:data_documento] = Date.parse('2008-04-08')
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
     @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
@@ -68,6 +69,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('39991.12232 34000.001239 45678.098927 8 42010000295295')
 
     @valid_attributes[:valor] = 934.23
+    @valid_attributes[:data_documento] = Date.parse('2004-09-03')
     @valid_attributes[:data_vencimento] = Date.parse('2004-09-03')
     @valid_attributes[:numero] = '07778899'
     @valid_attributes[:conta_corrente] = '0016324'
@@ -153,6 +155,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
   it 'Gerar boleto nos formatos válidos com método to_' do
     @valid_attributes[:valor] = 2952.95
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
+    @valid_attributes[:data_documento] = Date.parse('2009-04-07')
     @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'
     boleto_novo = described_class.new(@valid_attributes)
@@ -171,6 +174,7 @@ RSpec.describe Brcobranca::Boleto::Hsbc do
 
   it 'Gerar boleto nos formatos válidos' do
     @valid_attributes[:valor] = 2952.95
+    @valid_attributes[:data_documento] = Date.parse('2009-04-08')
     @valid_attributes[:data_vencimento] = Date.parse('2009-04-08')
     @valid_attributes[:numero] = '12345678'
     @valid_attributes[:conta_corrente] = '1122334'

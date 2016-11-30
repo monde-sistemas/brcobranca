@@ -91,6 +91,9 @@ module Brcobranca
       # Validações
       validates_presence_of :agencia, :conta_corrente, :moeda, :especie_documento, :especie, :aceite, :numero
       validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, allow_nil: true
+      validate :data_vencimento_maior_que_data_documento
+
+
 
       # Nova instancia da classe Base
       # @param [Hash] campos
@@ -244,6 +247,14 @@ module Brcobranca
       # @return [String]
       def class_name
         self.class.to_s.split('::').last.downcase
+      end
+
+      # Nome da classe do boleto
+      # @return [String]
+      def data_vencimento_maior_que_data_documento
+        if data_vencimento.present? && data_documento.present? && data_vencimento < data_documento
+          errors.add(:data_vencimento, "deve ser maior que a data do boleto.")
+        end
       end
     end
   end
