@@ -57,6 +57,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
 
   it 'Gerar boleto' do
     @valid_attributes[:data_vencimento] = Date.parse('2011/10/09')
+    @valid_attributes[:data_documento] = Date.parse('2011/10/09')
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('9189977500009000026700102')
     expect(boleto_novo.codigo_barras).to eql('03398511500000025009189977500009000026700102')
