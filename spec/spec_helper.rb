@@ -3,6 +3,7 @@ require 'coveralls'
 require 'simplecov'
 
 Coveralls.wear!
+
 SimpleCov.start
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
