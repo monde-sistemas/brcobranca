@@ -3,7 +3,7 @@ module Brcobranca
   module Boleto
     class BancoNordeste < Base # Banco do Nordeste
       validates_length_of :agencia, maximum: 4
-      validates_length_of :convenio, maximum: 7
+      validates_length_of :convenio, maximum: 11
       validates_length_of :carteira, maximum: 2
       validates_length_of :numero, maximum: 7
 
@@ -28,9 +28,9 @@ module Brcobranca
       end
 
       # Número do convênio/contrato do cliente junto ao banco.
-      # @return [String] 7 caracteres numéricos.
+      # @return [String] 11 caracteres numéricos.
       def convenio=(valor)
-        @convenio = valor.to_s.rjust(7, '0') if valor
+        @convenio = valor.to_s.rjust(11, '0') if valor
       end
 
       # Número sequencial utilizado para identificar o boleto.
@@ -85,7 +85,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "#{agencia}#{convenio}#{convenio_dv}#{numero}#{nosso_numero_dv}#{carteira}000"
+        "#{agencia}#{conta_corrente}5#{numero}#{nosso_numero_dv}#{carteira}000"
       end
     end
   end
