@@ -260,6 +260,9 @@ RSpec.describe Brcobranca::Boleto::BancoBrasil do #:nodoc:[all]
     boleto_novo.numero = 719
     expect(boleto_novo.nosso_numero_boleto).to eql('12387989000000719-2')
     expect(boleto_novo.nosso_numero_dv).to eql(2)
+    boleto_novo.numero = 719
+    boleto_novo.convenio = 1234567
+    expect(boleto_novo.nosso_numero_boleto).to eql('12345670000000719')
   end
 
   it 'Montar agencia_conta_boleto' do
