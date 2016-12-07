@@ -42,7 +42,7 @@ module Brcobranca
       # Dígito verificador do nosso número.
       # @return [String] 1 caracteres numéricos.
       def nosso_numero_dv
-        nosso_numero = numero.to_s.rjust(7, '0') unless numero.nil?
+        nosso_numero = numero.to_s.rjust(7, '0')
         nosso_numero.modulo11(
           multiplicador: (2..8).to_a,
           mapeamento: { 10 => 0, 11 => 0 }
