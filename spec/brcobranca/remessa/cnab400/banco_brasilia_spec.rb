@@ -6,6 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
       nosso_numero: 123,
+      documento: 6969,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -132,7 +133,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(detalhe[111..112]).to eq 'SP'                          # uf do pagador
         expect(detalhe[113..120]).to eq '12345678'                    # cep do pagador
         expect(detalhe[121..121]).to eq '1'                           # tipo de pessoa
-        expect(detalhe[122..134]).to eq ''.rjust(13, "0")             # seu numero
+        expect(detalhe[122..134]).to eq "6969".rjust(13, "0")             # seu numero
         expect(detalhe[135..135]).to eq '2'                           # categoria de cobranca
         expect(detalhe[136..143]).to eq Date.today.strftime('%d%m%Y') # data de emissao
         expect(detalhe[144..145]).to eq '21'                          # tipo do documento

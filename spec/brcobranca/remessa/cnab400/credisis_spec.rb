@@ -6,6 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
        data_vencimento: Date.today,
        nosso_numero: 123,
+       documento: 6969,
        dias_protesto: '6',
        valor_mora: "8.00",
        percentual_multa: "2.00",
@@ -150,7 +151,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[17..20]).to eq '0001'                                        # agência
         expect(detalhe[22..29]).to eq '00000002'                                    # conta corrente
         expect(detalhe[30]).to eq '7'                                               # dígito da conta corrente
-        expect(detalhe[37..61]).to eq ''.rjust(25, ' ')                             # número controle cliente
+        expect(detalhe[37..61]).to eq "6969".ljust(25)                             # número controle cliente
         expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
         expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
         expect(detalhe[110..119]).to eq '0000000000'                                # número documento

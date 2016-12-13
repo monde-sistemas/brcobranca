@@ -118,7 +118,7 @@ module Brcobranca
           detalhe << digito_conta                                           # dac                                   9[01]
           detalhe << pagamento.formata_percentual_multa.to_s[0..1]          # taxa - multa                           [02]
           detalhe << ''.rjust(4, ' ')                                       # filler                                 [04]
-          detalhe << ''.rjust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25)                                      # identificacao do tit. na empresa      X[25]
           detalhe << pagamento.nosso_numero.to_s.rjust(7, '0')              # nosso numero                          9[07]
           detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s       # dv nosso numero                       9[01]
           detalhe << ''.rjust(10, '0')                                      # numero do contrato                     [10]

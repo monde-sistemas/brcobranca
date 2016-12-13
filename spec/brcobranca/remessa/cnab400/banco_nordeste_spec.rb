@@ -6,6 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
       nosso_numero: 123,
+      documento: 6969,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -168,6 +169,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = banco_nordeste.monta_detalhe pagamento, 1
+        expect(detalhe[37..61]).to eq "6969".ljust(25) # documento
         expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
         expect(detalhe[69]).to eq '6'                                 # digito verificador
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento

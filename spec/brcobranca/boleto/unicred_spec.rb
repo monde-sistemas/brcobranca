@@ -126,7 +126,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
 
   it 'Gerar boleto nos formatos válidos' do
     @valid_attributes[:valor] = 2952.95
-    @valid_attributes[:data_documento] = Date.parse('2009-04-30')
+    @valid_attributes[:data_documento] = Date.parse('2007-04-30')
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-01')
     @valid_attributes[:numero] = '86452'
     @valid_attributes[:conta_corrente] = '03005'

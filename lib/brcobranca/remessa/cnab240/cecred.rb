@@ -108,10 +108,6 @@ module Brcobranca
           "#{conta_corrente}#{conta_corrente_dv}#{pagamento.nosso_numero.to_s.rjust(9, '0')}".ljust(20, ' ')
         end
 
-        def numero(pagamento)
-          pagamento.numero.to_s.rjust(15, "0")
-        end
-
         def identificacao_titulo_empresa(pagamento)
           pagamento.documento_ou_numero.to_s.ljust(25, " ")
         end

@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
   before do
     @valid_attributes = {
-      valor: 25.0,
+      valor: 1000.0,
       local_pagamento: 'QUALQUER BANCO ATÉ O VENCIMENTO',
       cedente: 'Kivanio Barbosa',
       documento_cedente: '12345678912',
@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
       sacado_documento: '12345678900',
       agencia: '0016',
       conta_corrente: '0001193',
-      convenio: '0001193',
+      convenio: '3129290001',
       numero: '0000053'
     }
   end
@@ -43,22 +43,24 @@ RSpec.describe Brcobranca::Boleto::BancoNordeste do #:nodoc:[all]
     expect(boleto_novo.data_vencimento).to eql(Date.today)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
-    expect(boleto_novo.valor).to eql(25.0)
-    expect(boleto_novo.valor_documento).to eql(25.0)
+    expect(boleto_novo.valor).to eql(1000.0)
+    expect(boleto_novo.valor_documento).to eql(1000.0)
     expect(boleto_novo.local_pagamento).to eql('QUALQUER BANCO ATÉ O VENCIMENTO')
     expect(boleto_novo.cedente).to eql('Kivanio Barbosa')
     expect(boleto_novo.documento_cedente).to eql('12345678912')
     expect(boleto_novo.sacado).to eql('Claudio Pozzebom')
     expect(boleto_novo.sacado_documento).to eql('12345678900')
     expect(boleto_novo.agencia).to eql('0016')
-    expect(boleto_novo.convenio).to eql('0001193')
+    expect(boleto_novo.convenio).to eql('03129290001')
     expect(boleto_novo.numero).to eql('0000053')
+    expect(boleto_novo.nosso_numero_boleto).to eql('0000053-1   21')
     expect(boleto_novo.carteira).to eql('21')
   end
 
   it 'Gerar boleto' do
     @valid_attributes[:valor] = 1000.00
     @valid_attributes[:data_vencimento] = Date.parse('2009/10/21')
+    @valid_attributes[:data_documento] = Date.parse('2009/10/20')
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('0016000119320000053121000')
     expect(boleto_novo.codigo_barras).to eql('00491439700001000000016000119320000053121000')

@@ -60,7 +60,7 @@ module Brcobranca
       #
       # @return [String] 8 caracteres numéricos.
       def nosso_numero_boleto
-        "#{numero}#{nosso_numero_dv}"
+        "#{numero}-#{nosso_numero_dv}"
       end
 
       # 3.13. Nosso número: Código de controle que permite ao Sicoob e à empresa identificar os dados da cobrança que deu origem ao boleto.
@@ -92,9 +92,9 @@ module Brcobranca
       #     Ex.: 11 – 3 = 8, então Nosso Número + DV = 21-8
       #
       def nosso_numero_dv
-        valor = "#{agencia}#{convenio.rjust(10, "0")}#{numero}"
-        valor.modulo11(
-          multiplicador: [3, 7, 9, 1],
+        "#{agencia}#{convenio.rjust(10, "0")}#{numero}".modulo11(
+          reverse: false,
+          multiplicador: [3, 1, 9, 7],
           mapeamento: { 10 => 0, 11 => 0 }
         ) { |t| 11 - (t % 11) }
       end
@@ -111,7 +111,7 @@ module Brcobranca
       #    34 a 41      08                 Nosso número do boleto
       #    41 a 44      03                 Número da parcela a que o boleto se refere - "001" se parcela única
       def codigo_barras_segunda_parte
-        "#{carteira}#{agencia}#{variacao}#{convenio}#{nosso_numero_boleto}#{quantidade}"
+        "#{carteira}#{agencia}#{variacao}#{convenio}#{numero}#{nosso_numero_dv}#{quantidade}"
       end
     end
   end

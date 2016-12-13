@@ -15,7 +15,8 @@ shared_examples_for 'cnab240' do
       valor_abatimento: 24.35,
       documento_avalista: '12345678901',
       nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
-      numero: '00000000123')
+      numero: '123',
+      documento: 6969)
   end
   let(:params) do
     p = {
@@ -99,9 +100,9 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[22]).to eq objeto.digito_agencia.to_s # digito da agencia
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
       if objeto.cod_banco == '104'
-        expect(segmento_p[62..76]).to eq '00000000123    ' # numero do documento
+        expect(segmento_p[62..76]).to eq '00000006969    ' # numero do documento
       else
-        expect(segmento_p[62..76]).to eq '000000000000123' # numero do documento
+        expect(segmento_p[62..76]).to eq '000000000006969' # numero do documento
       end
       expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor

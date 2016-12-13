@@ -469,11 +469,11 @@ module Brcobranca
         #
         # Sobreescreva caso necessário
         def numero(pagamento)
-          pagamento.numero.to_s.rjust(15, '0')
+          pagamento.documento_ou_numero.to_s.rjust(15, '0')
         end
 
         def identificacao_titulo_empresa(pagamento)
-          ''.rjust(25, ' ')
+          pagamento.documento_ou_numero.to_s.rjust(25, ' ')
         end
 
         # Campo exclusivo para serviço

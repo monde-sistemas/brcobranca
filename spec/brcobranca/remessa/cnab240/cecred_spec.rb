@@ -7,6 +7,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       data_vencimento: Date.today,
       nosso_numero: 123,
       numero: 123,
+      documento: 6969,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
@@ -146,7 +147,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
 
     it 'deve conter a identificacao do titulo da empresa' do
       segmento_p = cecred.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[195..219]).to eq "123".ljust(25, ' ')
+      expect(segmento_p[195..219]).to eq "6969".ljust(25, ' ')
     end
   end
 
