@@ -7,7 +7,8 @@ module Brcobranca
 
         validates_presence_of :agencia, :convenio, :sequencial_remessa
         validates_length_of :agencia, maximum: 4
-        validates_length_of :convenio, :sequencial_remessa, maximum: 7
+        validates_length_of :sequencial_remessa, maximum: 7
+        validates_length_of :convenio, maximum: 13
         validates_length_of :carteira, is: 1
 
         def agencia=(valor)
@@ -15,7 +16,7 @@ module Brcobranca
         end
 
         def convenio=(valor)
-          @convenio = valor.to_s.rjust(7, '0') if valor
+          @convenio = valor.to_s.rjust(13, '0') if valor
         end
 
         def sequencial_remessa=(valor)
@@ -39,7 +40,7 @@ module Brcobranca
         end
 
         def codigo_cedente
-          "#{agencia}#{convenio}#{numero_controle(convenio)}"
+          convenio
         end
 
         def calculo_dv_modulo11(campo_com_primeiro_dv)
