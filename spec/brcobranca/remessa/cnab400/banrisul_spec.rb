@@ -19,7 +19,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
     {
       carteira: '1',
       agencia: '1102',
-      convenio: '9000150',
+      convenio: '1102900015046',
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       sequencial_remessa: '1',
       pagamentos: [pagamento]
@@ -51,9 +51,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       end
 
       it 'deve ser inválido se o convenio tiver mais de 7 dígitos' do
-        banrisul.convenio = '12345678'
+        banrisul.convenio = '12345678901234'
         expect(banrisul.invalid?).to be true
-        expect(banrisul.errors.full_messages).to include('Convenio é muito longo (máximo: 7 caracteres).')
+        expect(banrisul.errors.full_messages).to include('Convenio é muito longo (máximo: 13 caracteres).')
       end
     end
 

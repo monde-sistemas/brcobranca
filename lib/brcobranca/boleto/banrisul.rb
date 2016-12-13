@@ -4,7 +4,7 @@ module Brcobranca
     class Banrisul < Base # Banco BANRISUL
       validates_length_of :agencia, maximum: 4
       validates_length_of :numero, maximum: 8
-      validates_length_of :convenio, maximum: 7
+      validates_length_of :convenio, maximum: 13
       validates_length_of :carteira, is: 1
 
       # Nova instancia do Banrisul
@@ -28,6 +28,13 @@ module Brcobranca
       # @return [String] 8 caracteres numéricos.
       def numero=(valor)
         @numero = valor.to_s.rjust(8, '0') if valor
+      end
+
+      def convenio=(valor)
+        if valor
+          convenio = valor.to_s.rjust(13, '0')
+          @convenio = convenio[4..10]
+        end
       end
 
       # Nosso número para exibir no boleto.
