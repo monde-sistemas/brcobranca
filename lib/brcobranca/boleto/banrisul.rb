@@ -31,8 +31,10 @@ module Brcobranca
       end
 
       def convenio=(valor)
-        convenio = valor.to_s.rjust(13, '0')
-        @convenio = convenio[4..10]
+        if valor
+          convenio = valor.to_s.rjust(13, '0')
+          @convenio = convenio[4..10]
+        end
       end
 
       # Nosso número para exibir no boleto.
