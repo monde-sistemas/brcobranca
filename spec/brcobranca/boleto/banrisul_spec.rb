@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
       sacado_documento: '12345678900',
       agencia: '1102',
       conta_corrente: '',
-      convenio: '9000150',
+      convenio: '1102900015046',
       numero: '22832563'
     }
   end
@@ -91,6 +91,16 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     expect(boleto_novo.agencia_conta_boleto).to eql('1102.48 / 9000150-46')
   end
 
+  it 'Extrair o convênio quando 12 ou 13 caracteres' do
+    boleto_novo = described_class.new(@valid_attributes)
+
+    boleto_novo.convenio = '456154346054'
+    expect(boleto_novo.convenio).to eql('1543460')
+
+    boleto_novo.convenio = '3456154346054'
+    expect(boleto_novo.convenio).to eql('1543460')
+  end
+
   describe "#agencia_dv" do
     it { expect(described_class.new(agencia: "0567").agencia_dv).to eq("82") }
     it { expect(described_class.new(agencia: "0085").agencia_dv).to eq("16") }
@@ -106,9 +116,9 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
   end
 
   describe "#convenio_dv" do
-    it { expect(described_class.new(convenio: "9000150").convenio_dv).to eq("46") }
-    it { expect(described_class.new(convenio: "8503410").convenio_dv).to eq("60") }
-    it { expect(described_class.new(convenio: "8557540").convenio_dv).to eq("53") }
+    it { expect(described_class.new(convenio: "1102900015046").convenio_dv).to eq("46") }
+    it { expect(described_class.new(convenio: "1102850341060").convenio_dv).to eq("60") }
+    it { expect(described_class.new(convenio: "1102855754053").convenio_dv).to eq("53") }
   end
 
   describe "#nosso_numero_dv" do
@@ -127,8 +137,8 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
       @valid_attributes[:data_documento] = Date.parse('2009-04-30')
       @valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
       @valid_attributes[:numero] = '75896452'
-      @valid_attributes[:conta_corrente] = '0403005'
-      @valid_attributes[:agencia] = '1172'
+      @valid_attributes[:agencia] = '1102'
+      @valid_attributes[:convenio] = '1102900015046'
     end
 
     it_behaves_like 'formatos_validos'
