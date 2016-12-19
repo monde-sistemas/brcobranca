@@ -88,8 +88,8 @@ module Brcobranca
           detalhe << '08'                                             # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
-          detalhe << ''.rjust(2, '0')                                 # 1a instrucao                                9[02]       157 a 158
-          detalhe << ''.rjust(2, '0')                                 # 2a instrucao                                9[02]       159 a 160
+          detalhe << pagamento.cod_primeira_instrucao                 # 1a instrucao                                9[02]       157 a 158
+          detalhe << pagamento.cod_segunda_instrucao                  # 2a instrucao                                9[02]       159 a 160
           detalhe << tipo_mora(pagamento)                             # tipo de mora (diária ou mensal)             9[13]       161 a 161
           detalhe << pagamento.formata_valor_mora(12)                 # mora                                        9[13]       162 a 173
           detalhe << pagamento.formata_data_desconto                  # data desconto                               9[06]       174 a 179
@@ -110,10 +110,19 @@ module Brcobranca
           detalhe << '0000'                                           # taxa ao dia para pag. antecipado            9[04]       352 a 355
           detalhe << ' '                                              # branco                                      9[01]       356 a 356
           detalhe << ''.rjust(13, '0')                                # valor para cálc. do desconto                9[13]       357 a 369
-          detalhe << pagamento.dias_protesto.format_size(2)           # dias para protesto                          9[02]       370 a 371
+          detalhe << pagamento.dias_protesto.to_s.rjust(2, '0')       # dias para protesto                          9[02]       370 a 371
           detalhe << ''.rjust(23, ' ')                                # brancos                                     X[23]       370 a 394
           detalhe << sequencial.to_s.rjust(6, '0')                    # numero do registro do arquivo               9[06]       395 a 400
           detalhe
+        end
+
+        def monta_trailer(sequencial)
+          trailer = "9"
+          trailer << ''.rjust(26, ' ')                                # brancos                                     X[26]       002 a 027
+          trailer << valor_titulos_carteira(13)                       # total geral/valores dos títulos             9[13]       028 a 040
+          trailer << ''.rjust(354, ' ')                               # brancos                                     X[354]      041 a 394
+          trailer << sequencial.to_s.rjust(6, '0')                    # sequencial                                  9[06]       395 a 400
+          trailer
         end
 
         private
