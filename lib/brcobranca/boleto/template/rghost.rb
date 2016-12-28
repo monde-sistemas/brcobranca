@@ -144,7 +144,7 @@ module Brcobranca
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
           # Dados
 
-          move_more(doc, 4.84, 0.07)
+          move_more(doc, 4.84, 0.02)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
           move_more(doc, 2, 0)
           doc.show boleto.codigo_barras.linha_digitavel, tag: :grande
@@ -196,7 +196,7 @@ module Brcobranca
           # LOGOTIPO do BANCO
           doc.image boleto.logotipo, x: "#{@x} cm", y: "#{@y} cm"
 
-          move_more(doc, 4.84, 0.07)
+          move_more(doc, 4.84, 0.01)
           doc.show "#{boleto.banco}-#{boleto.banco_dv}", tag: :maior
 
           move_more(doc, 2, 0)
@@ -221,7 +221,7 @@ module Brcobranca
           move_more(doc, 15.8, 0)
           doc.show boleto.agencia_conta_boleto
 
-          move_more(doc, -15.8 , -0.8)
+          move_more(doc, -15.8 , -0.9)
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
 
           move_more(doc, 3.5, 0)
