@@ -142,6 +142,14 @@ module Brcobranca
           data_multa.strftime('%d%m%Y')
         end
 
+        def codigo_baixa(pagamento)
+          "2"
+        end
+
+        def dias_baixa(pagamento)
+          "000"
+        end
+
         def data_mora(pagamento)
           return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
           data_mora = pagamento.data_vencimento + 1
