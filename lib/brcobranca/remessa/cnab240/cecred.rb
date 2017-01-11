@@ -14,8 +14,6 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
                      forma_cadastramento: '0',
-                     codigo_baixa: '2',
-                     dias_baixa: ''.rjust(3, ' '),
                      distribuicao_boleto: '2',
                      especie_titulo: '02' }.merge!(campos)
           super(campos)
@@ -138,6 +136,14 @@ module Brcobranca
         def monta_segmento_r(pagamento, nro_lote, contador)
           return nil if pagamento.codigo_multa == '0'
           super(pagamento, nro_lote, contador)
+        end
+
+        def codigo_baixa(pagamento)
+          '2'
+        end
+
+        def dias_baixa(pagamento)
+          ''.rjust(3, ' ')
         end
       end
     end
