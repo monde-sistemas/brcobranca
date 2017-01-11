@@ -41,11 +41,11 @@ module Brcobranca
           :emissao_boleto, :distribuicao_boleto, is: 1
 
         def initialize(campos = {})
-          campos = { codigo_carteira: '1',
+          campos = {
+            codigo_carteira: '1',
             forma_cadastramento: '1',
-            tipo_documento: ' ',
-            codigo_baixa: '0',
-            dias_baixa: '000' }.merge!(campos)
+            tipo_documento: ' '
+          }.merge!(campos)
           super(campos)
         end
 
@@ -172,8 +172,8 @@ module Brcobranca
           segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
           segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
           segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
-          segmento_p << codigo_baixa                                    # cod. para baixa                       1
-          segmento_p << dias_baixa                                      # dias para baixa                       2
+          segmento_p << codigo_baixa(pagamento)                         # cod. para baixa                       1
+          segmento_p << dias_baixa(pagamento)                           # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2
           segmento_p << ''.rjust(10, '0')                               # uso exclusivo                         10
           segmento_p << ' '                                             # uso exclusivo                         1
@@ -463,6 +463,14 @@ module Brcobranca
         def data_mora(pagamento)
           return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
           pagamento.data_vencimento.strftime("%d%m%Y")
+        end
+
+        def codigo_baixa(pagamento)
+          pagamento.codigo_baixa
+        end
+
+        def dias_baixa(pagamento)
+          pagamento.dias_baixa.to_s.rjust(3, "0")
         end
 
         # Identificacao do titulo da empresa

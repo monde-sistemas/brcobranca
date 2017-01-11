@@ -112,6 +112,8 @@ module Brcobranca
           percentual_multa: 0.0,
           codigo_protesto: '3',
           dias_protesto: '00',
+          codigo_baixa: '0',
+          dias_baixa: '000',
           cod_primeira_instrucao: '00',
           cod_segunda_instrucao: '00'
         }
