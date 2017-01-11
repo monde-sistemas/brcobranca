@@ -143,10 +143,12 @@ module Brcobranca
         end
 
         def codigo_baixa(pagamento)
+          return "1" if pagamento.codigo_protesto.to_s == "3"
           "2"
         end
 
         def dias_baixa(pagamento)
+          return "120" if pagamento.codigo_protesto.to_s == "3"
           "000"
         end
 
