@@ -34,5 +34,6 @@ RSpec.describe Brcobranca::Retorno::Cnab400::BancoNordeste do
     expect(pagamento.valor_recebido).to eql('0000000017500')
     expect(pagamento.juros_mora).to eql('0000000000000')
     expect(pagamento.data_credito).to eql('201114')
+    expect(pagamento.motivo_ocorrencia).to eql('00000000000000002011140000000000000000000000000000000000000000000000000000000')
   end
 end

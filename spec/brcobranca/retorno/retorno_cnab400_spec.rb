@@ -34,6 +34,7 @@ RSpec.describe Brcobranca::Retorno::RetornoCnab400 do
     expect(pagamento.juros_mora).to eql('0000000000000')
     expect(pagamento.outros_recebimento).to eql('0000000000000')
     expect(pagamento.data_credito).to eql('210513')
+    expect(pagamento.motivo_ocorrencia).to eql('')
     expect(pagamento.sequencial).to eql('000002')
 
     # Campos da classe base que não encontrei a relação com CNAB400
