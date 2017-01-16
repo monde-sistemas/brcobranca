@@ -24,6 +24,7 @@ module Brcobranca
       attr_accessor :agencia_recebedora_com_dv
       attr_accessor :especie_documento
       attr_accessor :codigo_ocorrencia
+      attr_accessor :motivo_ocorrencia
       attr_accessor :data_ocorrencia
       attr_accessor :data_credito
       attr_accessor :valor_tarifa

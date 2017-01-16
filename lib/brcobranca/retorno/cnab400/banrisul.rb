@@ -33,6 +33,7 @@ module Brcobranca
           parse.field :juros_mora, 266..278
           parse.field :outros_recebimento, 279..291
           parse.field :data_credito, 295..300
+          parse.field :motivo_ocorrencia, 382..391
           parse.field :sequencial, 394..399
         end
       end

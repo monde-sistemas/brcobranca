@@ -31,5 +31,6 @@ RSpec.describe Brcobranca::Retorno::Cnab400::BancoBrasilia do
     expect(pagamento.valor_abatimento).to eql('0000000000000')
     expect(pagamento.desconto).to eql('0000000000000')
     expect(pagamento.outros_recebimento).to eql('0000000000000')
+    expect(pagamento.motivo_ocorrencia).to eql('')
   end
 end
