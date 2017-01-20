@@ -90,7 +90,7 @@ module Brcobranca
           # :motivo_do_codigo_de_ocorrencia, 294..294
 
           # :data_credito, 295..300 # data de credito desta liquidacao
-          parse.field :data_credito, 295..300
+          parse.field :data_credito, 146..151
 
           # :origem_pagamento, 301..303
           # :brancos, 304..313
