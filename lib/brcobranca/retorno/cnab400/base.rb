@@ -13,6 +13,8 @@ module Brcobranca
           codigo_banco = codigo_banco_do_arquivo(file)
 
           case codigo_banco
+          when "004"
+            Brcobranca::Retorno::Cnab400::BancoNordeste.load_lines(file, options)
           when "041"
             Brcobranca::Retorno::Cnab400::Banrisul.load_lines(file, options)
           when "070"
