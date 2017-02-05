@@ -10,7 +10,7 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Base do
       expect(Brcobranca::Retorno::Cnab400::Base.load_lines(nil)).to be_nil
     end
 
-    context "Bando de Brasilia" do
+    context "Banco de Brasilia" do
       let(:nome_arquivo) { "CNAB400BANCOBRASILIA.RET" }
 
       subject { Brcobranca::Retorno::Cnab400::BancoBrasilia }
@@ -38,6 +38,17 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Base do
       subject { Brcobranca::Retorno::Cnab400::Itau }
 
       it "lê o arquivo pela classe do Itaú" do
+        expect(subject).to receive(:load_lines).with(arquivo, {})
+        Brcobranca::Retorno::Cnab400::Base.load_lines(arquivo)
+      end
+    end
+
+    context "Santander" do
+      let(:nome_arquivo) { "CNAB400SANTANDER.RET" }
+
+      subject { Brcobranca::Retorno::Cnab400::Santander }
+
+      it "lê o arquivo pela classe do Santander" do
         expect(subject).to receive(:load_lines).with(arquivo, {})
         Brcobranca::Retorno::Cnab400::Base.load_lines(arquivo)
       end
