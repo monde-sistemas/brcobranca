@@ -35,22 +35,5 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Santander do
     expect(pagamento.data_credito).to eql('210513')
     expect(pagamento.motivo_ocorrencia).to eql('')
     expect(pagamento.sequencial).to eql('000002')
-
-    # Campos da classe base que não encontrei a relação com CNAB400
-    # parse.field :tipo_cobranca,80..80
-    # parse.field :tipo_cobranca_anterior,81..81
-    # parse.field :natureza_recebimento,86..87
-    # parse.field :convenio,31..37
-    # parse.field :comando,108..109
-    # parse.field :juros_desconto,201..213
-    # parse.field :iof_desconto,214..226
-    # parse.field :desconto_concedito,240..252
-    # parse.field :outras_despesas,279..291
-    # parse.field :abatimento_nao_aproveitado,292..304
-    # parse.field :data_liquidacao,295..300
-    # parse.field :valor_lancamento,305..317
-    # parse.field :indicativo_lancamento,318..318
-    # parse.field :indicador_valor,319..319
-    # parse.field :valor_ajuste,320..331
   end
 end
