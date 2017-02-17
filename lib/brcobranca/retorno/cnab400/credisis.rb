@@ -52,10 +52,10 @@ module Brcobranca
           # :brancos, 134..145 # complemento de registro
 
           # :vencimento, 146..151 # data de vencimento do titulo (ddmmaa)
-          # :data_vencimento, 146..151
+          parse.field :data_vencimento, 146..151
 
           # :valor_do_titulo, 152..164 # valor nominal do titulo (ultimos 2 digitos, virgula decimal assumida)
-          # :valor_titulo, 152..164
+          parse.field :valor_titulo, 152..164
 
           # :codigo_do_banco, 165..167 # numero do banco na camara de compensacao
           # :banco_recebedor, 165..167
