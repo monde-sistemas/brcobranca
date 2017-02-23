@@ -181,6 +181,7 @@ module Brcobranca
       autoload :Sicoob,       'brcobranca/remessa/cnab240/sicoob'
       autoload :SicoobBancoBrasil, 'brcobranca/remessa/cnab240/sicoob_banco_brasil'
       autoload :Sicredi,      'brcobranca/remessa/cnab240/sicredi'
+      autoload :Unicred,      'brcobranca/remessa/cnab240/unicred'
     end
   end
 
