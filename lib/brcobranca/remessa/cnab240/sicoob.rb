@@ -43,7 +43,6 @@ module Brcobranca
             parcela: '01',
             modalidade_carteira: '01',
             forma_cadastramento: '0',
-            dias_baixa: ''.rjust(3, ' '),
             posto: '00'}.merge!(campos)
           super(campos)
         end
@@ -216,6 +215,10 @@ module Brcobranca
         #       Em branco - 05 posições (16 a 20)
         def formata_nosso_numero(nosso_numero)
           "#{nosso_numero.to_s.rjust(10, '0')}#{parcela}#{modalidade_carteira}#{tipo_formulario}     "
+        end
+
+        def dias_baixa(pagamento)
+          ''.rjust(3, ' ')
         end
       end
     end

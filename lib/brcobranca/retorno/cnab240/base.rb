@@ -27,7 +27,7 @@ module Brcobranca
         # Codigo do banco lido do arquivo.
         # Registro Header [0..2]
         def self.codigo_banco_do_arquivo(file)
-          arquivo = File.open(file, "r")
+          arquivo = File.open(file)
           header = arquivo.gets
           codigo_banco = header.blank? ? nil : header[0..2]
           arquivo.close

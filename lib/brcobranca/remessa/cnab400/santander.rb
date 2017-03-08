@@ -13,6 +13,7 @@ module Brcobranca
         attr_accessor :codigo_carteira
 
         validates_presence_of :documento_cedente, :codigo_transmissao
+        validates_presence_of :digito_conta, if: :conta_padrao_novo?
         validates_length_of :documento_cedente, in: 11..14
         validates_length_of :carteira, maximum: 3
         validates_length_of :codigo_transmissao, maximum: 20

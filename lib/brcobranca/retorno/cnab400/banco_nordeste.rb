@@ -90,7 +90,7 @@ module Brcobranca
           # :motivo_do_codigo_de_ocorrencia, 294..294
 
           # :data_credito, 295..300 # data de credito desta liquidacao
-          parse.field :data_credito, 295..300
+          parse.field :data_credito, 146..151
 
           # :origem_pagamento, 301..303
           # :brancos, 304..313
@@ -100,6 +100,8 @@ module Brcobranca
           # :numero_do_cartorio, 368..369
           # :numero_do_protocolo, 370..379
           # :brancos, 380..393
+
+          parse.field :motivo_ocorrencia, 279..393
 
           # :numero_sequencial, 394..399 # numero sequencial no arquivo
           parse.field :sequencial, 394..399
