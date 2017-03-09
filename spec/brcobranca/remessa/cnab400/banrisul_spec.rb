@@ -13,6 +13,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
+      percentual_multa: 2.0,
       uf_sacado: 'SP')
   end
   let(:params) do
@@ -153,7 +154,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
         expect(detalhe[147..148]).to eq '08'                                         # tipo de documento (08 - Cobrança Credenciada Banrisul - CCB)
         expect(detalhe[149]).to eq 'N'                                               # código de aceite
         expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')                # data de emissão
-        expect(detalhe[156..157]).to eq '00'                                         # código da 1a instrução
+        expect(detalhe[156..157]).to eq '18'                                         # código da 1a instrução
         expect(detalhe[158..159]).to eq '00'                                         # código da 2a instrução
         expect(detalhe[160]).to eq ' '                                               # código da mora
         expect(detalhe[161..172]).to eq ''.rjust(12, '0')                            # valor ao dia ou mensal de juros
@@ -166,7 +167,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
         expect(detalhe[234..268]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA'        # nome do pagador
         expect(detalhe[274..313]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas ca'   # endereço do pagador
         expect(detalhe[314..320]).to eq ''.rjust(7, ' ')                             # brancos
-        expect(detalhe[321..323]).to eq '000'                                        # multa
+        expect(detalhe[321..323]).to eq '020'                                        # multa
         expect(detalhe[324..325]).to eq '00'                                         # num. dias para a multa após o vencimento
         expect(detalhe[326..333]).to eq '12345678'                                   # cep do pagador
         expect(detalhe[334..348]).to eq 'Santa rita de c'                            # cidade do pagador

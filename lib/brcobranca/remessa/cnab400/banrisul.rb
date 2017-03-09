@@ -66,6 +66,26 @@ module Brcobranca
           numero_controle(nosso_numero)
         end
 
+        # Header do arquivo remessa
+        #
+        # @return [String]
+        #
+        def monta_header
+          # CAMPO                 TAMANHO    VALOR
+          # tipo do registro      [1]        0
+          # operacao              [1]        1
+          # literal remessa       [7]        REMESSA
+          # brancos               [16]
+          # info. conta           [20]
+          # empresa mae           [30]
+          # cod. banco            [3]
+          # nome banco            [15]
+          # data geracao          [6]        formato DDMMAA
+          # complemento registro  [294]
+          # num. sequencial       [6]        000001
+          "01REMESSA                 #{info_conta}#{empresa_mae.format_size(30)}#{cod_banco}#{nome_banco}#{data_geracao}#{complemento}000001"
+        end
+
         def monta_detalhe(pagamento, sequencial)
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
@@ -88,7 +108,7 @@ module Brcobranca
           detalhe << '08'                                             # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
-          detalhe << pagamento.cod_primeira_instrucao                 # 1a instrucao                                9[02]       157 a 158
+          detalhe << codigo_primeira_instrucao(pagamento)             # 1a instrucao                                9[02]       157 a 158
           detalhe << pagamento.cod_segunda_instrucao                  # 2a instrucao                                9[02]       159 a 160
           detalhe << tipo_mora(pagamento)                             # tipo de mora (diária ou mensal)             9[13]       161 a 161
           detalhe << pagamento.formata_valor_mora(12)                 # mora                                        9[13]       162 a 173
@@ -102,7 +122,7 @@ module Brcobranca
           detalhe << ''.rjust(5, ' ')                                 # brancos                                     9[05]       270 a 274
           detalhe << pagamento.endereco_sacado.format_size(40)        # endereco do pagador                         X[40]       275 a 314
           detalhe << ''.rjust(7, ' ')                                 # brancos                                     X[07]       315 a 321
-          detalhe << pagamento.formata_percentual_multa(3)            # percentual multa                            X[02]       322 a 324
+          detalhe << formata_percentual_multa(pagamento)              # percentual multa                            X[02]       322 a 324
           detalhe << '00'                                             # num.dias para a multa após o vencimento     9[02]       325 a 326
           detalhe << pagamento.cep_sacado                             # cep do pagador                              9[08]       327 a 334
           detalhe << pagamento.cidade_sacado.format_size(15)          # cidade do pagador                           9[15]       335 a 349
@@ -127,10 +147,22 @@ module Brcobranca
 
         private
 
+        def codigo_primeira_instrucao(pagamento)
+          return "18" if pagamento.percentual_multa > 0.00
+          pagamento.cod_primeira_instrucao
+        end
+
         def tipo_mora(pagamento)
           return ' ' if pagamento.tipo_mora == '3'
           pagamento.tipo_mora
         end
+
+        def formata_percentual_multa(pagamento)
+          raise ValorInvalido.new('Deve ser um Float') if !(pagamento.percentual_multa.to_s =~ /\./)
+
+          sprintf('%.1f', pagamento.percentual_multa).delete('.').rjust(3, '0')
+        end
+
       end
     end
   end
