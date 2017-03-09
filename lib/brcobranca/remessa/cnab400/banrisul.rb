@@ -148,7 +148,7 @@ module Brcobranca
         private
 
         def codigo_primeira_instrucao(pagamento)
-          return "18" if pagamento.percentual_multa > 0.00
+          return "18" if pagamento.percentual_multa.to_f > 0.00
           pagamento.cod_primeira_instrucao
         end
 
