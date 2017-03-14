@@ -50,9 +50,8 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     expect(boleto_novo.documento_cedente).to eql('12345678912')
     expect(boleto_novo.sacado).to eql('Claudio Pozzebom')
     expect(boleto_novo.sacado_documento).to eql('12345678900')
-    expect(boleto_novo.convenio).to eql('9000150')
+    expect(boleto_novo.convenio).to eql('900015046')
     expect(boleto_novo.agencia).to eql('1102')
-    expect(boleto_novo.convenio).to eql("9000150")
     expect(boleto_novo.numero).to eql('22832563')
     expect(boleto_novo.carteira).to eql('1')
   end
@@ -79,11 +78,9 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
 
     boleto_novo.numero = '525'
     expect(boleto_novo.nosso_numero_boleto).to eql('00000525-66')
-    expect(boleto_novo.nosso_numero_dv).to eql('66')
 
     boleto_novo.numero = '2808'
     expect(boleto_novo.nosso_numero_boleto).to eql('00002808-44')
-    expect(boleto_novo.nosso_numero_dv).to eql('44')
   end
 
   it 'Montar agencia_conta_boleto' do
@@ -103,12 +100,6 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     it { expect(described_class.new(agencia: "1004").agencia_dv).to eq("12") }
     it { expect(described_class.new(agencia: "0156").agencia_dv).to eq("01") }
     it { expect(described_class.new(agencia: "0039").agencia_dv).to eq("80") }
-  end
-
-  describe "#convenio_dv" do
-    it { expect(described_class.new(convenio: "9000150").convenio_dv).to eq("46") }
-    it { expect(described_class.new(convenio: "8503410").convenio_dv).to eq("60") }
-    it { expect(described_class.new(convenio: "8557540").convenio_dv).to eq("53") }
   end
 
   describe "#nosso_numero_dv" do
