@@ -71,6 +71,8 @@ module Brcobranca
       attr_accessor :data_multa
       # <b>OPCIONAL</b>: tipo de mora (diário, mensal)
       attr_accessor :tipo_mora
+      # <b>OPCIONAL</b>: Data para cobrança de mora
+      attr_accessor :data_mora
       # <b>OPCIONAL</b>: codigo dos juros
       attr_accessor :codigo_juros
       # <b>OPCIONAL</b>: codigo do protesto
