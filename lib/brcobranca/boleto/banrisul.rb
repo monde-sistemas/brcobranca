@@ -33,7 +33,7 @@ module Brcobranca
       def convenio=(valor)
         if valor
           convenio = valor.to_s.rjust(13, '0')
-          @convenio = convenio[4..10]
+          @convenio = convenio[4..-1]
         end
       end
 
@@ -76,18 +76,14 @@ module Brcobranca
         gerar_numero_controle(numero)
       end
 
-      # Dígito verificador do convenio
-      # @return [Integer] 2 caracteres numéricos.
-      def convenio_dv
-        gerar_numero_controle("#{convenio}")
-      end
-
       # Agência + convênio do cliente para exibir no boleto.
       # @return [String]
       # @example
       #  boleto.agencia_conta_boleto #=> "0548.23/0000140-26"
       def agencia_conta_boleto
-        "#{agencia}.#{agencia_dv} / #{convenio}-#{convenio_dv}"
+        agrupa_convenio_e_dv = /\A(\d{7})(\d{2})\Z/
+        formata_convenio = "\\1-\\2"
+        "#{agencia}.#{agencia_dv} / #{convenio.gsub(agrupa_convenio_e_dv, formata_convenio)}"
       end
 
       # Segunda parte do código de barras.
@@ -103,7 +99,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        codigo_sem_nc = "21#{agencia}#{convenio}#{numero}40"
+        codigo_sem_nc = "21#{agencia}#{convenio[0..-3]}#{numero}40"
         "#{codigo_sem_nc}#{gerar_numero_controle(codigo_sem_nc)}"
       end
     end
