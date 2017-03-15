@@ -41,11 +41,11 @@ module Brcobranca
           :emissao_boleto, :distribuicao_boleto, is: 1
 
         def initialize(campos = {})
-          campos = { codigo_carteira: '1',
+          campos = {
+            codigo_carteira: '1',
             forma_cadastramento: '1',
-            tipo_documento: ' ',
-            codigo_baixa: '0',
-            dias_baixa: '000' }.merge!(campos)
+            tipo_documento: ' '
+          }.merge!(campos)
           super(campos)
         end
 
@@ -172,8 +172,8 @@ module Brcobranca
           segmento_p << identificacao_titulo_empresa(pagamento)         # identificacao titulo empresa          25
           segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
           segmento_p << pagamento.dias_protesto.to_s.rjust(2, '0')      # dias para protesto                    2
-          segmento_p << codigo_baixa                                    # cod. para baixa                       1
-          segmento_p << dias_baixa                                      # dias para baixa                       2
+          segmento_p << codigo_baixa(pagamento)                         # cod. para baixa                       1
+          segmento_p << dias_baixa(pagamento)                           # dias para baixa                       2
           segmento_p << '09'                                            # cod. da moeda                         2
           segmento_p << ''.rjust(10, '0')                               # uso exclusivo                         10
           segmento_p << ' '                                             # uso exclusivo                         1
@@ -238,10 +238,10 @@ module Brcobranca
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
           segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
-          segmento_r << "0"                                             # cod. desconto 2                      1
+          segmento_r << cod_desconto_2("0")                             # cod. desconto 2                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
-          segmento_r << "0"                                             # cod. desconto 3                      1
+          segmento_r << cod_desconto_3("0")                             # cod. desconto 3                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
@@ -465,15 +465,35 @@ module Brcobranca
           pagamento.data_vencimento.strftime("%d%m%Y")
         end
 
+        def codigo_baixa(pagamento)
+          pagamento.codigo_baixa
+        end
+
+        def dias_baixa(pagamento)
+          pagamento.dias_baixa.to_s.rjust(3, "0")
+        end
+
         # Identificacao do titulo da empresa
         #
         # Sobreescreva caso necessário
         def numero(pagamento)
-          pagamento.numero.to_s.rjust(15, '0')
+          pagamento.documento_ou_numero.to_s.rjust(15, '0')
         end
 
         def identificacao_titulo_empresa(pagamento)
-          ''.rjust(25, ' ')
+          pagamento.documento_ou_numero.to_s.rjust(25, ' ')
+        end
+
+        # Esse método existe somente para sobrescrever o valor do desconto
+        # no segmento em outros bancos
+        def cod_desconto_2(codigo_desconto)
+          codigo_desconto
+        end
+
+        # Esse método existe somente para sobrescrever o valor do desconto
+        # no segmento em outros bancos
+        def cod_desconto_3(codigo_desconto)
+          codigo_desconto
         end
 
         # Campo exclusivo para serviço

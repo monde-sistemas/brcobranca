@@ -75,7 +75,7 @@ module Brcobranca
     attr_accessor :external_encoding
 
     # Atribui valores padrões de configuração
-    def initialize 
+    def initialize
       self.gerador = :rghost
       self.formato = :pdf
       self.resolucao = 150
@@ -142,6 +142,8 @@ module Brcobranca
       autoload :BancoBrasilia, 'brcobranca/retorno/cnab400/banco_brasilia'
       autoload :Unicred,       'brcobranca/retorno/cnab400/unicred'
       autoload :Credisis,      'brcobranca/retorno/cnab400/credisis'
+      autoload :Santander,     'brcobranca/retorno/cnab400/santander'
+
     end
 
     module Cnab240
@@ -159,6 +161,7 @@ module Brcobranca
 
     module Cnab400
       autoload :Base,          'brcobranca/remessa/cnab400/base'
+      autoload :Banrisul,      'brcobranca/remessa/cnab400/banrisul'
       autoload :Bradesco,      'brcobranca/remessa/cnab400/bradesco'
       autoload :Itau,          'brcobranca/remessa/cnab400/itau'
       autoload :Citibank,      'brcobranca/remessa/cnab400/citibank'
@@ -178,6 +181,7 @@ module Brcobranca
       autoload :Sicoob,       'brcobranca/remessa/cnab240/sicoob'
       autoload :SicoobBancoBrasil, 'brcobranca/remessa/cnab240/sicoob_banco_brasil'
       autoload :Sicredi,      'brcobranca/remessa/cnab240/sicredi'
+      autoload :Unicred,      'brcobranca/remessa/cnab240/unicred'
     end
   end
 

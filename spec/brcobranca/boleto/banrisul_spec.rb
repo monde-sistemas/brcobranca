@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
       sacado_documento: '12345678900',
       agencia: '1102',
       conta_corrente: '',
-      convenio: '9000150',
+      convenio: '1102900015046',
       numero: '22832563'
     }
   end
@@ -78,9 +78,11 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
 
     boleto_novo.numero = '525'
     expect(boleto_novo.nosso_numero_boleto).to eql('00000525-66')
+    expect(boleto_novo.nosso_numero_dv).to eql('66')
 
     boleto_novo.numero = '2808'
     expect(boleto_novo.nosso_numero_boleto).to eql('00002808-44')
+    expect(boleto_novo.nosso_numero_dv).to eql('44')
   end
 
   it 'Montar agencia_conta_boleto' do
@@ -119,7 +121,8 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
       @valid_attributes[:data_vencimento] = Date.parse('2009-04-30')
       @valid_attributes[:numero] = '75896452'
       @valid_attributes[:conta_corrente] = '0403005'
-      @valid_attributes[:agencia] = '1172'
+      @valid_attributes[:agencia] = '1102'
+      @valid_attributes[:convenio] = '1102900015046'
     end
 
     it_behaves_like 'formatos_validos'

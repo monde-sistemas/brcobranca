@@ -28,9 +28,7 @@ module Brcobranca
                      parcela: '01',
                      modalidade_carteira: '01',
                      forma_cadastramento: '1',
-                     tipo_documento: '1',
-                     codigo_baixa: '1',
-                     dias_baixa: '060' }.merge!(campos)
+                     tipo_documento: '1' }.merge!(campos)
           super(campos)
         end
 
@@ -146,6 +144,32 @@ module Brcobranca
         # @return [String]
         def formata_nosso_numero(nosso_numero)
           nosso_numero.somente_numeros.ljust(20, ' ')
+        end
+
+        def data_multa(pagamento)
+          return "00000000" unless pagamento.data_multa.present?
+          pagamento.data_multa.strftime("%d%m%Y")
+        end
+
+        def data_mora(pagamento)
+          return "00000000" unless pagamento.data_mora.present?
+          pagamento.data_mora.strftime("%d%m%Y")
+        end
+
+        def cod_desconto_2(codigo_desconto)
+          "1"
+        end
+
+        def cod_desconto_3(codigo_desconto)
+          "1"
+        end
+
+        def codigo_baixa(pagamento)
+          '1'
+        end
+
+        def dias_baixa(pagamento)
+          '060'
         end
 
         private

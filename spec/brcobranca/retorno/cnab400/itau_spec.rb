@@ -35,6 +35,7 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Itau do
     expect(pagamento.codigo_ocorrencia).to eql('06')
     expect(pagamento.data_ocorrencia).to eql('200513')
     expect(pagamento.data_credito).to eql('210513')
+    expect(pagamento.motivo_ocorrencia).to eql('')
     expect(pagamento.sequencial).to eql('000002')
 
     # Campos da classe base que não encontrei a relação com CNAB400

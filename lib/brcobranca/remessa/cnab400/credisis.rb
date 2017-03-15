@@ -88,7 +88,7 @@ module Brcobranca
           detalhe << conta_corrente                                         # conta corrente                        9[08]
           detalhe << digito_conta                                           # dac                                   9[01]
           detalhe << ''.rjust(6, ' ')                                       # complemento do registro (brancos)     X[06]
-          detalhe << ''.rjust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25)                                      # identificacao do tit. na empresa      X[25]
           detalhe << formata_nosso_numero(pagamento.nosso_numero.to_s)      # nosso numero                          9[11]
           detalhe << ''.rjust(37, ' ')                                      # brancos                               X[37]
           detalhe << pagamento.numero.to_s.rjust(10, '0')         # numero do documento                   X[10]

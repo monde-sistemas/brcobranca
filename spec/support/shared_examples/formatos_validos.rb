@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 shared_examples_for 'formatos_validos' do
   it 'válido com método to_' do
+    @valid_attributes[:data_vencimento] = Date.parse('2009/08/14')
     @valid_attributes[:data_documento] = Date.parse('2009/08/13')
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -18,6 +19,7 @@ shared_examples_for 'formatos_validos' do
 
   it 'válido' do
     @valid_attributes[:data_documento] = Date.parse('2009/08/13')
+    @valid_attributes[:data_vencimento] = Date.parse('2009/08/13')
     boleto_novo = described_class.new(@valid_attributes)
 
     %w(pdf jpg tif png).each do |format|

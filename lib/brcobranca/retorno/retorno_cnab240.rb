@@ -40,7 +40,7 @@ module Brcobranca
       class Line < Base
         extend ParseLine::FixedWidth # Extendendo parseline
 
-        REGISTRO_T_FIELDS = %w(codigo_registro codigo_ocorrencia agencia_com_dv cedente_com_dv nosso_numero carteira data_vencimento valor_titulo banco_recebedor agencia_recebedora_com_dv sequencial valor_tarifa)
+        REGISTRO_T_FIELDS = %w(codigo_registro codigo_ocorrencia agencia_com_dv cedente_com_dv nosso_numero carteira data_vencimento valor_titulo banco_recebedor agencia_recebedora_com_dv sequencial valor_tarifa motivo_ocorrencia)
         REGISTRO_U_FIELDS = %w(desconto_concedito valor_abatimento iof_desconto juros_mora valor_recebido outras_despesas outros_recebimento data_ocorrencia data_credito)
 
         attr_accessor :tipo_registro
@@ -68,6 +68,7 @@ module Brcobranca
           parse.field :juros_mora, 17..31
           parse.field :outros_recebimento, 122..136
           parse.field :valor_tarifa, 198..212
+          parse.field :motivo_ocorrencia, 213..222
 
           # Dados que não consegui extrair dos registros T e U
           # parse.field :convenio,31..37

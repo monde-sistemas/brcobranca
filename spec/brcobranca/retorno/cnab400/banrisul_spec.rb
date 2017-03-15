@@ -35,6 +35,7 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Banrisul do
     expect(pagamento.juros_mora).to eql('0000000000000')
     expect(pagamento.outros_recebimento).to eql('0000000000000')
     expect(pagamento.data_credito).to eql('150515')
+    expect(pagamento.motivo_ocorrencia).to eql('')
     expect(pagamento.sequencial).to eql('000002')
   end
 end

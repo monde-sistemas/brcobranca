@@ -4,7 +4,7 @@ module Brcobranca
     class Banrisul < Base # Banco BANRISUL
       validates_length_of :agencia, maximum: 4
       validates_length_of :numero, maximum: 8
-      validates_length_of :convenio, maximum: 7
+      validates_length_of :convenio, maximum: 13
       validates_length_of :carteira, is: 1
 
       # Nova instancia do Banrisul

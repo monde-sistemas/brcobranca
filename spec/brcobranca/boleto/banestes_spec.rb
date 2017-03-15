@@ -5,6 +5,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
 
   let(:valid_attributes) { {
     data_vencimento: Date.parse("2015-06-26"),
+    data_documento: Date.parse("2015-06-25"),
     valor: 1278.90,
     cedente: "Kivanio Barbosa",
     documento_cedente: "12345678912",
@@ -37,7 +38,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
     expect(boleto_novo.especie_documento).to eql("DM")
     expect(boleto_novo.especie).to eql("R$")
     expect(boleto_novo.moeda).to eql("9")
-    expect(boleto_novo.data_documento).to eql(Date.today)
+    expect(boleto_novo.data_documento).to eql(Date.parse("2015-06-25"))
     expect(boleto_novo.data_vencimento).to eql(Date.parse("2015-06-26"))
     expect(boleto_novo.aceite).to eql("S")
     expect(boleto_novo.quantidade).to eql(1)
@@ -75,6 +76,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
 
   it "Gerar boleto nos formatos válidos com método to_" do
     valid_attributes[:valor] = 135.00
+    valid_attributes[:data_documento] = Date.parse('2008-02-02')
     valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
     valid_attributes[:numero] = "240"
 
@@ -95,6 +97,7 @@ RSpec.describe Brcobranca::Boleto::Banestes do #:nodoc:[all]
 
   it "Gerar boleto nos formatos válidos" do
     valid_attributes[:valor] = 135.00
+    valid_attributes[:data_documento] = Date.parse('2008-02-03')
     valid_attributes[:data_vencimento] = Date.parse('2008-02-03')
     valid_attributes[:numero] = "240"
 

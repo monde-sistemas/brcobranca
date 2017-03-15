@@ -15,7 +15,8 @@ shared_examples_for 'cnab240' do
       valor_abatimento: 24.35,
       documento_avalista: '12345678901',
       nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
-      numero: '00000000123')
+      numero: '123',
+      documento: 6969)
   end
   let(:params) do
     p = {
@@ -36,6 +37,8 @@ shared_examples_for 'cnab240' do
       p.merge!(carteira: '12',
         variacao: '123')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Sicredi
+      p.merge!(byte_idt: '2', posto: '14', digito_conta: '5')
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Unicred
       p.merge!(byte_idt: '2', posto: '14', digito_conta: '5')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
       pagamento.codigo_multa = '2'
@@ -99,9 +102,9 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[22]).to eq objeto.digito_agencia.to_s # digito da agencia
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
       if objeto.cod_banco == '104'
-        expect(segmento_p[62..76]).to eq '00000000123    ' # numero do documento
+        expect(segmento_p[62..76]).to eq '00000006969    ' # numero do documento
       else
-        expect(segmento_p[62..76]).to eq '000000000000123' # numero do documento
+        expect(segmento_p[62..76]).to eq '000000000006969' # numero do documento
       end
       expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
@@ -166,8 +169,14 @@ shared_examples_for 'cnab240' do
       expect(segmento_r[13]).to eq "R"                        # cod. segmento
       expect(segmento_r[14]).to eq " "                        # branco
       expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
-      expect(segmento_r[17..40]).to eq "".rjust(24,  '0')     # desconto 2
-      expect(segmento_r[41..64]).to eq "".rjust(24,  '0')     # desconto 3
+
+      if objeto.cod_banco == "748"
+        expect(segmento_r[17..40]).to eq "1".ljust(24,  '0')  # desconto 2
+        expect(segmento_r[41..64]).to eq "1".ljust(24,  '0')  # desconto 3
+      else
+        expect(segmento_r[17..40]).to eq "".rjust(24,  '0')   # desconto 2
+        expect(segmento_r[41..64]).to eq "".rjust(24,  '0')   # desconto 3
+      end
 
       if objeto.cod_banco == "085"
         expect(segmento_r[65]).to eq '2'                        # cod. multa

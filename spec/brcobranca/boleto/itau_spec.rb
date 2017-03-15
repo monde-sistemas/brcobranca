@@ -58,6 +58,7 @@ RSpec.describe Brcobranca::Boleto::Itau do
 
   it 'Gerar boleto' do
     @valid_attributes[:data_vencimento] = Date.parse('2009/08/14')
+    @valid_attributes[:data_documento] = Date.parse('2007/08/13')
     boleto_novo = described_class.new(@valid_attributes)
 
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('1751234567840810536789000')
@@ -74,6 +75,7 @@ RSpec.describe Brcobranca::Boleto::Itau do
     expect(boleto_novo.codigo_barras.linha_digitavel).to eql('34191.75009 25828.170818 05367.890000 1 37700000013500')
 
     @valid_attributes[:numero] = '258281'
+    @valid_attributes[:data_documento] = Date.parse('2004/09/05')
     @valid_attributes[:data_vencimento] = Date.parse('2004/09/05')
     @valid_attributes[:carteira] = 168
     @valid_attributes[:valor] = 135.00
@@ -124,6 +126,14 @@ RSpec.describe Brcobranca::Boleto::Itau do
     boleto_novo = described_class.new
     expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
     expect(boleto_novo.errors.count).to eql(3)
+  end
+
+  context 'erro @data_vencimento' do
+    it 'deve dar erro ao ser menor que data_documento' do
+      object = described_class.new(@valid_attributes.merge!(data_vencimento: Date.today - 10, data_documento: Date.today))
+      expect(object.invalid?).to be true
+      expect(object.errors.full_messages).to include('Data vencimento deve ser maior que a data do boleto.')
+    end
   end
 
   it 'Montar agencia_conta_corrente_dv' do

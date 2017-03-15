@@ -129,7 +129,7 @@ module Brcobranca
         end
 
         def numero(pagamento)
-          "#{pagamento.numero.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
+          "#{pagamento.documento_ou_numero.to_s.rjust(11, "0")}#{''.rjust(4, ' ')}"
         end
 
         def identificacao_titulo_empresa(pagamento)
@@ -140,6 +140,16 @@ module Brcobranca
           return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
           data_multa = pagamento.data_vencimento + 1
           data_multa.strftime('%d%m%Y')
+        end
+
+        def codigo_baixa(pagamento)
+          return "1" if pagamento.codigo_protesto.to_s == "3"
+          "2"
+        end
+
+        def dias_baixa(pagamento)
+          return "120" if pagamento.codigo_protesto.to_s == "3"
+          "000"
         end
 
         def data_mora(pagamento)

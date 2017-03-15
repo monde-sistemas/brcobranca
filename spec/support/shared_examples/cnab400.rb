@@ -70,6 +70,16 @@ shared_examples_for 'cnab400' do
         documento_cedente: '12345678910',
         pagamentos: [pagamento]
       }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Banrisul
+      {
+        carteira: '1',
+        agencia: '1102',
+        convenio: '9000150',
+        digito_conta: '96',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        sequencial_remessa: '1',
+        pagamentos: [pagamento]
+      }
     else
       { carteira: '123',
         agencia: '1234',
@@ -103,7 +113,11 @@ shared_examples_for 'cnab400' do
       trailer = objeto.monta_trailer 3
       expect(trailer[0]).to eq '9'                       # identificacao registro
 
-      if subject.class != Brcobranca::Remessa::Cnab400::Santander
+      if subject.class == Brcobranca::Remessa::Cnab400::Banrisul
+        expect(trailer[1..26]).to eq ''.rjust(26, ' ')      # brancos
+        expect(trailer[27..39]).to eq '0000000019990'       # total geral
+        expect(trailer[40..393]).to eq ''.rjust(354, ' ')   # brancos
+      elsif subject.class != Brcobranca::Remessa::Cnab400::Santander
         expect(trailer[1..393]).to eq ''.rjust(393, ' ')   # brancos
       end
 
