@@ -81,7 +81,9 @@ module Brcobranca
       # @example
       #  boleto.agencia_conta_boleto #=> "0548.23/0000140-26"
       def agencia_conta_boleto
-        "#{agencia}.#{agencia_dv} / #{convenio.gsub(/\A(\d{7})(\d{2})\Z/, "\\1-\\2")}"
+        agrupa_convenio_e_dv = /\A(\d{7})(\d{2})\Z/
+        formata_convenio = "\\1-\\2"
+        "#{agencia}.#{agencia_dv} / #{convenio.gsub(agrupa_convenio_e_dv, formata_convenio)}"
       end
 
       # Segunda parte do código de barras.
