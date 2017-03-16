@@ -238,10 +238,10 @@ module Brcobranca
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
           segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
-          segmento_r << cod_desconto_2("0")                             # cod. desconto 2                      1
+          segmento_r << "0"                                             # cod. desconto 2                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
-          segmento_r << cod_desconto_3("0")                             # cod. desconto 3                      1
+          segmento_r << "0"                                             # cod. desconto 3                      1
           segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
           segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
@@ -482,18 +482,6 @@ module Brcobranca
 
         def identificacao_titulo_empresa(pagamento)
           pagamento.documento_ou_numero.to_s.rjust(25, ' ')
-        end
-
-        # Esse método existe somente para sobrescrever o valor do desconto
-        # no segmento em outros bancos
-        def cod_desconto_2(codigo_desconto)
-          codigo_desconto
-        end
-
-        # Esse método existe somente para sobrescrever o valor do desconto
-        # no segmento em outros bancos
-        def cod_desconto_3(codigo_desconto)
-          codigo_desconto
         end
 
         # Campo exclusivo para serviço

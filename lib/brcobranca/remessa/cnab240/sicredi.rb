@@ -146,24 +146,6 @@ module Brcobranca
           nosso_numero.somente_numeros.ljust(20, ' ')
         end
 
-        def data_multa(pagamento)
-          return "00000000" unless pagamento.data_multa.present?
-          pagamento.data_multa.strftime("%d%m%Y")
-        end
-
-        def data_mora(pagamento)
-          return "00000000" unless pagamento.data_mora.present?
-          pagamento.data_mora.strftime("%d%m%Y")
-        end
-
-        def cod_desconto_2(codigo_desconto)
-          "1"
-        end
-
-        def cod_desconto_3(codigo_desconto)
-          "1"
-        end
-
         def codigo_baixa(pagamento)
           '1'
         end
