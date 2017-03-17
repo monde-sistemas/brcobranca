@@ -3,6 +3,9 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Itau < Brcobranca::Remessa::Cnab400::Base
+        VALOR_EM_REAIS = "1"
+        VALOR_EM_PERCENTUAL = "2"
+
         # documento do cedente
         attr_accessor :documento_cedente
 
@@ -134,6 +137,38 @@ module Brcobranca
           detalhe << ''.rjust(1, ' ')                                       # complemento do registro (brancos)     X[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
+        end
+
+
+        def monta_detalhe_multa(pagamento, sequencial)
+          detalhe = '2'
+          detalhe << pagamento.codigo_multa
+          detalhe << pagamento.data_vencimento.strftime('%d%m%Y')
+          detalhe << pagamento.formata_percentual_multa(13)
+          detalhe << ''.rjust(371, ' ')
+          detalhe << sequencial.to_s.rjust(6, '0')
+          detalhe
+        end
+
+        # Gera o arquivo com os registros
+        #
+        # @return [String]
+        def gera_arquivo
+          fail Brcobranca::RemessaInvalida.new(self) unless self.valid?
+
+          # contador de registros no arquivo
+          contador = 1
+          ret = [monta_header]
+          pagamentos.each do |pagamento|
+            contador += 1
+            ret << monta_detalhe(pagamento, contador)
+            if [VALOR_EM_REAIS, VALOR_EM_PERCENTUAL].include? pagamento.codigo_multa
+              contador += 1
+              ret << monta_detalhe_multa(pagamento, contador)
+            end
+          end
+          ret << monta_trailer(contador + 1)
+          ret.join("\r\n").to_ascii.upcase
         end
       end
     end

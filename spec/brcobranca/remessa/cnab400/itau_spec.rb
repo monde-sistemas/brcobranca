@@ -13,6 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
+      codigo_multa: '1',
+      percentual_multa: 2.00,
       uf_sacado: 'SP')
   end
   let(:params) do
@@ -154,7 +156,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
 
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
-        detalhe = itau.monta_detalhe pagamento, 1
+        detalhe = itau.monta_detalhe pagamento, 2
         expect(detalhe[37..61]).to eq "6969".ljust(25)
         expect(detalhe[62..69]).to eq '00000123' # nosso numero
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
@@ -164,6 +166,17 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
         expect(detalhe[158..159]).to eq '00' # instrução 2
         expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+      end
+
+      it 'informacoes devem estar posicionadas corretamente no detalhe opcional de multa' do
+        detalhe_multa = itau.monta_detalhe_multa pagamento, 3
+                                                                          # Significado                        Posição     Picture
+        expect(detalhe_multa[0]).to eq '2'                                # Identificação do reg. transação    [001..001]  9(001)
+        expect(detalhe_multa[1]).to eq '1'                                # Código da multa                    [002..002]  X(001)
+        expect(detalhe_multa[2..9]).to eq Date.today.strftime('%d%m%Y')   # Data da multa                      [003..010]  9(008)
+        expect(detalhe_multa[10..22]).to eq '0000000000200'               # Valor da multa                     [011..023]  9(013)
+        expect(detalhe_multa[23..393]).to eq ''.rjust(371, ' ')           # Complemento                        [024..394]  X(370)
+        expect(detalhe_multa[394..399]).to eq '000003'                    # Número sequencial                  [395..400]  9(006)
       end
     end
 
