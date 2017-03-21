@@ -152,28 +152,31 @@ module Brcobranca
 
           doc.show boleto.cedente
 
-          move_more(doc, 9.3, 0)
+          move_more(doc, 15.8, 0)
           doc.show boleto.agencia_conta_boleto
 
-          move_more(doc, 4.2, 0)
+          move_more(doc, -15.8, -0.9)
+          doc.show boleto.cedente_endereco
+
+          move_more(doc, 15.8, 0)
+          doc.show boleto.nosso_numero_boleto
+
+          move_more(doc, -15.8, -0.8)
+          doc.show boleto.documento_ou_numero
+
+          move_more(doc, 3.5, 0)
           doc.show boleto.especie
 
           move_more(doc, 1.5, 0)
           doc.show boleto.quantidade
 
-          move_more(doc, -15, -0.9)
-          doc.show boleto.documento_ou_numero
-
-          move_more(doc, 6.3, 0)
+          move_more(doc, 2, 0)
           doc.show "#{boleto.documento_cedente.formata_documento}"
 
-          move_more(doc, 5, 0)
+          move_more(doc, 3.8, 0)
           doc.show boleto.data_vencimento.to_s_br
 
-          move_more(doc, 4.5, 0.9)
-          doc.show boleto.nosso_numero_boleto
-
-          move_more(doc, 0, -0.9)
+          move_more(doc, 5, 0)
           doc.show boleto.valor_documento.to_currency
 
           move_more(doc, -15, -1.3)
