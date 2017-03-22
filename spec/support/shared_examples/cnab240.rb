@@ -109,8 +109,13 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
       expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
-      # mora
-      expect(segmento_p[141]).to eq '0' # codigo do desconto
+
+      if objeto.cod_banco == "748"
+        expect(segmento_p[141]).to eq '1' # codigo do desconto
+      else
+        expect(segmento_p[141]).to eq '0' # codigo do desconto
+      end
+
       expect(segmento_p[142..149]).to eq '00000000' # data de desconto
       expect(segmento_p[150..164]).to eq ''.rjust(15, '0') # valor do desconto
       expect(segmento_p[165..179]).to eq '000000000000990' # valor do IOF
