@@ -164,7 +164,7 @@ module Brcobranca
           segmento_p << pagamento.tipo_mora                             # cod. do mora                          1
           segmento_p << data_mora(pagamento)                            # data mora                             8
           segmento_p << pagamento.formata_valor_mora(15)                # valor mora                            15
-          segmento_p << pagamento.cod_desconto                          # cod. do desconto                      1
+          segmento_p << codigo_desconto(pagamento)                      # cod. do desconto                      1
           segmento_p << pagamento.formata_data_desconto('%d%m%Y')       # data desconto                         8
           segmento_p << pagamento.formata_valor_desconto(15)            # valor desconto                        15
           segmento_p << pagamento.formata_valor_iof(15)                 # valor IOF                             15
@@ -463,6 +463,10 @@ module Brcobranca
         def data_mora(pagamento)
           return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
           pagamento.data_vencimento.strftime("%d%m%Y")
+        end
+
+        def codigo_desconto(pagamento)
+          pagamento.cod_desconto
         end
 
         def codigo_baixa(pagamento)

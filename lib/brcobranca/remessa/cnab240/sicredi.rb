@@ -146,6 +146,10 @@ module Brcobranca
           nosso_numero.somente_numeros.ljust(20, ' ')
         end
 
+        def codigo_desconto(pagamento)
+          '1'
+        end
+
         def codigo_baixa(pagamento)
           '1'
         end
