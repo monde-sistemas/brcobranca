@@ -140,7 +140,7 @@ module Brcobranca
         end
 
         def prazo_instrucao(pagamento)
-          return '03' unless pagamento.cod_primeira_instrucao == '06'
+          return '03' unless pagamento.cod_primeira_instrucao == '09'
           pagamento.dias_protesto.rjust(2, '0')
         end
 
