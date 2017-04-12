@@ -150,6 +150,7 @@ module Brcobranca
       autoload :Base,          'brcobranca/retorno/cnab240/base'
       autoload :Santander,     'brcobranca/retorno/cnab240/santander'
       autoload :Cecred,        'brcobranca/retorno/cnab240/cecred'
+      autoload :Sicredi,       'brcobranca/retorno/cnab240/sicredi'
       autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
     end
   end
