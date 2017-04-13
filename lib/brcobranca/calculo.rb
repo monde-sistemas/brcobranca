@@ -114,6 +114,34 @@ module Brcobranca
 
       "#{digito_1}#{digito_2}"
     end
+
+    # Calcula duplo dígito com modulo 10 e 11
+    #
+    # @return [String]
+    # @raise  [ArgumentError] Caso não seja um número inteiro.
+    def duplo_digito_banrisul
+      fail ArgumentError, 'Número inválido' unless is_number?
+
+      primeiro_digito = modulo10
+      segundo_digito = "#{self}#{primeiro_digito}".modulo11_duplo_dv
+
+      if segundo_digito == 10
+        if primeiro_digito == 9
+          primeiro_digito = 0
+        else
+          primeiro_digito += 1
+        end
+
+        segundo_digito = "#{self}#{primeiro_digito}".modulo11_duplo_dv
+      end
+
+      "#{primeiro_digito}#{segundo_digito}"
+    end
+
+    def modulo11_duplo_dv
+      modulo11(multiplicador: (2..7).to_a, mapeamento: { 0 => 1, 11 => 0 }) { |total| 11 - (total % 11) }
+    end
+
   end
 end
 
