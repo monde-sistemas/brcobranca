@@ -45,35 +45,16 @@ module Brcobranca
         "#{numero}-#{nosso_numero_dv}"
       end
 
-      def calculo_dv_modulo11(campo_com_primeiro_dv)
-        campo_com_primeiro_dv.modulo11(
-          multiplicador: (2..7).to_a,
-          mapeamento: { 0 => 1, 11 => 0 }
-        ) { |total| 11 - (total % 11) }
-      end
-
-      def gerar_numero_controle(campo)
-        primeiro_digito = campo.modulo10
-        segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
-
-        if segundo_digito == 10
-          primeiro_digito += 1
-          segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
-        end
-
-        "#{primeiro_digito}#{segundo_digito}"
-      end
-
       # Dígito verificador da agência
       # @return [Integer] 2 caracteres numéricos.
       def agencia_dv
-        gerar_numero_controle(agencia)
+        agencia.duplo_digito_banrisul
       end
 
       # Dígito verificador do nosso número
-      # @return [Integer] 1 caracteres numéricos.
+      # @return [Integer] 2 caracteres numéricos.
       def nosso_numero_dv
-        gerar_numero_controle(numero)
+        numero.duplo_digito_banrisul
       end
 
       # Agência + convênio do cliente para exibir no boleto.
@@ -100,7 +81,7 @@ module Brcobranca
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
         codigo_sem_nc = "21#{agencia}#{convenio[0..-3]}#{numero}40"
-        "#{codigo_sem_nc}#{gerar_numero_controle(codigo_sem_nc)}"
+        "#{codigo_sem_nc}#{codigo_sem_nc.duplo_digito_banrisul}"
       end
     end
   end
