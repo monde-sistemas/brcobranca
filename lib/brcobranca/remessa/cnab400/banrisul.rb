@@ -43,27 +43,8 @@ module Brcobranca
           convenio
         end
 
-        def calculo_dv_modulo11(campo_com_primeiro_dv)
-          campo_com_primeiro_dv.modulo11(
-            multiplicador: (2..7).to_a,
-            mapeamento: { 0 => 1, 11 => 0 }
-          ) { |total| 11 - (total % 11) }
-        end
-
-        def numero_controle(campo)
-          primeiro_digito = campo.modulo10
-          segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
-
-          if segundo_digito == 10
-            primeiro_digito += 1
-            segundo_digito = calculo_dv_modulo11("#{campo}#{primeiro_digito}")
-          end
-
-          "#{primeiro_digito}#{segundo_digito}"
-        end
-
         def digito_nosso_numero(nosso_numero)
-          numero_controle(nosso_numero)
+          nosso_numero.duplo_digito_banrisul
         end
 
         # Header do arquivo remessa
@@ -95,7 +76,7 @@ module Brcobranca
           detalhe << ''.rjust(7, ' ')                                 # brancos                                     X[07]       031 a 037
           detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')# num. controle                               X[25]       038 a 062
           detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')        # identificação do título (nosso número)      9[08]       063 a 070
-          detalhe << digito_nosso_numero(pagamento.nosso_numero).to_s # dígitos de conferência do nosso número (dv) 9[02]       071 a 072
+          detalhe << digito_nosso_numero(pagamento.nosso_numero)      # dígitos de conferência do nosso número (dv) 9[02]       071 a 072
           detalhe << ''.rjust(32, ' ')                                # mensagem no bloqueto                        X[32]       073 a 104
           detalhe << ''.rjust(3, ' ')                                 # brancos                                     X[03]       105 a 107
           detalhe << carteira                                         # carteira                                    9[01]       108 a 108
