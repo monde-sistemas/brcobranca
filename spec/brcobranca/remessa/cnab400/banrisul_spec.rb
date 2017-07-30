@@ -157,7 +157,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
         expect(detalhe[156..157]).to eq '18'                                         # código da 1a instrução
         expect(detalhe[158..159]).to eq '00'                                         # código da 2a instrução
         expect(detalhe[160]).to eq ' '                                               # código da mora
-        expect(detalhe[161..172]).to eq ''.rjust(12, '0')                            # valor ao dia ou mensal de juros
+        expect(detalhe[161..172]).to eq ''.rjust(12, ' ')                            # valor ao dia ou mensal de juros
         expect(detalhe[173..178]).to eq ''.rjust(6, '0')                             # data para concessão do desconto
         expect(detalhe[179..191]).to eq ''.rjust(13, '0')                            # valor do desconto a ser concedido
         expect(detalhe[192..204]).to eq ''.rjust(13, '0')                            # valor do iof

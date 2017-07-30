@@ -92,7 +92,7 @@ module Brcobranca
           detalhe << codigo_primeira_instrucao(pagamento)             # 1a instrucao                                9[02]       157 a 158
           detalhe << pagamento.cod_segunda_instrucao                  # 2a instrucao                                9[02]       159 a 160
           detalhe << tipo_mora(pagamento)                             # tipo de mora (diária ou mensal)             9[13]       161 a 161
-          detalhe << pagamento.formata_valor_mora(12)                 # mora                                        9[13]       162 a 173
+          detalhe << formata_valor_mora(12, pagamento)                # mora                                        9[13]       162 a 173
           detalhe << pagamento.formata_data_desconto                  # data desconto                               9[06]       174 a 179
           detalhe << pagamento.formata_valor_desconto                 # valor desconto                              9[13]       180 a 192
           detalhe << pagamento.formata_valor_iof                      # valor iof                                   9[13]       193 a 205
@@ -142,6 +142,11 @@ module Brcobranca
           raise ValorInvalido.new('Deve ser um Float') if !(pagamento.percentual_multa.to_s =~ /\./)
 
           sprintf('%.1f', pagamento.percentual_multa).delete('.').rjust(3, '0')
+        end
+
+        def formata_valor_mora(tamanho, pagamento)
+          return ''.rjust(tamanho, ' ') if pagamento.tipo_mora == '3'
+          pagamento.formata_valor_mora(tamanho)
         end
 
       end
