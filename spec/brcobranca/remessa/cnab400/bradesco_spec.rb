@@ -5,6 +5,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
       data_vencimento: Date.today,
+      codigo_multa: '2',
+      percentual_multa: '2.00',
       numero: 1,
       nosso_numero: 123,
       documento: 6969,
@@ -177,6 +179,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = bradesco.monta_detalhe pagamento, 1
         expect(detalhe[37..61]).to eq "6969".ljust(25)
+        expect(detalhe[65]).to eq "2"
+        expect(detalhe[66..69]).to eq "0200"
         expect(detalhe[70..80]).to eq '00000000123' # nosso numero
         expect(detalhe[81]).to eq 'P' # digito nosso numero (para nosso numero 123 o digito e P)
         expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
