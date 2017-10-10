@@ -485,7 +485,7 @@ module Brcobranca
         end
 
         def identificacao_titulo_empresa(pagamento)
-          pagamento.formata_documento_ou_numero(25, ' ')
+          pagamento.formata_documento_ou_numero
         end
 
         # Campo exclusivo para serviço
