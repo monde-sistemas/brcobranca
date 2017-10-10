@@ -91,6 +91,7 @@ module Brcobranca
       validates_length_of :cod_desconto, is: 1
       validates_length_of :especie_titulo, is: 2, allow_blank: true
       validates_length_of :identificacao_ocorrencia, is: 2
+      validates_length_of :documento, maximum: 25
 
       # Nova instancia da classe Pagamento
       #
@@ -194,6 +195,11 @@ module Brcobranca
 
       def documento_ou_numero
         documento.present? ? documento : numero
+      end
+
+      def formata_documento_ou_numero(tamanho = 25, caracter = ' ')
+        doc = documento_ou_numero.to_s
+        doc.rjust(tamanho, caracter)[-tamanho..-1]
       end
 
       # Formata o campo valor da mora
