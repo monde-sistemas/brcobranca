@@ -181,7 +181,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     context 'formata valor do campo documento' do
       before { pagamento.documento = '2345' }
 
-      it "deve formatar com sem os parametros tamanho e caracter" do
+      it "deve formatar assumindo os valores padrao para os parametros tamanho e caracter" do
         expect(pagamento.formata_documento_ou_numero).to eql '2345'.rjust(25, ' ')
       end
 
