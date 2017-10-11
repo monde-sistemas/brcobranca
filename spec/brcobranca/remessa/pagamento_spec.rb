@@ -64,6 +64,12 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.errors.full_messages).to include('Uf sacado não pode estar em branco.')
     end
 
+    it 'deve ser invalido quando documento maior que o aceitável' do
+      pagamento.documento = 'a' * 26
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Documento é muito longo (máximo: 25 caracteres).')
+    end
+
     context '@cep' do
       it 'deve ser invalido se nao possuir CEP' do
         pagamento.cep_sacado = nil
@@ -170,6 +176,23 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.formata_valor_mora).to eq '0000000004920'
       # formata com o tamanho passado
       expect(pagamento.formata_valor_mora(15)).to eq '000000000004920'
+    end
+
+    context 'formata valor do campo documento' do
+      before { pagamento.documento = '2345' }
+
+      it "deve formatar assumindo os valores padrao para os parametros tamanho e caracter" do
+        expect(pagamento.formata_documento_ou_numero).to eql '2345'.rjust(25, ' ')
+      end
+
+      it "deve formatar com os parametros tamanho e caracter" do
+        expect(pagamento.formata_documento_ou_numero(15, '0')).to eql '2345'.rjust(15, '0')
+      end
+
+      it "deve extrair somente o valor do campo no tamanho informado" do
+        pagamento.documento = '12345678901234567890'
+        expect(pagamento.formata_documento_ou_numero(15, '0')).to eql '678901234567890'
+      end
     end
 
     context 'identificacao sacado' do
