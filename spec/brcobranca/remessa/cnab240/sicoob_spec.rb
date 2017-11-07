@@ -113,6 +113,18 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       # =         36 24 14 6 = 80
       # 80 / 11 = 7 com resto 3
       expect(sicoob.digito_agencia).to eq '3'
+
+      sicoob_2 = subject.class.new(params.merge!(agencia: '3214'))
+      expect(sicoob_2.digito_agencia).to eq '0'
+
+      sicoob_3 = subject.class.new(params.merge!(agencia: '0001'))
+      expect(sicoob_3.digito_agencia).to eq '9'
+
+      sicoob_4 = subject.class.new(params.merge!(agencia: '2006'))
+      expect(sicoob_4.digito_agencia).to eq '0'
+
+      sicoob_5 = subject.class.new(params.merge!(agencia: '3032'))
+      expect(sicoob_5.digito_agencia).to eq '5'
     end
 
     it 'deve calcular  digito da conta' do

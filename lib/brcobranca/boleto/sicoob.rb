@@ -35,6 +35,12 @@ module Brcobranca
         @agencia = valor.to_s.rjust(4, "0") if valor
       end
 
+      # Dígito verificador da agência
+      # @return [Integer] 1 caracteres numéricos.
+      def agencia_dv
+        agencia.modulo11(mapeamento: { 10 => '0' }).to_s
+      end
+
       # Convênio
       #
       # @return [String] 7 caracteres numéricos.
