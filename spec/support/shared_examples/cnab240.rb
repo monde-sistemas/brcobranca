@@ -103,6 +103,8 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
       if objeto.cod_banco == '104'
         expect(segmento_p[62..76]).to eq '00000006969    ' # numero do documento
+      elsif objeto.cod_banco == '748'
+        expect(segmento_p[62..76]).to eq '696900000000000' # numero do documento
       else
         expect(segmento_p[62..76]).to eq '000000000006969' # numero do documento
       end
@@ -110,7 +112,7 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
       expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
 
-      if objeto.cod_banco == "748"
+      if objeto.cod_banco == '748'
         expect(segmento_p[141]).to eq '1' # codigo do desconto
       else
         expect(segmento_p[141]).to eq '0' # codigo do desconto
