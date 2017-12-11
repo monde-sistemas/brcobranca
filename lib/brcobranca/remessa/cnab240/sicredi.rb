@@ -146,6 +146,11 @@ module Brcobranca
           nosso_numero.somente_numeros.ljust(20, ' ')
         end
 
+        def numero(pagamento)
+          doc = pagamento.documento_ou_numero.to_s.gsub(/[^0-9A-Za-z ]/, '')
+          doc.ljust(15, '0')[0...15]
+        end
+
         def codigo_desconto(pagamento)
           '1'
         end
