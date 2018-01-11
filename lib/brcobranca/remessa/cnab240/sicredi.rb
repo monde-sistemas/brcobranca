@@ -130,13 +130,21 @@ module Brcobranca
           "#{cod_banco}99999#{''.rjust(9, ' ')}#{nro_lotes.to_s.rjust(6, '0')}#{sequencial.to_s.rjust(6, '0')}#{''.rjust(6, '0')}#{''.rjust(205, ' ')}"
         end
 
+        def numero_conta_corrente_complemento_p
+          if convenio.blank? || conta_corrente == convenio
+            "#{conta_corrente.rjust(12, '0')}#{digito_conta} "
+          else
+            "#{convenio.rjust(12, '0')}  "
+          end
+        end
+
         def complemento_p(pagamento)
           # CAMPO                   TAMANHO
           # conta corrente          12
           # digito conta            1
           # digito agencia/conta    1
           # ident. titulo no banco  20
-          "#{conta_corrente.rjust(12, '0')}#{digito_conta} #{formata_nosso_numero(pagamento.nosso_numero)}"
+          "#{numero_conta_corrente_complemento_p}#{formata_nosso_numero(pagamento.nosso_numero)}"
         end
 
         # Retorna o nosso numero
