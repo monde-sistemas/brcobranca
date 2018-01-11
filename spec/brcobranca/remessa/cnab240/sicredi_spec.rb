@@ -25,6 +25,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       agencia: '0165',
       conta_corrente: '00623',
+      convenio: '00623',
       digito_conta: '8',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
@@ -181,6 +182,14 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero "072000031"
       expect(nosso_numero.strip).to eq "072000031"
+    end
+
+    it 'convenio deve ser adicionado no caso de conta beneficiario' do
+      sicredi.convenio = '0123'
+      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
+
+      expect(segmento_p[23..34]).to eql '000000000123'
+      expect(segmento_p[35..36]).to eql '  '
     end
 
     it "data de mora deve ser após o vencimento quando informada" do
