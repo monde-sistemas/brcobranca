@@ -13,7 +13,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
       sacado_documento: '12345678900',
       agencia: '4042',
       conta_corrente: '61900',
-      convenio: 12_387_989,
+      convenio:  '61900',
       numero: '00168',
       posto: '1',
       byte_idt: '7'
@@ -54,8 +54,8 @@ RSpec.describe Brcobranca::Boleto::Unicred do
     expect(boleto_novo.sacado).to eql('Claudio Pozzebom')
     expect(boleto_novo.sacado_documento).to eql('12345678900')
     expect(boleto_novo.conta_corrente).to eql('61900')
+    expect(boleto_novo.convenio).to eql('61900')
     expect(boleto_novo.agencia).to eql('4042')
-    expect(boleto_novo.convenio).to eql(12_387_989)
     expect(boleto_novo.numero).to eql('00168')
     expect(boleto_novo.carteira).to eql('03')
   end
@@ -66,6 +66,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
     @valid_attributes[:data_documento] = Date.parse('2012-01-19')
     @valid_attributes[:numero] = '13871'
     @valid_attributes[:conta_corrente] = '12345'
+    @valid_attributes[:convenio] = '12345'
     @valid_attributes[:agencia] = '1234'
     @valid_attributes[:carteira] = '03'
     @valid_attributes[:posto] = '8'
@@ -89,7 +90,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
     boleto_novo.byte_idt = '2'
     boleto_novo.agencia = '1234'
     boleto_novo.posto = '18'
-    boleto_novo.conta_corrente = '12345'
+    boleto_novo.convenio = '12345'
     boleto_novo.numero = '13871'
     boleto_novo.carteira = '03'
     expect(boleto_novo.nosso_numero_boleto).to eql('12/213871-5')
@@ -101,7 +102,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
 
     boleto_novo.agencia = '1234'
     boleto_novo.posto = '18'
-    boleto_novo.conta_corrente = '12345'
+    boleto_novo.convenio = '12345'
     expect(boleto_novo.agencia_conta_boleto).to eql('1234.18.12345')
   end
 
@@ -129,7 +130,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
     @valid_attributes[:data_documento] = Date.parse('2007-04-30')
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-01')
     @valid_attributes[:numero] = '86452'
-    @valid_attributes[:conta_corrente] = '03005'
+    @valid_attributes[:convenio] = '03005'
     @valid_attributes[:agencia] = '1172'
     boleto_novo = described_class.new(@valid_attributes)
 
@@ -149,7 +150,7 @@ RSpec.describe Brcobranca::Boleto::Unicred do
     attributes = {
       convenio: "2442725",
       agencia: "0217",
-      conta_corrente: "42725",
+      convenio: "42725",
       byte_idt: 1,
       posto: "24",
       numero: 25,
