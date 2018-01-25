@@ -45,6 +45,12 @@ module Brcobranca
         @posto = valor.to_s.rjust(2, '0') if valor
       end
 
+      # Número do convênio
+      # @return [String] 5 caracteres numéricos.
+      def convenio=(valor)
+        @convenio = valor.to_s.rjust(5, '0') if valor
+      end
+
       # Número da conta corrente
       # @return [String] 5 caracteres numéricos.
       def conta_corrente=(valor)
@@ -95,11 +101,11 @@ module Brcobranca
       end
 
       def agencia_conta_boleto
-        "#{agencia}.#{posto}.#{conta_corrente}"
+        "#{agencia}.#{posto}.#{convenio}"
       end
 
       def agencia_posto_conta
-        "#{agencia}#{posto}#{conta_corrente}"
+        "#{agencia}#{posto}#{convenio}"
       end
 
       # Segunda parte do código de barras.
