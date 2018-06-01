@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+#
 require 'spec_helper'
 
 RSpec.describe 'RGhost' do
@@ -12,7 +13,7 @@ RSpec.describe 'RGhost' do
       agencia: '4042',
       conta_corrente: '61900',
       convenio: 12_387_989,
-      numero: '777700168'
+      nosso_numero: '777700168'
     }
   end
 

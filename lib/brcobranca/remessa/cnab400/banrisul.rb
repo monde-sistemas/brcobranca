@@ -5,11 +5,11 @@ module Brcobranca
       class Banrisul < Brcobranca::Remessa::Cnab400::Base
         attr_accessor :convenio
 
-        validates_presence_of :agencia, :convenio, :sequencial_remessa
-        validates_length_of :agencia, maximum: 4
-        validates_length_of :sequencial_remessa, maximum: 7
-        validates_length_of :convenio, maximum: 13
-        validates_length_of :carteira, is: 1
+        validates_presence_of :agencia, :convenio, :sequencial_remessa, message: 'não pode estar em branco.'
+        validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
+        validates_length_of :sequencial_remessa, maximum: 7, message: 'deve ter 7 dígitos.'
+        validates_length_of :convenio, maximum: 13, message: 'deve ter 13 dígitos.'
+        validates_length_of :carteira, maximum: 1, message: 'deve ter 1 dígito.'
 
         def agencia=(valor)
           @agencia = valor.to_s.rjust(4, '0') if valor
@@ -44,7 +44,7 @@ module Brcobranca
         end
 
         def digito_nosso_numero(nosso_numero)
-          nosso_numero.duplo_digito_banrisul
+          nosso_numero.duplo_digito
         end
 
         # Header do arquivo remessa
@@ -68,7 +68,7 @@ module Brcobranca
         end
 
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                               # identificação do registro                   9[01]       001 a 001
           detalhe << ''.rjust(16, ' ')                                # brancos                                     9[16]       002 a 017
@@ -139,7 +139,7 @@ module Brcobranca
         end
 
         def formata_percentual_multa(pagamento)
-          raise ValorInvalido.new('Deve ser um Float') if !(pagamento.percentual_multa.to_s =~ /\./)
+          raise ValorInvalido, 'Deve ser um Float' if !(pagamento.percentual_multa.to_s =~ /\./)
 
           sprintf('%.1f', pagamento.percentual_multa).delete('.').rjust(3, '0')
         end

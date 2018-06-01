@@ -2,7 +2,7 @@
 shared_examples_for 'cnab240' do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
@@ -103,16 +103,14 @@ shared_examples_for 'cnab240' do
       expect(segmento_p[23..56]).to eq objeto.complemento_p(pagamento) # complemento do segmento P
       if objeto.cod_banco == '104'
         expect(segmento_p[62..76]).to eq '00000006969    ' # numero do documento
-      elsif objeto.cod_banco == '748'
-        expect(segmento_p[62..76]).to eq '696900000000000' # numero do documento
       else
         expect(segmento_p[62..76]).to eq '000000000006969' # numero do documento
       end
-      expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
+      expect(segmento_p[77..84]).to eq Date.current.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
-      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
+      expect(segmento_p[109..116]).to eq Date.current.strftime('%d%m%Y') # data de emissao
 
-      if objeto.cod_banco == '748'
+      if objeto.cod_banco == "748"
         expect(segmento_p[141]).to eq '1' # codigo do desconto
       else
         expect(segmento_p[141]).to eq '0' # codigo do desconto
@@ -249,7 +247,7 @@ shared_examples_for 'cnab240' do
     it 'remessa deve conter os registros mais as quebras de linha' do
       remessa = objeto.gera_arquivo
 
-      expect(remessa.size).to eq 1692
+      expect(remessa.size).to eq 1694
       # quebras de linha
       expect(remessa[240..241]).to eq "\r\n"
       expect(remessa[482..483]).to eq "\r\n"

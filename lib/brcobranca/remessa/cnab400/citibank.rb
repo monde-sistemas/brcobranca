@@ -3,8 +3,6 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Citibank < Brcobranca::Remessa::Cnab400::Base
-        # documento do cedente
-        attr_accessor :documento_cedente
         # Identificação do portfolio.
         # Necessário consultar o Citibank para informações referentes à conta cobrança e carteira do cliente.
         attr_accessor :portfolio
@@ -60,7 +58,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]

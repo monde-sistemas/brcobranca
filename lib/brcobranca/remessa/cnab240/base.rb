@@ -3,8 +3,6 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Base < Brcobranca::Remessa::Base
-        # documento do cedente (CPF/CNPJ)
-        attr_accessor :documento_cedente
         # convenio do cedente
         attr_accessor :convenio
         # mensagem 1
@@ -54,7 +52,7 @@ module Brcobranca
         # @return [String]
         #
         def data_geracao
-          Date.today.strftime('%d%m%Y')
+          Date.current.strftime('%d%m%Y')
         end
 
         # Hora de geracao do arquivo
@@ -62,7 +60,7 @@ module Brcobranca
         # @return [String]
         #
         def hora_geracao
-          (Time.respond_to?(:current) ? Time.current : Time.now).strftime('%H%M%S')
+          Time.current.strftime('%H%M%S')
         end
 
         # Monta o registro header do arquivo
@@ -313,18 +311,19 @@ module Brcobranca
           lote = [monta_header_lote(nro_lote)]
 
           pagamentos.each do |pagamento|
-            fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+            raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
             lote << monta_segmento_p(pagamento, nro_lote, contador)
             contador += 1
             lote << monta_segmento_q(pagamento, nro_lote, contador)
             contador += 1
+            if self.respond_to?(:monta_segmento_r)
+              seg_r = monta_segmento_r(pagamento, nro_lote, contador)
 
-            seg_r = monta_segmento_r(pagamento, nro_lote, contador)
-
-            if seg_r.present?
-              lote << seg_r
-              contador += 1
+              if seg_r.present?
+                lote << seg_r
+                contador += 1
+              end
             end
           end
           contador += 1 #trailer
@@ -339,7 +338,7 @@ module Brcobranca
         # @return [String]
         #
         def gera_arquivo
-          fail Brcobranca::RemessaInvalida.new(self) if self.invalid?
+          raise Brcobranca::RemessaInvalida, self if invalid?
 
           arquivo = [monta_header_arquivo]
 
@@ -351,7 +350,17 @@ module Brcobranca
 
           arquivo << monta_trailer_arquivo(contador, total_linhas)
 
-          arquivo.join("\r\n").to_ascii.upcase
+          remittance = arquivo.join("\r\n").to_ascii.upcase
+          remittance << "\n"
+          remittance.encode(remittance.encoding, universal_newline: true).encode(remittance.encoding, crlf_newline: true)
+        end
+
+        def total_segmentos(pagamentos)
+          if self.respond_to?(:monta_segmento_r)
+            pagamentos.size * 3
+          else
+            pagamentos.size * 2
+          end
         end
 
         def total_segmentos(pagamentos)
@@ -363,7 +372,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def complemento_header
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Numero da versao do layout do arquivo
@@ -371,7 +380,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def versao_layout_arquivo
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Numero da versao do layout do lote
@@ -379,7 +388,22 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def versao_layout_lote
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
+        end
+
+        # Densidade de gravacao do arquivo
+        def densidade_gravacao
+          '00000'
+        end
+
+        # Uso exclusivo do Banco
+        def uso_exclusivo_banco
+          ''.rjust(20, '0')
+        end
+
+        # Uso exclusivo da Empresa
+        def uso_exclusivo_empresa
+          ''.rjust(20, '0')
         end
 
         # Densidade de gravacao do arquivo
@@ -402,7 +426,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def convenio_lote
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Nome do banco
@@ -410,7 +434,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def nome_banco
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Codigo do banco
@@ -418,7 +442,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def cod_banco
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Informacoes da conta do cedente
@@ -426,7 +450,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def info_conta
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Codigo do convenio
@@ -434,7 +458,69 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def codigo_convenio
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
+        end
+
+        # Complemento do Segmento R
+        #
+        # Sobreescreva caso necessário
+        def complemento_r
+          segmento_r = ''
+          segmento_r << ''.rjust(20, ' ')                               # Exclusivo FEBRABAN                   20
+          segmento_r << ''.rjust(8, '0')                                # Cod. Ocor do Pagador                 8
+          segmento_r << ''.rjust(3, '0')                                # Cod. do Banco conta débito           3
+          segmento_r << ''.rjust(5, '0')                                # Cod. da Agencia do débito            5
+          segmento_r << ' '                                             # Cod. verificador da agencia          1
+          segmento_r << ''.rjust(12, '0')                               # Conta corrente para débito           12
+          segmento_r << ' '                                             # Cod. verificador da conta            1
+          segmento_r << ' '                                             # Cod. verificador da Ag/Conta         1
+          segmento_r << '0'                                             # Aviso débito automático              1
+          segmento_r << ''.rjust(9, ' ')                                # Uso FEBRABAN                         9
+          segmento_r
+        end
+
+        def data_multa(pagamento)
+          return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
+          pagamento.data_vencimento.strftime('%d%m%Y')
+        end
+
+        def data_mora(pagamento)
+          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
+          pagamento.data_vencimento.strftime("%d%m%Y")
+        end
+
+        def codigo_desconto(pagamento)
+          pagamento.cod_desconto
+        end
+
+        def codigo_baixa(pagamento)
+          pagamento.codigo_baixa
+        end
+
+        def dias_baixa(pagamento)
+          pagamento.dias_baixa.to_s.rjust(3, "0")
+        end
+
+        # Identificacao do titulo da empresa
+        #
+        # Sobreescreva caso necessário
+        def numero(pagamento)
+          pagamento.formata_documento_ou_numero(15, '0')
+        end
+
+        def identificacao_titulo_empresa(pagamento)
+          pagamento.formata_documento_ou_numero
+        end
+
+        # Campo exclusivo para serviço
+        #
+        # Sobreescreva caso necessário
+        def exclusivo_servico
+          "".rjust(2, " ")
+        end
+
+        def dv_agencia_cobradora
+          '0'
         end
 
         # Complemento do Segmento R

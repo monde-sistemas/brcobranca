@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+#
 # @author Kivanio Barbosa
 module Brcobranca
   module Boleto
@@ -13,8 +14,8 @@ module Brcobranca
         include klass
       end
 
-      # Validações do Rails 3
-      include ActiveModel::Validations
+      # Validações
+      include Brcobranca::Validations
 
       # <b>REQUERIDO</b>: Número do convênio/contrato do cliente junto ao banco emissor
       attr_accessor :convenio
@@ -23,8 +24,10 @@ module Brcobranca
       # <b>REQUERIDO</b>: Carteira utilizada
       attr_accessor :carteira
       # <b>OPCIONAL</b>: Variacao da carteira(opcional para a maioria dos bancos)
+      attr_accessor :carteira_label
+      # <b>OPCIONAL</b>: Rótulo da Carteira, RG ou SR, somente para impressão no boleto.
       attr_accessor :variacao
-      # <b>OPCIONAL</b>: Data de processamento do boleto, geralmente igual a data_documento
+      # <b>OPCIONAL</b>: Data de processamento do boleto
       attr_accessor :data_processamento
       # <b>REQUERIDO</b>: Quantidade de boleto(padrão = 1)
       attr_accessor :quantidade
@@ -34,58 +37,57 @@ module Brcobranca
       attr_accessor :agencia
       # <b>REQUERIDO</b>: Número da conta corrente sem <b>Digito Verificador</b>
       attr_accessor :conta_corrente
-      # <b>REQUERIDO</b>: Nome do proprietario da conta corrente
+      # <b>REQUERIDO</b>: Nome do beneficiário
       attr_accessor :cedente
-      # <b>REQUERIDO</b>: Documento do proprietario da conta corrente (CPF ou CNPJ)
+      # <b>REQUERIDO</b>: Documento do beneficiário (CPF ou CNPJ)
       attr_accessor :documento_cedente
-      # <b>REQUERIDO</b>: Número sequencial utilizado para identificar o boleto
-      attr_accessor :numero
-      # <b>OPCIONAL</b>: Número utilizado para controle do beneficiário/cedente
-      attr_accessor :documento
+      # <b>OPCIONAL</b>: Número sequencial utilizado para identificar o boleto
+      attr_accessor :nosso_numero
       # <b>REQUERIDO</b>: Símbolo da moeda utilizada (R$ no brasil)
       attr_accessor :especie
       # <b>REQUERIDO</b>: Tipo do documento (Geralmente DM que quer dizer Duplicata Mercantil)
       attr_accessor :especie_documento
-      # <b>REQUERIDO</b>: Data em que foi emitido o boleto
+      # <b>REQUERIDO</b>: Data de pedido, Nota fiscal ou documento que originou o boleto
       attr_accessor :data_documento
       # <b>REQUERIDO</b>: Data de vencimento do boleto
       attr_accessor :data_vencimento
+      # <b>OPCIONAL</b>: Número de pedido, Nota fiscal ou documento que originou o boleto
+      attr_accessor :documento_numero
       # <b>OPCIONAL</b>: Código utilizado para identificar o tipo de serviço cobrado
       attr_accessor :codigo_servico
       # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
       attr_accessor :demonstrativo
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
-      # O método abaixo tem prioridade nas instruções
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucoes
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao1
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao2
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao3
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao4
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao5
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao6
-      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao sacado
+      # <b>OPCIONAL</b>: Utilizado para mostrar alguma informação ao caixa
       attr_accessor :instrucao7
       # <b>REQUERIDO</b>: Informação sobre onde o sacado podera efetuar o pagamento
       attr_accessor :local_pagamento
       # <b>REQUERIDO</b>: Informa se o banco deve aceitar o boleto após o vencimento ou não( S ou N, quase sempre S)
       attr_accessor :aceite
-      # <b>REQUERIDO</b>: Nome da pessoa que receberá o boleto
+      # <b>REQUERIDO</b>: Nome do pagador
       attr_accessor :sacado
-      # <b>OPCIONAL</b>: Endereco da pessoa que receberá o boleto
+      # <b>OPCIONAL</b>: Endereco do pagador
       attr_accessor :sacado_endereco
-      # <b>REQUERIDO</b>: Documento da pessoa que receberá o boleto
+      # <b>REQUERIDO</b>: Documento do pagador
       attr_accessor :sacado_documento
       # <b>OPCIONAL</b>: Nome do avalista
       attr_accessor :avalista
       # <b>OPCIONAL</b>: Documento do avalista
       attr_accessor :avalista_documento
-      # <b>OPCIONAL</b>: Endereço da pessoa que envia o boleto
+      # <b>OPCIONAL</b>: Endereço do beneficiário
       attr_accessor :cedente_endereco
 
       # Validações
@@ -101,8 +103,14 @@ module Brcobranca
         Brcobranca.i18n
 
         padrao = {
-          moeda: '9', data_documento: Date.today, data_vencimento: Date.today, quantidade: 1,
-          especie_documento: 'DM', especie: 'R$', aceite: 'S', valor: 0.0,
+          moeda: '9',
+          data_processamento: Date.current,
+          data_vencimento: Date.current,
+          quantidade: 1,
+          especie_documento: 'DM',
+          especie: 'R$',
+          aceite: 'S',
+          valor: 0.0,
           local_pagamento: 'QUALQUER BANCO ATÉ O VENCIMENTO'
         }
 
@@ -156,21 +164,17 @@ module Brcobranca
       # Dígito verificador do nosso número
       # @return [Integer] 1 caracteres numéricos.
       def nosso_numero_dv
-        numero.modulo11
-      end
-
-      def numero_documento
-        fail Brcobranca::NaoImplementado.new('Utilize numero no lugar de numero_documento')
+        nosso_numero.modulo11(mapeamento: { 10 => 0, 11 => 0 })
       end
 
       # @abstract Deverá ser sobreescrito para cada banco.
       def nosso_numero_boleto
-        fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+        raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
       end
 
       # @abstract Deverá ser sobreescrito para cada banco.
       def agencia_conta_boleto
-        fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+        raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
       end
 
       # Valor total do documento: <b>quantidate * valor</b>
@@ -205,7 +209,7 @@ module Brcobranca
       # @raise [Brcobranca::BoletoInvalido] Caso as informações fornecidas não sejam suficientes ou sejam inválidas.
       # @return [String] código de barras formado por 44 caracteres numéricos.
       def codigo_barras
-        fail Brcobranca::BoletoInvalido.new(self) unless self.valid?
+        raise Brcobranca::BoletoInvalido, self unless valid?
         codigo = codigo_barras_primeira_parte # 18 digitos
         codigo << codigo_barras_segunda_parte # 25 digitos
         if codigo =~ /^(\d{4})(\d{39})$/
@@ -218,7 +222,8 @@ module Brcobranca
           codigo = "#{Regexp.last_match[1]}#{codigo_dv}#{Regexp.last_match[2]}"
           codigo
         else
-          fail Brcobranca::BoletoInvalido.new(self)
+          self.errors.add(:base, :too_long, message: "tamanho(#{codigo.size}) prévio do código de barras(#{codigo}) inválido, deveria ser 43 dígitos")
+          raise Brcobranca::BoletoInvalido, self
         end
       end
 
@@ -226,7 +231,7 @@ module Brcobranca
       #
       # @abstract Deverá ser sobreescrito para cada banco.
       def codigo_barras_segunda_parte
-        fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+        raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
       end
 
       private

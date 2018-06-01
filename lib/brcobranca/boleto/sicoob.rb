@@ -1,16 +1,17 @@
 # -*- encoding: utf-8 -*-
+#
 module Brcobranca
   module Boleto
     class Sicoob < Base # Sicoob (Bancoob)
-      validates_length_of :agencia, maximum: 4
-      validates_length_of :conta_corrente, maximum: 8
-      validates_length_of :numero, maximum: 8
-      validates_length_of :convenio, maximum: 7
-      validates_length_of :variacao, in: 1..2
-      validates_length_of :quantidade, maximum: 3
+      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
+      validates_length_of :conta_corrente, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
+      validates_length_of :nosso_numero, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :variacao, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
+      validates_length_of :quantidade, maximum: 3, message: 'deve ser menor ou igual a 3 dígitos.'
 
       def initialize(campos = {})
-        campos = { carteira: "1", variacao: '01', quantidade: '001' }.merge!(campos)
+        campos = { carteira: '1', variacao: '01', quantidade: '001' }.merge!(campos)
         super(campos)
       end
 
@@ -18,21 +19,21 @@ module Brcobranca
       #
       # @return [String] 3 caracteres numéricos.
       def banco
-        "756"
+        '756'
       end
 
       # Dígito verificador do banco
       #
       # @return [String] 1 caractere.
       def banco_dv
-        "0"
+        '0'
       end
 
       # Agência
       #
       # @return [String] 4 caracteres numéricos.
       def agencia=(valor)
-        @agencia = valor.to_s.rjust(4, "0") if valor
+        @agencia = valor.to_s.rjust(4, '0') if valor
       end
 
       # Dígito verificador da agência
@@ -45,28 +46,28 @@ module Brcobranca
       #
       # @return [String] 7 caracteres numéricos.
       def convenio=(valor)
-        @convenio = valor.to_s.rjust(7, "0") if valor
+        @convenio = valor.to_s.rjust(7, '0') if valor
       end
 
       # Número documento
       #
       # @return [String] 7 caracteres numéricos.
-      def numero=(valor)
-        @numero = valor.to_s.rjust(7, "0") if valor
+      def nosso_numero=(valor)
+        @nosso_numero = valor.to_s.rjust(7, '0') if valor
       end
 
       # Quantidade
       #
       # @return [String] 3 caracteres numéricos.
       def quantidade=(valor)
-        @quantidade = valor.to_s.rjust(3, "0") if valor
+        @quantidade = valor.to_s.rjust(3, '0') if valor
       end
 
       # Nosso número para exibição no boleto.
       #
       # @return [String] 8 caracteres numéricos.
       def nosso_numero_boleto
-        "#{numero}-#{nosso_numero_dv}"
+        "#{nosso_numero}#{nosso_numero_dv}"
       end
 
       # 3.13. Nosso número: Código de controle que permite ao Sicoob e à empresa identificar os dados da cobrança que deu origem ao boleto.
@@ -98,7 +99,7 @@ module Brcobranca
       #     Ex.: 11 – 3 = 8, então Nosso Número + DV = 21-8
       #
       def nosso_numero_dv
-        "#{agencia}#{convenio.rjust(10, "0")}#{numero}".modulo11(
+        "#{agencia}#{convenio.rjust(10, '0')}#{nosso_numero}".modulo11(
           reverse: false,
           multiplicador: [3, 1, 9, 7],
           mapeamento: { 10 => 0, 11 => 0 }
@@ -117,7 +118,7 @@ module Brcobranca
       #    34 a 41      08                 Nosso número do boleto
       #    41 a 44      03                 Número da parcela a que o boleto se refere - "001" se parcela única
       def codigo_barras_segunda_parte
-        "#{carteira}#{agencia}#{variacao}#{convenio}#{numero}#{nosso_numero_dv}#{quantidade}"
+        "#{carteira}#{agencia}#{variacao}#{convenio}#{nosso_numero_boleto}#{quantidade}"
       end
     end
   end

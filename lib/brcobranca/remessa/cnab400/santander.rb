@@ -3,8 +3,6 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Santander < Brcobranca::Remessa::Cnab400::Base
-        # documento do cedente
-        attr_accessor :documento_cedente
 
         # Código de Transmissão
         # Consultar seu gerente para pegar esse código. Geralmente está no e-mail enviado pelo banco.
@@ -12,11 +10,11 @@ module Brcobranca
 
         attr_accessor :codigo_carteira
 
-        validates_presence_of :documento_cedente, :codigo_transmissao
-        validates_presence_of :digito_conta, if: :conta_padrao_novo?
-        validates_length_of :documento_cedente, in: 11..14
-        validates_length_of :carteira, maximum: 3
-        validates_length_of :codigo_transmissao, maximum: 20
+        validates_presence_of :documento_cedente, :codigo_transmissao, message: 'não pode estar em branco.'
+        validates_presence_of :digito_conta, message: 'não pode estar em branco.', if: :conta_padrao_novo?
+        validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
+        validates_length_of :carteira, maximum: 3, message: 'deve ter no máximo 3 dígitos.'
+        validates_length_of :codigo_transmissao, maximum: 20, message: 'deve ter no máximo 20 dígitos.'
 
         def initialize(campos = {})
           campos = { aceite: 'N', carteira: '101', codigo_carteira: '1' }.merge!(campos)
@@ -99,7 +97,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]

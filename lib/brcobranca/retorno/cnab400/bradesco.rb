@@ -45,13 +45,10 @@ module Brcobranca
           # :indicador_de_rateio, 104..104 # indicador de rateio de credito
           # :zeros, 105..106
           # :carteira, 107..107 # de novo?
-          # :cod_de_ocorrencia, 108..109 # código de ocorrencia
           parse.field :codigo_ocorrencia, 108..109
-
-          # :data_de_ocorrencia, 110..115 # data de ocorrencia no banco (ddmmaa)
-          parse.field :data_ocorrencia, 110..115
-
+          parse.field :data_ocorrencia, 110..115 # data de ocorrencia no banco (ddmmaa)
           # :n_do_documento, 116..125 # n umero do documento de cobranca (dupl, np etc)
+          parse.field :documento_numero, 116..125
           # :nosso_numero, 126..133 # confirmacao do numero do titulo no banco
           # :brancos, 134..145 # complemento de registro
 
@@ -110,7 +107,9 @@ module Brcobranca
           # :numero_do_protocolo, 370..379
           # :brancos, 380..393
 
-          parse.field :motivo_ocorrencia, 318..327
+          parse.field :motivo_ocorrencia, 318..327, ->(motivos) do
+            motivos.scan(/.{2}/).reject(&:blank?).reject{|motivo| motivo == '00'}
+          end
 
           # :numero_sequencial, 394..399 # numero sequencial no arquivo
           parse.field :sequencial, 394..399

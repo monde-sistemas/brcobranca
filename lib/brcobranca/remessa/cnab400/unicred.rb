@@ -5,22 +5,20 @@ module Brcobranca
       class Unicred < Brcobranca::Remessa::Cnab400::Base
         attr_accessor :posto, :byte_idt
 
-        # documento do cedente
-        attr_accessor :documento_cedente
         # Codigo de transmissao fornecido pelo banco
         attr_accessor :codigo_transmissao
 
         validates_presence_of :agencia, :conta_corrente, :documento_cedente,
-                              :digito_conta, :codigo_transmissao
+                              :digito_conta, :codigo_transmissao, message: 'não pode estar em branco.'
 
-        validates_length_of :agencia, maximum: 4
-        validates_length_of :conta_corrente, maximum: 5
-        validates_length_of :documento_cedente, in: 11..14
-        validates_length_of :carteira, maximum: 2
-        validates_length_of :digito_conta, maximum: 1
-        validates_length_of :codigo_transmissao, maximum: 20
+        validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
+        validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
+        validates_length_of :documento_cedente, minimum: 11, maximum: 14, message: 'deve ter entre 11 e 14 dígitos.'
+        validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
+        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :codigo_transmissao, maximum: 20, message: 'deve ter 20 dígitos.'
 
-        validates_inclusion_of :carteira, in: %w(01 03 04 05 06 07)
+        validates_inclusion_of :carteira, in: %w(01 03 04 05 06 07), message: 'não existente para este banco.'
 
         # Nova instancia do Unicred
         def initialize(campos = {})
@@ -99,7 +97,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]

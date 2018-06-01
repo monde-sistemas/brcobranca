@@ -5,7 +5,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: '072000031',
       numero: '00003',
       documento: 6969,
@@ -49,7 +49,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
       it 'deve ser invalido se o posto tiver mais de 2 dígitos' do
         unicred.posto = '123'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Posto é muito longo (máximo: 2 caracteres).')
+        expect(unicred.errors.full_messages).to include('Posto deve ter 2 dígitos.')
       end
     end
 
@@ -96,7 +96,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
       it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
         unicred.conta_corrente = '123456'
         expect(unicred.invalid?).to be true
-        expect(unicred.errors.full_messages).to include('Conta corrente é muito longo (máximo: 5 caracteres).')
+        expect(unicred.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
       end
     end
 

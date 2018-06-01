@@ -37,6 +37,6 @@ RSpec.describe Brcobranca::Retorno::Cnab400::Unicred do
     expect(pagamento.data_ocorrencia).to eql('150515')
     expect(pagamento.valor_recebido).to eql('0000000044400')
     expect(pagamento.data_credito).to eql('150515')
-    expect(pagamento.motivo_ocorrencia).to eql('20')
+    expect(pagamento.motivo_ocorrencia).to eql(['20'])
   end
 end

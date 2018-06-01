@@ -22,9 +22,11 @@ module Brcobranca
       attr_accessor :sequencial_remessa
       # aceite (A = ACEITO/N = NAO ACEITO)
       attr_accessor :aceite
+      # documento do cedente (CPF/CNPJ)
+      attr_accessor :documento_cedente
 
-      # Validações do Rails 3
-      include ActiveModel::Validations
+      # Validações
+      include Brcobranca::Validations
 
       validates_presence_of :pagamentos, :empresa_mae
 
@@ -65,7 +67,7 @@ module Brcobranca
       end
 
       def totaliza_valor_titulos
-        pagamentos.inject(0) { |sum, pag| sum += pag.valor.to_f }
+        pagamentos.inject(0.0) { |sum, pagamento| sum += pagamento.valor.to_f }
       end
 
       def valor_titulos_carteira(tamanho = 17)

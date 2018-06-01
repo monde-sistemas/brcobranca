@@ -105,7 +105,9 @@ module Brcobranca
           # :numero_do_protocolo, 370..379
           # :brancos, 380..393
 
-          parse.field :motivo_ocorrencia, 318..319
+          parse.field :motivo_ocorrencia, 318..319, ->(motivos) do
+            motivos.scan(/.{2}/).reject(&:blank?).reject{|motivo| motivo == '00'}
+          end
 
           # :numero_sequencial, 394..399 # numero sequencial no arquivo
           parse.field :sequencial, 394..399

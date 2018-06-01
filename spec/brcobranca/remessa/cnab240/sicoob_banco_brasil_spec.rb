@@ -5,7 +5,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: '1234567',
       documento: 6969,
       documento_sacado: '82136760505',
@@ -48,7 +48,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se o codigo cobranca tiver mais de 7 digitos' do
         sicoob_banco_brasil.codigo_cobranca = '12345678'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca é muito longo (máximo: 7 caracteres).')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Codigo cobranca deve ter 7 dígitos.')
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a convenio tiver mais de 10 digitos' do
         sicoob_banco_brasil.convenio = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio é muito longo (máximo: 10 caracteres).')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Convenio deve ter 10 dígitos.')
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se a conta corrente tiver mais de 10 digitos' do
         sicoob_banco_brasil.conta_corrente = '12345678901'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente é muito longo (máximo: 10 caracteres).')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Conta corrente deve ter 10 dígitos.')
       end
     end
 
@@ -78,7 +78,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       it 'deve ser invalido se o sequencial remessa tiver mais de 8 digitos' do
         sicoob_banco_brasil.sequencial_remessa = '123456789'
         expect(sicoob_banco_brasil.invalid?).to be true
-        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 8 caracteres).')
+        expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa deve ter 8 dígitos.')
       end
     end
 
@@ -130,7 +130,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(header[70..99]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG'   # razao social do cedente
       expect(header[100..179]).to eq ''.rjust(80, ' ')                # brancos
       expect(header[180..187]).to eq '00000001'                       # sequencial de remessa
-      expect(header[188..195]).to eq Date.today.strftime('%d%m%Y')    # data gravacao
+      expect(header[188..195]).to eq Date.current.strftime('%d%m%Y')    # data gravacao
       expect(header[196..206]).to eq ''.rjust(11, '0')                # zeros
       expect(header[207..239]).to eq ''.rjust(33, ' ')                # brancos
     end
@@ -156,12 +156,12 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(segmento_p[60]).to eq '2'                                # emissao boleto
       expect(segmento_p[61]).to eq ' '                                # branco
       expect(segmento_p[62..76]).to eq '000000001234567'              # numero do documento de cobranca
-      expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y')  # data de vencimento
+      expect(segmento_p[77..84]).to eq Date.current.strftime('%d%m%Y')  # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000005000'              # valor do documento
       expect(segmento_p[100..105]).to eq ''.rjust(6, '0')             # zeros
       expect(segmento_p[106]).to eq 'N'                               # aceite
       expect(segmento_p[107..108]).to eq '  '                         # brancos
-      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y')# data de emissao
+      expect(segmento_p[109..116]).to eq Date.current.strftime('%d%m%Y')# data de emissao
       expect(segmento_p[117]).to eq '1'                               # tipo da mora
       expect(segmento_p[118..132]).to eq ''.rjust(15, '0')            # valor juros/mora
       expect(segmento_p[133..141]).to eq ''.rjust(9, '0')             # zeros

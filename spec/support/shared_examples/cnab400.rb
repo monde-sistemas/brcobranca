@@ -2,7 +2,7 @@
 shared_examples_for 'cnab400' do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       documento_sacado: '12345678901',
       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
@@ -36,6 +36,71 @@ shared_examples_for 'cnab400' do
         codigo_transmissao: '17777751042700080112',
         empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
         documento_cedente: '12345678910',
+        agencia: '8888',
+        conta_corrente: '000002997',
+        digito_conta: '8',
+        pagamentos: [pagamento]
+      }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Sicoob
+      { carteira: '01',
+        agencia: '1234',
+        conta_corrente: '12345678',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        convenio: '123456789',
+        pagamentos: [pagamento] }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::BancoBrasil
+      { carteira: '12',
+        agencia: '1234',
+        variacao_carteira: '123',
+        convenio: '1234567',
+        convenio_lider: '7654321',
+        conta_corrente: '1234',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        sequencial_remessa: '1',
+        pagamentos: [pagamento] }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::BancoNordeste
+      {
+        carteira: '21',
+        agencia: '1234',
+        conta_corrente: '1234567',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        pagamentos: [pagamento]
+      }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Unicred
+      {
+        carteira: '03',
+        agencia: '1234',
+        conta_corrente: '12345',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        documento_cedente: '12345678910',
+        codigo_transmissao: '12345678901234567890',
+        pagamentos: [pagamento]
+      }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Credisis
+      {
+        carteira: '18',
+        agencia: '1234',
+        conta_corrente: '12345',
+        digito_conta: '1',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        codigo_cedente: '0027',
+        documento_cedente: '12345678910',
+        pagamentos: [pagamento]
+      }
+    elsif subject.class == Brcobranca::Remessa::Cnab400::Banrisul
+      {
+        carteira: '1',
+        agencia: '1102',
+        convenio: '9000150',
+        digito_conta: '96',
+        empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
+        sequencial_remessa: '1',
         pagamentos: [pagamento]
       }
     elsif subject.class == Brcobranca::Remessa::Cnab400::BancoNordeste
@@ -117,7 +182,13 @@ shared_examples_for 'cnab400' do
         expect(trailer[1..26]).to eq ''.rjust(26, ' ')      # brancos
         expect(trailer[27..39]).to eq '0000000019990'       # total geral
         expect(trailer[40..393]).to eq ''.rjust(354, ' ')   # brancos
-      elsif subject.class != Brcobranca::Remessa::Cnab400::Santander
+      elsif subject.class == Brcobranca::Remessa::Cnab400::Santander
+        expect(trailer[1..6]).to eq '000003'                # numero sequencial do registro
+        expect(trailer[7..19]).to eq '0000000019990'        # total
+        expect(trailer[20..393]).to eq ''.rjust(374, '0')   # zeros
+      elsif subject.class == Brcobranca::Remessa::Cnab400::Sicoob
+        expect(trailer[1..393]).to eq ''.rjust(393, '0')   # zeros
+      else
         expect(trailer[1..393]).to eq ''.rjust(393, ' ')   # brancos
       end
 
@@ -131,7 +202,7 @@ shared_examples_for 'cnab400' do
 
   it 'remessa deve conter os registros mais as quebras de linha' do
     remessa = objeto.gera_arquivo
-    expect(remessa.size).to eq 1204
+    expect(remessa.size).to eq 1206
 
     # registros
     expect(remessa[0..399]).to eq objeto.monta_header
@@ -146,6 +217,6 @@ shared_examples_for 'cnab400' do
     objeto.pagamentos << pagamento
     remessa = objeto.gera_arquivo
 
-    expect(remessa.size).to eq 1606
+    expect(remessa.size).to eq 1608
   end
 end

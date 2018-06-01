@@ -1,19 +1,20 @@
 # -*- encoding: utf-8 -*-
+#
 module Brcobranca
   module Boleto
-    class Banrisul < Base # Banco BANRISUL
-      validates_length_of :agencia, maximum: 4
-      validates_length_of :numero, maximum: 8
-      validates_length_of :convenio, maximum: 13
-      validates_length_of :carteira, is: 1
+    class Banrisul < Base # Banrisul
+      # <b>REQUERIDO</b>: digito verificador do convenio
+      attr_accessor :digito_convenio
 
-      # Nova instancia do Banrisul
-      # @param (see Brcobranca::Boleto::Base#initialize)
+      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
+      validates_length_of :conta_corrente, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
+      validates_length_of :nosso_numero, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
+      validates_length_of :carteira, maximum: 1, message: 'deve ser menor ou igual a 1 dígitos.'
+      validates_length_of :convenio, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      validates_length_of :digito_convenio, maximum: 2, message: 'deve ser menor ou igual a 2 dígitos.'
+
       def initialize(campos = {})
-        campos = { carteira: '1' }.merge!(campos)
-
-        campos.merge!(local_pagamento: 'Pagável em qualquer banco até o vencimento')
-
+        campos = { carteira: '2' }.merge!(campos)
         super(campos)
       end
 
@@ -24,64 +25,69 @@ module Brcobranca
         '041'
       end
 
-      # Número seqüencial utilizado para identificar o boleto.
+      # Dígito verificador do banco
+      #
+      # @return [String] 1 caractere.
+      def banco_dv
+        '8'
+      end
+
+      # Agência
+      #
+      # @return [String] 4 caracteres numéricos.
+      def agencia=(valor)
+        @agencia = valor.to_s.rjust(4, '0') if valor
+      end
+
+      # Conta
+      #
       # @return [String] 8 caracteres numéricos.
-      def numero=(valor)
-        @numero = valor.to_s.rjust(8, '0') if valor
+      def conta_corrente=(valor)
+        @conta_corrente = valor.to_s.rjust(8, '0') if valor
       end
 
+      # Número documento
+      #
+      # @return [String] 8 caracteres numéricos.
+      def nosso_numero=(valor)
+        @nosso_numero = valor.to_s.rjust(8, '0') if valor
+      end
+
+      # Número do convênio do cliente junto ao banco.
+      # @return [String] 7 caracteres numéricos.
       def convenio=(valor)
-        if valor
-          convenio = valor.to_s.rjust(13, '0')
-          @convenio = convenio[4..-1]
-        end
+        @convenio = valor.to_s.rjust(7, '0') if valor
       end
 
-      # Nosso número para exibir no boleto.
-      # @return [String]
-      # @example
-      #  boleto.nosso_numero_boleto #=> "00000004042-28"
+      # Digito do convênio do cliente junto ao banco.
+      # @return [String] 2 caracteres numéricos.
+      def digito_convenio=(valor)
+        @digito_convenio = valor.to_s.rjust(2, '0') if valor
+      end
+
+      # Nosso número para exibição no boleto.
+      #
+      # @return [String] caracteres numéricos.
       def nosso_numero_boleto
-        "#{numero}-#{nosso_numero_dv}"
+        "#{nosso_numero}-#{nosso_numero.duplo_digito}"
       end
 
-      # Dígito verificador da agência
-      # @return [Integer] 2 caracteres numéricos.
-      def agencia_dv
-        agencia.duplo_digito_banrisul
-      end
-
-      # Dígito verificador do nosso número
-      # @return [Integer] 2 caracteres numéricos.
-      def nosso_numero_dv
-        numero.duplo_digito_banrisul
-      end
-
-      # Agência + convênio do cliente para exibir no boleto.
-      # @return [String]
-      # @example
-      #  boleto.agencia_conta_boleto #=> "0548.23/0000140-26"
       def agencia_conta_boleto
-        agrupa_convenio_e_dv = /\A(\d{7})(\d{2})\Z/
-        formata_convenio = "\\1-\\2"
-        "#{agencia}.#{agencia_dv} / #{convenio.gsub(agrupa_convenio_e_dv, formata_convenio)}"
+        "#{agencia} / #{convenio[0..5]}.#{convenio[6]}.#{digito_convenio}"
       end
 
-      # Segunda parte do código de barras.
-      #
-      # Posição | Tamanho | Conteúdo<br/>
-      # 20        1         Constante 2, identifica o Produto
-      # 21        1         Constante 1, identifica o Sistema
-      # 22 a 25   4         Agência do Beneficiário, sem NC
-      # 26 a 32   7         Código do Cedente, sem NC
-      # 33 a 40   8         Nosso Número, sem NC
-      # 41 a 42   2         Constante 40
-      # 43 a 44   2         Número de controle (cálculo através dos modulos 10 e 11)
-      #
-      # @return [String] 25 caracteres numéricos.
+      # Posições 20 a 20 - Produto:
+      #                    1 Cobrança Normal, Fichário emitido pelo BANRISUL.
+      #                    2 Cobrança Direta, Fichário emitido pelo CLIENTE.
+      # Posição 21 a 21 - Constante 1
+      # Posição 22 a 25 - Código da Agência, com quatro dígitos, sem o Número de Controle.
+      # Posição 26 a 32 - Código de Cedente do Beneficiário sem Número de Controle.
+      # Posição 33 a 40 - Nosso Número sem Número de Controle.
+      # Posição 41 a 42 - Constante 40.
+      # Posição 43 a 44 - Duplo Dígito referente às posições 20 a 42 (módulos 10 e 11).
       def codigo_barras_segunda_parte
-        codigo_sem_nc = "21#{agencia}#{convenio[0..-3]}#{numero}40"
-        "#{codigo_sem_nc}#{codigo_sem_nc.duplo_digito_banrisul}"
+        campo_livre = "#{carteira}1#{agencia}#{convenio}#{nosso_numero}40"
+        campo_livre + campo_livre.duplo_digito
       end
     end
   end

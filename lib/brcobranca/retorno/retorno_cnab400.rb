@@ -43,7 +43,9 @@ module Brcobranca
         parse.field :juros_mora, 266..278
         parse.field :outros_recebimento, 279..291
         parse.field :data_credito, 295..300
-        parse.field :motivo_ocorrencia, 377..384
+        parse.field :motivo_ocorrencia, 377..384, ->(motivos) do
+          motivos.scan(/.{2}/).reject(&:blank?).reject{|motivo| motivo == '00'}
+        end
         parse.field :sequencial, 394..399
 
         # Campos da classe base que não encontrei a relação com CNAB400

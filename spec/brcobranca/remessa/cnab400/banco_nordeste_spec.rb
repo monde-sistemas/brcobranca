@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       documento: 6969,
       documento_sacado: '12345678901',
@@ -39,7 +39,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se a agencia tiver mais de 4 digitos' do
         banco_nordeste.agencia = '12345'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
+        expect(banco_nordeste.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
         banco_nordeste.digito_conta = '12'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
+        expect(banco_nordeste.errors.full_messages).to include('Digito conta deve ter 1 dígito.')
       end
     end
 
@@ -67,7 +67,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se a conta corrente tiver mais de 7 digitos' do
         banco_nordeste.conta_corrente = '12345678'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
+        expect(banco_nordeste.errors.full_messages).to include('Conta corrente deve ter 7 dígitos.')
       end
     end
 
@@ -81,7 +81,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser inválido se a carteira tiver 2 dígitos' do
         banco_nordeste.carteira = '123'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
+        expect(banco_nordeste.errors.full_messages).to include('Carteira deve ter 2 dígitos.')
       end
     end
 
@@ -95,11 +95,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
       it 'deve ser invalido se o documento do cedente nao tiver entre 11 e 14 digitos' do
         banco_nordeste.documento_cedente = '123'
         expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Documento cedente é muito curto (mínimo: 11 caracteres).')
-
-        banco_nordeste.documento_cedente = '123456789012345'
-        expect(banco_nordeste.invalid?).to be true
-        expect(banco_nordeste.errors.full_messages).to include('Documento cedente é muito longo (máximo: 14 caracteres).')
+        expect(banco_nordeste.errors.full_messages).to include('Documento cedente deve ter entre 11 e 14 dígitos.')
       end
     end
   end
@@ -149,7 +145,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
 
       banco_nordeste.carteira = 99
       expect(banco_nordeste.invalid?).to be true
-      expect(banco_nordeste.errors.full_messages).to include('Carteira não existente para este banco.')
+      expect(banco_nordeste.errors.full_messages).to include('Carteira não é válida.')
     end
   end
 
@@ -172,7 +168,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
         expect(detalhe[37..61]).to eq "6969".ljust(25) # documento
         expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
         expect(detalhe[69]).to eq '6'                                 # digito verificador
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
         expect(detalhe[156..159]).to eq '0000'                        # instrução

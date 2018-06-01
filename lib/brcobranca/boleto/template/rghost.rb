@@ -22,7 +22,7 @@ module Brcobranca
       # Templates para usar com Rghost
       module Rghost
         extend self
-        include RGhost unless self.include?(RGhost)
+        include RGhost unless include?(RGhost)
         RGhost::Config::GS[:external_encoding] = Brcobranca.configuration.external_encoding
 
         # Gera o boleto em usando o formato desejado [:pdf, :jpg, :tif, :png, :ps, :laserjet, ... etc]
@@ -72,7 +72,7 @@ module Brcobranca
 
           template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico.eps')
 
-          fail 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
+          raise 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
           modelo_generico_template(doc, boleto, template_path)
           modelo_generico_cabecalho(doc, boleto)
@@ -99,7 +99,7 @@ module Brcobranca
 
           template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_generico.eps')
 
-          fail 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
+          raise 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
           boletos.each_with_index do |boleto, index|
             modelo_generico_template(doc, boleto, template_path)
@@ -162,7 +162,7 @@ module Brcobranca
           doc.show boleto.nosso_numero_boleto
 
           move_more(doc, -15.8, -0.8)
-          doc.show boleto.documento_ou_numero
+          doc.show boleto.documento_numero
 
           move_more(doc, 3.5, 0)
           doc.show boleto.especie
@@ -228,7 +228,7 @@ module Brcobranca
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
 
           move_more(doc, 3.5, 0)
-          doc.show boleto.documento_ou_numero
+          doc.show boleto.documento_numero
 
           move_more(doc, 5.8, 0)
           doc.show boleto.especie_documento

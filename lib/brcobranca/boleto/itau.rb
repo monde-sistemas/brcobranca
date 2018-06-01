@@ -1,16 +1,19 @@
 # -*- encoding: utf-8 -*-
+#
+
 module Brcobranca
   module Boleto
     class Itau < Base # Banco Itaú
       # Usado somente em carteiras especiais com registro para complementar o número do cocumento
       attr_reader :seu_numero
 
-      validates_length_of :agencia, maximum: 4
-      validates_length_of :convenio, maximum: 5
-      validates_length_of :numero, maximum: 8
-      validates_length_of :conta_corrente, maximum: 5
-      validates_length_of :seu_numero, maximum: 7
-
+      validates_length_of :agencia, maximum: 4, message: 'deve ser menor ou igual a 4 dígitos.'
+      validates_length_of :convenio, maximum: 5, message: 'deve ser menor ou igual a 5 dígitos.'
+      validates_length_of :nosso_numero, maximum: 8, message: 'deve ser menor ou igual a 8 dígitos.'
+      validates_length_of :conta_corrente, maximum: 5, message: 'deve ser menor ou igual a 5 dígitos.'
+      with_options if: :usa_seu_numero? do |v|
+        v.validates_length_of :seu_numero, maximum: 7, message: 'deve ser menor ou igual a 7 dígitos.'
+      end
       # Nova instancia do Itau
       # @param (see Brcobranca::Boleto::Base#initialize)
       def initialize(campos = {})
@@ -39,14 +42,18 @@ module Brcobranca
 
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 8 caracteres numéricos.
-      def numero=(valor)
-        @numero = valor.to_s.rjust(8, '0') if valor
+      def nosso_numero=(valor)
+        @nosso_numero = valor.to_s.rjust(8, '0') if valor
       end
 
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 7 caracteres numéricos.
       def seu_numero=(valor)
         @seu_numero = valor.to_s.rjust(7, '0') if valor
+      end
+
+      def usa_seu_numero?
+        %w(198 106 107 122 142 143 195 196).include?(carteira.to_s)
       end
 
       # Dígito verificador do nosso número.
@@ -59,9 +66,9 @@ module Brcobranca
       # @return [String] 1 caracteres numéricos.
       def nosso_numero_dv
         if %w(112 126 131 146 150 168).include?(carteira)
-          "#{carteira}#{numero}".modulo10
+          "#{carteira}#{nosso_numero}".modulo10
         else
-          "#{agencia}#{conta_corrente}#{carteira}#{numero}".modulo10
+          "#{agencia}#{conta_corrente}#{carteira}#{nosso_numero}".modulo10
         end
       end
 
@@ -76,7 +83,7 @@ module Brcobranca
       # @example
       #  boleto.nosso_numero_boleto #=> "175/12345678-4"
       def nosso_numero_boleto
-        "#{carteira}/#{numero}-#{nosso_numero_dv}"
+        "#{carteira}/#{nosso_numero}-#{nosso_numero_dv}"
       end
 
       # Agência + conta corrente do cliente para exibir no boleto.
@@ -120,10 +127,10 @@ module Brcobranca
       def codigo_barras_segunda_parte
         case carteira.to_i
         when 198, 106, 107, 122, 142, 143, 195, 196
-          dv = "#{carteira}#{numero}#{seu_numero}#{convenio}".modulo10
-          "#{carteira}#{numero}#{seu_numero}#{convenio}#{dv}0"
+          dv = "#{carteira}#{nosso_numero}#{seu_numero}#{convenio}".modulo10
+          "#{carteira}#{nosso_numero}#{seu_numero}#{convenio}#{dv}0"
         else
-          "#{carteira}#{numero}#{nosso_numero_dv}#{agencia}#{conta_corrente}#{agencia_conta_corrente_dv}000"
+          "#{carteira}#{nosso_numero}#{nosso_numero_dv}#{agencia}#{conta_corrente}#{agencia_conta_corrente_dv}000"
         end
       end
     end

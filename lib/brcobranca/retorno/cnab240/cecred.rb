@@ -61,7 +61,9 @@ module Brcobranca
             parse.field :banco_recebedor, 96..98
             parse.field :agencia_recebedora_com_dv, 99..104
             parse.field :valor_tarifa, 198..212
-            parse.field :motivo_ocorrencia, 213..222
+            parse.field :motivo_ocorrencia, 213..222, ->(motivos) do
+              motivos.scan(/.{2}/).reject(&:blank?).reject{|motivo| motivo == '00'}
+            end
 
             # Segmento U
             parse.field :data_ocorrencia, 137..144

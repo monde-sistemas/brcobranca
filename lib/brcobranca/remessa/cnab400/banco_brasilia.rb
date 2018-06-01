@@ -5,10 +5,11 @@ module Brcobranca
       class BancoBrasilia < Brcobranca::Remessa::Cnab400::Base
         attr_accessor :convenio
 
-        validates_presence_of :agencia, :conta_corrente, :digito_conta
-        validates_length_of :agencia, maximum: 3
-        validates_length_of :conta_corrente, maximum: 7
-        validates_length_of :carteira, :digito_conta, maximum: 1
+        validates_presence_of :agencia, :conta_corrente, :digito_conta, message: 'não pode estar em branco.'
+        validates_length_of :agencia, maximum: 3, message: 'deve ter 3 dígitos.'
+        validates_length_of :conta_corrente, maximum: 7, message: 'deve ter 7 dígitos.'
+        validates_length_of :carteira, maximum: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
 
         # Nova instancia do Banco do Nordeste
         def initialize(campos = {})
@@ -118,7 +119,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '01'                                                    # identificacao transacao               9[02]
           detalhe << agencia                                                # agencia                               9[03]
@@ -158,24 +159,6 @@ module Brcobranca
           detalhe << ''.rjust(40, ' ')                                      # mensagem livre                        X[40]
           detalhe << ''.rjust(32, ' ')                                      # branco                                X[32]
           detalhe
-        end
-
-        # Gera o arquivo com os registros
-        #
-        # @return [String]
-        def gera_arquivo
-          fail Brcobranca::RemessaInvalida.new(self) unless self.valid?
-
-          # contador de registros no arquivo
-          contador = 1
-          ret = [monta_header]
-          pagamentos.each do |pagamento|
-            contador += 1
-            ret << monta_detalhe(pagamento, contador)
-          end
-
-          ret << []
-          ret.join("\r\n").to_ascii.upcase
         end
       end
     end

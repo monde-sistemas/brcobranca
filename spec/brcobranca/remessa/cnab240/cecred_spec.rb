@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       numero: 123,
       documento: 6969,
@@ -55,7 +55,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       it 'deve ser invalido se o convenio tiver mais de 6 digitos' do
         cecred.convenio = '1234567'
         expect(cecred.invalid?).to be true
-        expect(cecred.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
+        expect(cecred.errors.full_messages).to include('Convenio deve ter 6 dígitos.')
       end
     end
 
@@ -69,7 +69,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Cecred do
       it 'deve ser invalido se o conta corrente tiver mais de 7 digitos' do
         cecred.conta_corrente = ''.rjust(8, '0')
         expect(cecred.invalid?).to be true
-        expect(cecred.errors.full_messages).to include('Conta corrente é muito longo (máximo: 7 caracteres).')
+        expect(cecred.errors.full_messages).to include('Conta corrente deve ter 7 dígitos.')
       end
     end
   end

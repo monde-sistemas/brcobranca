@@ -7,7 +7,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       numero: 123,
       documento: 6969,
@@ -59,7 +59,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       it 'deve ser invalido se o convenio tiver mais de 6 digitos' do
         caixa.convenio = '1234567'
         expect(caixa.invalid?).to be true
-        expect(caixa.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
+        expect(caixa.errors.full_messages).to include('Convenio deve ter 6 dígitos.')
       end
     end
 

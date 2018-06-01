@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 22832563,
       documento: '1',
       documento_sacado: '12345678901',
@@ -40,7 +40,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       it 'deve ser inválido se a agência tiver mais de 4 dígitos' do
         banrisul.agencia = '12345'
         expect(banrisul.invalid?).to be true
-        expect(banrisul.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
+        expect(banrisul.errors.full_messages).to include('Agencia deve ter 4 dígitos.')
       end
     end
 
@@ -54,7 +54,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       it 'deve ser inválido se o convenio tiver mais de 7 dígitos' do
         banrisul.convenio = '12345678901234'
         expect(banrisul.invalid?).to be true
-        expect(banrisul.errors.full_messages).to include('Convenio é muito longo (máximo: 13 caracteres).')
+        expect(banrisul.errors.full_messages).to include('Convenio deve ter 13 dígitos.')
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
       it 'deve ser inválido se sequencial de remessa tiver mais de 8 dígitos' do
         banrisul.sequencial_remessa = '12345678'
         expect(banrisul.invalid?).to be true
-        expect(banrisul.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
+        expect(banrisul.errors.full_messages).to include('Sequencial remessa deve ter 7 dígitos.')
       end
     end
   end
@@ -147,13 +147,13 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
         expect(detalhe[107]).to eq '1'                                               # carteira
         expect(detalhe[108..109]).to eq '01'                                         # código da ocorrência
         expect(detalhe[110..119]).to eq '1'.ljust(10, ' ')                           # seu número
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y')                # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')                # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'                              # valor do documento
         expect(detalhe[139..141]).to eq '041'                                        # banco cobrador
         expect(detalhe[142..146]).to eq ''.rjust(5, ' ')                             # brancos
         expect(detalhe[147..148]).to eq '08'                                         # tipo de documento (08 - Cobrança Credenciada Banrisul - CCB)
         expect(detalhe[149]).to eq 'N'                                               # código de aceite
-        expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')                # data de emissão
+        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')                # data de emissão
         expect(detalhe[156..157]).to eq '18'                                         # código da 1a instrução
         expect(detalhe[158..159]).to eq '00'                                         # código da 2a instrução
         expect(detalhe[160]).to eq ' '                                               # código da mora

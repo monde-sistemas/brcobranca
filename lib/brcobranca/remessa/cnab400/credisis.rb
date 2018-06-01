@@ -5,12 +5,13 @@ module Brcobranca
       class Credisis < Brcobranca::Remessa::Cnab400::Base
         attr_accessor :codigo_cedente, :documento_cedente, :convenio
 
-        validates_presence_of :agencia, :conta_corrente, :codigo_cedente, :digito_conta
-        validates_length_of :agencia, :codigo_cedente, maximum: 4
-        validates_length_of :conta_corrente, maximum: 8
-        validates_length_of :carteira, maximum: 2
-        validates_length_of :digito_conta, maximum: 1
-        validates_length_of :sequencial_remessa, :convenio, maximum: 7
+        validates_presence_of :agencia, :conta_corrente, :codigo_cedente, :digito_conta, message: 'não pode estar em branco.'
+        validates_length_of :agencia, maximum: 4, message: 'deve ter 4 dígitos.'
+        validates_length_of :codigo_cedente, maximum: 4, message: 'deve ter 4 dígitos.'
+        validates_length_of :conta_corrente, maximum: 8, message: 'deve ter 8 dígitos.'
+        validates_length_of :carteira, maximum: 2, message: 'deve ter 2 dígitos.'
+        validates_length_of :digito_conta, maximum: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :sequencial_remessa, :convenio, maximum: 7, message: 'deve ter 7 dígitos.'
 
         # Nova instancia do CrediSIS
         def initialize(campos = {})
@@ -32,6 +33,10 @@ module Brcobranca
 
         def sequencial_remessa=(valor)
           @sequencial_remessa = valor.to_s.rjust(7, '0') if valor
+        end
+
+        def codigo_cedente=(valor)
+          @codigo_cedente = valor.to_s.rjust(4, '0') if valor
         end
 
         def cod_banco
@@ -65,7 +70,7 @@ module Brcobranca
         end
 
         def formata_nosso_numero(nosso_numero)
-          "0#{codigo_cedente.rjust(4, '0')}#{nosso_numero.rjust(6, '0')}"
+          "0#{codigo_cedente}#{nosso_numero.rjust(6, '0')}"
         end
 
         # Detalhe do arquivo
@@ -78,7 +83,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]

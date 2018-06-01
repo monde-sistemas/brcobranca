@@ -6,9 +6,6 @@ module Brcobranca
         VALOR_EM_REAIS = "1"
         VALOR_EM_PERCENTUAL = "2"
 
-        # documento do cedente
-        attr_accessor :documento_cedente
-
         validates_presence_of :agencia, :conta_corrente, :documento_cedente, :digito_conta
         validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 5
@@ -88,7 +85,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+          raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
@@ -152,27 +149,6 @@ module Brcobranca
           detalhe << ''.rjust(371, ' ')
           detalhe << sequencial.to_s.rjust(6, '0')
           detalhe
-        end
-
-        # Gera o arquivo com os registros
-        #
-        # @return [String]
-        def gera_arquivo
-          fail Brcobranca::RemessaInvalida.new(self) unless self.valid?
-
-          # contador de registros no arquivo
-          contador = 1
-          ret = [monta_header]
-          pagamentos.each do |pagamento|
-            contador += 1
-            ret << monta_detalhe(pagamento, contador)
-            if [VALOR_EM_REAIS, VALOR_EM_PERCENTUAL].include? pagamento.codigo_multa
-              contador += 1
-              ret << monta_detalhe_multa(pagamento, contador)
-            end
-          end
-          ret << monta_trailer(contador + 1)
-          ret.join("\r\n").to_ascii.upcase
         end
       end
     end

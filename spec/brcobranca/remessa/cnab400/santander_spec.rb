@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       codigo_multa: '4',
       percentual_multa: '2.00',
       valor_mora: '8.00',
@@ -25,6 +25,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
       codigo_transmissao: '17777751042700080112',
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       documento_cedente: '12345678910',
+      agencia: '8888',
+      conta_corrente: '000002997',
+      digito_conta: '8',
       pagamentos: [pagamento]
     }
   end
@@ -125,7 +128,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
         detalhe = santander.monta_detalhe pagamento, 1
         expect(detalhe[37..61]).to eq "6969".ljust(25) # nosso numero
         expect(detalhe[62..69]).to eq '00000123' # nosso numero
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
         expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador

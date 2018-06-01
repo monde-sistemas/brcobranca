@@ -10,14 +10,14 @@ module Brcobranca
         attr_accessor :byte_idt
         attr_accessor :posto
 
-        validates_presence_of :byte_idt, :modalidade_carteira, :parcela, :posto, :digito_conta
+        validates_presence_of :byte_idt, :modalidade_carteira, :parcela, :posto, :digito_conta, message: 'não pode estar em branco.'
 
         # Remessa 240 - 12 digitos
-        validates_length_of :conta_corrente, maximum: 5
-        validates_length_of :agencia, is: 4
-        validates_length_of :modalidade_carteira, is: 2
-        validates_length_of :digito_conta, is: 1
-        validates_length_of :posto, maximum: 2
+        validates_length_of :conta_corrente, maximum: 5, message: 'deve ter 5 dígitos.'
+        validates_length_of :agencia, is: 4, message: 'deve ter 4 dígitos.'
+        validates_length_of :modalidade_carteira, is: 2, message: 'deve ter 2 dígitos.'
+        validates_length_of :digito_conta, is: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :posto, maximum: 2, message: 'deve ter 2 dígitos.'
         validates_length_of :byte_idt, is: 1,
           message: 'deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário'
 
@@ -130,21 +130,13 @@ module Brcobranca
           "#{cod_banco}99999#{''.rjust(9, ' ')}#{nro_lotes.to_s.rjust(6, '0')}#{sequencial.to_s.rjust(6, '0')}#{''.rjust(6, '0')}#{''.rjust(205, ' ')}"
         end
 
-        def numero_conta_corrente_complemento_p
-          if convenio.blank? || conta_corrente == convenio
-            "#{conta_corrente.rjust(12, '0')}#{digito_conta} "
-          else
-            "#{convenio.rjust(12, '0')}  "
-          end
-        end
-
         def complemento_p(pagamento)
           # CAMPO                   TAMANHO
           # conta corrente          12
           # digito conta            1
           # digito agencia/conta    1
           # ident. titulo no banco  20
-          "#{numero_conta_corrente_complemento_p}#{formata_nosso_numero(pagamento.nosso_numero)}"
+          "#{conta_corrente.rjust(12, '0')}#{digito_conta} #{formata_nosso_numero(pagamento.nosso_numero)}"
         end
 
         # Retorna o nosso numero
@@ -152,11 +144,6 @@ module Brcobranca
         # @return [String]
         def formata_nosso_numero(nosso_numero)
           nosso_numero.somente_numeros.ljust(20, ' ')
-        end
-
-        def numero(pagamento)
-          doc = pagamento.documento_ou_numero.to_s.gsub(/[^0-9A-Za-z ]/, '')
-          doc.ljust(15, '0')[0...15]
         end
 
         def codigo_desconto(pagamento)

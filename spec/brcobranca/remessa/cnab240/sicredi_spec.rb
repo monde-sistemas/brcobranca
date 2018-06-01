@@ -5,7 +5,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       tipo_mora: '1',
       nosso_numero: '072000031',
       numero: '00003',
@@ -25,7 +25,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
       agencia: '0165',
       conta_corrente: '00623',
-      convenio: '00623',
       digito_conta: '8',
       documento_cedente: '74576177000177',
       modalidade_carteira: '01',
@@ -51,7 +50,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       it 'deve ser invalido se o posto tiver mais de 2 dígitos' do
         sicredi.posto = '123'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Posto é muito longo (máximo: 2 caracteres).')
+        expect(sicredi.errors.full_messages).to include('Posto deve ter 2 dígitos.')
       end
     end
 
@@ -98,7 +97,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       it 'deve ser invalido se a conta corrente tiver mais de 5 digitos' do
         sicredi.conta_corrente = '123456'
         expect(sicredi.invalid?).to be true
-        expect(sicredi.errors.full_messages).to include('Conta corrente é muito longo (máximo: 5 caracteres).')
+        expect(sicredi.errors.full_messages).to include('Conta corrente deve ter 5 dígitos.')
       end
     end
 
@@ -182,14 +181,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     it 'formata o nosso numero' do
       nosso_numero = sicredi.formata_nosso_numero "072000031"
       expect(nosso_numero.strip).to eq "072000031"
-    end
-
-    it 'convenio deve ser adicionado no caso de conta beneficiario' do
-      sicredi.convenio = '0123'
-      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
-
-      expect(segmento_p[23..34]).to eql '000000000123'
-      expect(segmento_p[35..36]).to eql '  '
     end
 
     it "data de mora deve ser após o vencimento quando informada" do

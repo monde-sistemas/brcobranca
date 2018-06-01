@@ -3,8 +3,6 @@ module Brcobranca
   module Remessa
     module Cnab240
       class BaseCorrespondente < Brcobranca::Remessa::Base
-        # documento do cedente (CPF/CNPJ)
-        attr_accessor :documento_cedente
         # convenio do cedente
         attr_accessor :convenio
         # mensagem 1
@@ -32,9 +30,11 @@ module Brcobranca
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
 
-        validates_presence_of :agencia, :conta_corrente, :documento_cedente
-        validates_length_of :codigo_carteira, :forma_cadastramento,
-          :emissao_boleto, :distribuicao_boleto, is: 1
+        validates_presence_of :agencia, :conta_corrente, :documento_cedente, message: 'não pode estar em branco.'
+        validates_length_of :codigo_carteira, is: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :forma_cadastramento, is: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :emissao_boleto, is: 1, message: 'deve ter 1 dígito.'
+        validates_length_of :distribuicao_boleto, is: 1, message: 'deve ter 1 dígito.'
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
@@ -48,7 +48,7 @@ module Brcobranca
         # @return [String]
         #
         def data_geracao
-          Date.today.strftime('%d%m%Y')
+          Date.current.strftime('%d%m%Y')
         end
 
         # Hora de geracao do arquivo
@@ -217,7 +217,7 @@ module Brcobranca
           lote = []
 
           pagamentos.each do |pagamento|
-            fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+            raise Brcobranca::RemessaInvalida, pagamento if pagamento.invalid?
 
             lote << monta_segmento_p(pagamento, contador)
             contador += 1
@@ -234,7 +234,7 @@ module Brcobranca
         # @return [String]
         #
         def gera_arquivo
-          fail Brcobranca::RemessaInvalida.new(self) if self.invalid?
+          raise Brcobranca::RemessaInvalida, self if invalid?
 
           arquivo = [monta_header_arquivo]
 
@@ -252,7 +252,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def complemento_header
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Informacoes do convenio para o lote
@@ -260,7 +260,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def convenio_lote
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Codigo do banco
@@ -268,7 +268,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def cod_banco
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Informacoes da conta do cedente
@@ -276,7 +276,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def info_conta
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Codigo do convenio
@@ -284,7 +284,7 @@ module Brcobranca
         # Este metodo deve ser sobrescrevido na classe do banco
         #
         def codigo_convenio
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
+          raise Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando'
         end
 
         # Codigo para protesto

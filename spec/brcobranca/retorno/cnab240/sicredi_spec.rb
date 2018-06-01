@@ -1,4 +1,4 @@
-RSpec.describe Brcobranca::Retorno::Cnab240::Sicredi do
+sRSpec.describe Brcobranca::Retorno::Cnab240::Sicredi do
   before do
     @arquivo = File.join(File.dirname(__FILE__), '..', '..', '..', 'arquivos', 'CNAB240SICREDI.CRT')
   end
@@ -26,6 +26,6 @@ RSpec.describe Brcobranca::Retorno::Cnab240::Sicredi do
     expect(pagamento.outros_recebimento).to eql('000000000000000')
     expect(pagamento.sequencial).to eql('00001')
     expect(pagamento.valor_tarifa).to eql('000000000000000')
-    expect(pagamento.motivo_ocorrencia).to eql('A4')
+    expect(pagamento.motivo_ocorrencia).to eql(['A4'])
   end
 end

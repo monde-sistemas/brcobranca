@@ -22,7 +22,7 @@ module Brcobranca
       # Templates para usar com Rghost
       module RghostCarne
         extend self
-        include RGhost unless self.include?(RGhost)
+        include RGhost unless include?(RGhost)
         RGhost::Config::GS[:external_encoding] = Brcobranca.configuration.external_encoding
 
         # Gera o boleto em usando o formato desejado [:pdf, :jpg, :tif, :png, :ps, :laserjet, ... etc]
@@ -134,7 +134,7 @@ module Brcobranca
         # carrega background do boleto
         def modelo_carne_load_background(doc, margin_bottom)
           template_path = File.join(File.dirname(__FILE__), '..', '..', 'arquivos', 'templates', 'modelo_carne.eps')
-          fail 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
+          raise 'Não foi possível encontrar o template. Verifique o caminho' unless File.exist?(template_path)
 
           doc.image template_path, x: 1, y: margin_bottom
         end
@@ -198,7 +198,7 @@ module Brcobranca
 
           # numero documento
           doc.moveto x: colunas[0], y: linhas[11]
-          doc.show boleto.numero
+          doc.show boleto.documento_numero
 
           # sacado
           doc.moveto x: colunas[0], y: linhas[13]
@@ -240,7 +240,7 @@ module Brcobranca
 
           # numero documento
           doc.moveto x: colunas[3], y: linhas[3]
-          doc.show boleto.numero
+          doc.show boleto.documento_numero
 
           # especie doc.
           doc.moveto x: colunas[8], y: linhas[3]

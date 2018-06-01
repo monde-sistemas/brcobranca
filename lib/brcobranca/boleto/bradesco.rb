@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
+#
 module Brcobranca
   module Boleto
     class Bradesco < Base # Banco BRADESCO
       validates_length_of :agencia, maximum: 4
-      validates_length_of :numero, maximum: 11
+      validates_length_of :nosso_numero, maximum: 11
       validates_length_of :conta_corrente, maximum: 7
       validates_length_of :carteira, maximum: 2
 
@@ -12,7 +13,7 @@ module Brcobranca
       def initialize(campos = {})
         campos = { carteira: '06' }.merge!(campos)
 
-        campos.merge!(local_pagamento: 'Pagável preferencialmente na Rede Bradesco ou Bradesco Expresso')
+        campos[:local_pagamento] = 'Pagável preferencialmente na Rede Bradesco ou Bradesco Expresso'
 
         super(campos)
       end
@@ -33,8 +34,8 @@ module Brcobranca
 
       # Número seqüencial utilizado para identificar o boleto.
       # @return [String] 11 caracteres numéricos.
-      def numero=(valor)
-        @numero = valor.to_s.rjust(11, '0') if valor
+      def nosso_numero=(valor)
+        @nosso_numero = valor.to_s.rjust(11, '0') if valor
       end
 
       # Nosso número para exibir no boleto.
@@ -42,7 +43,7 @@ module Brcobranca
       # @example
       #  boleto.nosso_numero_boleto #=> ""06/00000004042-8"
       def nosso_numero_boleto
-        "#{carteira}/#{numero}-#{nosso_numero_dv}"
+        "#{carteira}/#{nosso_numero}-#{nosso_numero_dv}"
       end
 
       # Dígito verificador da agência
@@ -57,7 +58,7 @@ module Brcobranca
       # Dígito verificador do nosso número
       # @return [Integer] 1 caracteres numéricos.
       def nosso_numero_dv
-        "#{carteira}#{numero}".modulo11(
+        "#{carteira}#{nosso_numero}".modulo11(
           multiplicador: [2, 3, 4, 5, 6, 7],
           mapeamento: { 10 => 'P', 11 => 0 }
         ) { |total| 11 - (total % 11) }
@@ -91,7 +92,7 @@ module Brcobranca
       #
       # @return [String] 25 caracteres numéricos.
       def codigo_barras_segunda_parte
-        "#{agencia}#{carteira}#{numero}#{conta_corrente}0"
+        "#{agencia}#{carteira}#{nosso_numero}#{conta_corrente}0"
       end
     end
   end

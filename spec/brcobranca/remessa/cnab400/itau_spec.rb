@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       documento: 6969,
       documento_sacado: '12345678901',
@@ -159,7 +159,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
         detalhe = itau.monta_detalhe pagamento, 2
         expect(detalhe[37..61]).to eq "6969".ljust(25)
         expect(detalhe[62..69]).to eq '00000123' # nosso numero
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
         expect(detalhe[142..146]).to eq '00000' # agência cobradora
         expect(detalhe[156..157]).to eq '00' # instrução 1
@@ -173,7 +173,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
                                                                           # Significado                        Posição     Picture
         expect(detalhe_multa[0]).to eq '2'                                # Identificação do reg. transação    [001..001]  9(001)
         expect(detalhe_multa[1]).to eq '1'                                # Código da multa                    [002..002]  X(001)
-        expect(detalhe_multa[2..9]).to eq Date.today.strftime('%d%m%Y')   # Data da multa                      [003..010]  9(008)
+        expect(detalhe_multa[2..9]).to eq Date.current.strftime('%d%m%Y')   # Data da multa                      [003..010]  9(008)
         expect(detalhe_multa[10..22]).to eq '0000000000200'               # Valor da multa                     [011..023]  9(013)
         expect(detalhe_multa[23..393]).to eq ''.rjust(371, ' ')           # Complemento                        [024..394]  X(370)
         expect(detalhe_multa[394..399]).to eq '000003'                    # Número sequencial                  [395..400]  9(006)

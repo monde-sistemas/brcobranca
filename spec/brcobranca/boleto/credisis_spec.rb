@@ -6,15 +6,14 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     @valid_attributes = {
       valor: 0.0,
       local_pagamento: 'QUALQUER BANCO ATÉ O VENCIMENTO',
-      codigo_cedente: '0027',
       cedente: 'Kivanio Barbosa',
       documento_cedente: '12345678912',
       sacado: 'Claudio Pozzebom',
       sacado_documento: '12345678900',
       agencia: '0001',
       conta_corrente: '0000002',
-      convenio: 1_000_000,
-      numero: '000095'
+      convenio: 100000,
+      nosso_numero: '000095'
     }
   end
 
@@ -42,13 +41,23 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
   end
 
   it 'Tamanho do número documento deve ser de 6 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(numero: '1234567')
+    boleto_novo = described_class.new @valid_attributes.merge(nosso_numero: '1234567')
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'documento_cedente nao pode estar em branco' do
+    boleto_novo = described_class.new @valid_attributes.merge(documento_cedente: nil)
+    expect(boleto_novo).not_to be_valid
+  end
+
+  it 'documento_cedente deve ter somente numeros' do
+    boleto_novo = described_class.new @valid_attributes.merge(documento_cedente: '123.456.789-12')
     expect(boleto_novo).not_to be_valid
   end
 
   it 'Número do documento deve ser preenchido com zeros à esquerda quando menor que 6 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(numero: '1')
-    expect(boleto_novo.numero).to eq('000001')
+    boleto_novo = described_class.new @valid_attributes.merge(nosso_numero: '1')
+    expect(boleto_novo.nosso_numero).to eq('000001')
     expect(boleto_novo).to be_valid
   end
 
@@ -58,7 +67,7 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
-    expect(boleto_novo.data_documento).to eql(Date.today)
+    expect(boleto_novo.data_processamento).to eql(Date.today)
     expect(boleto_novo.data_vencimento).to eql(Date.today)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
@@ -66,7 +75,6 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.valor_documento).to eql(0.0)
     expect(boleto_novo.local_pagamento).to eql('QUALQUER BANCO ATÉ O VENCIMENTO')
     expect(boleto_novo.carteira).to eql('18')
-    expect(boleto_novo.codigo_servico).to be_falsey
   end
 
   it 'Criar nova instancia com atributos válidos' do
@@ -75,7 +83,7 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
-    expect(boleto_novo.data_documento).to eql(Date.today)
+    expect(boleto_novo.data_processamento).to eql(Date.today)
     expect(boleto_novo.data_vencimento).to eql(Date.today)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
@@ -88,10 +96,9 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.sacado_documento).to eql('12345678900')
     expect(boleto_novo.conta_corrente).to eql('0000002')
     expect(boleto_novo.agencia).to eql('0001')
-    expect(boleto_novo.convenio).to eql(1_000_000)
-    expect(boleto_novo.numero).to eql('000095')
+    expect(boleto_novo.convenio).to eql('100000')
+    expect(boleto_novo.nosso_numero).to eql('000095')
     expect(boleto_novo.carteira).to eql('18')
-    expect(boleto_novo.codigo_servico).to be_falsey
   end
 
   it 'Montar código de barras' do
@@ -100,18 +107,17 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     @valid_attributes[:data_vencimento] = Date.parse('2008-02-01')
     boleto_novo = described_class.new(@valid_attributes)
 
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('0000001000000002700009518')
-    expect(boleto_novo.codigo_barras).to eql('09796376900000135000000001000000002700009518')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('09790.00007 01000.000008 27000.095185 6 37690000013500')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('0000009750001100000000095')
+    expect(boleto_novo.codigo_barras).to eql('09791376900000135000000009750001100000000095')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('09790.00007 09750.001100 00000.000950 1 37690000013500')
     expect(boleto_novo.conta_corrente_dv).to eql(7)
-    expect(boleto_novo.nosso_numero_dv).to eql(7)
 
-    @valid_attributes[:codigo_cedente] = "6641"
+    @valid_attributes[:convenio] = "6641"
     segundo_boleto = described_class.new(@valid_attributes)
 
-    expect(segundo_boleto.codigo_barras_segunda_parte).to eql('0000001000000664100009518')
-    expect(segundo_boleto.codigo_barras).to eql('09792376900000135000000001000000664100009518')
-    expect(segundo_boleto.codigo_barras.linha_digitavel).to eql('09790.00007 01000.000669 41000.095186 2 37690000013500')
+    expect(segundo_boleto.codigo_barras_segunda_parte).to eql('0000009750001006641000095')
+    expect(segundo_boleto.codigo_barras).to eql('09797376900000135000000009750001006641000095')
+    expect(segundo_boleto.codigo_barras.linha_digitavel).to eql('09790.00007 09750.001001 66410.000955 7 37690000013500')
   end
 
   it 'Calcular agencia_dv' do
@@ -128,9 +134,8 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
 
   it 'Montar nosso_numero_boleto' do
     boleto_novo = described_class.new(@valid_attributes)
-    boleto_novo.numero = '95'
-    expect(boleto_novo.nosso_numero_boleto).to eql('10000000027000095')
-    expect(boleto_novo.nosso_numero_dv).to eql(7)
+    boleto_novo.nosso_numero = '95'
+    expect(boleto_novo.nosso_numero_boleto).to eql('09750001100000000095')
   end
 
   it 'Montar agencia_conta_boleto' do

@@ -5,6 +5,9 @@ module Brcobranca
       extend ActiveModel::Translation
       include ActiveModel::Validations
 
+      # TODO: Encontrar uma solução de desacoplamento para a tradução
+      # include Brcobranca::Validations
+
       # <b>REQUERIDO</b>: nosso numero
       attr_accessor :nosso_numero
       # <b>REQUERIDO</b>: data do vencimento do boleto
@@ -83,14 +86,17 @@ module Brcobranca
       attr_accessor :codigo_baixa
       # <b>OPCIONAL</b>: dias para baixa
       attr_accessor :dias_baixa
+      # <b>OPCIONAL</b>: Número da Parcela
+      attr_accessor :parcela
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
         :documento_sacado, :nome_sacado, :endereco_sacado,
-        :cep_sacado, :cidade_sacado, :uf_sacado
-      validates_length_of :cep_sacado, is: 8
-      validates_length_of :cod_desconto, is: 1
-      validates_length_of :especie_titulo, is: 2, allow_blank: true
-      validates_length_of :identificacao_ocorrencia, is: 2
+        :cep_sacado, :cidade_sacado, :uf_sacado, message: 'não pode estar em branco.'
+      validates_length_of :uf_sacado, is: 2, message: 'deve ter 2 dígitos.'
+      validates_length_of :cep_sacado, is: 8, message: 'deve ter 8 dígitos.'
+      validates_length_of :cod_desconto, is: 1, message: 'deve ter 1 dígito.'
+      validates_length_of :especie_titulo, is: 2, message: 'deve ter 2 dígitos.', allow_blank: true
+      validates_length_of :identificacao_ocorrencia, is: 2, message: 'deve ter 2 dígitos.'
 
       # Nova instancia da classe Pagamento
       #
@@ -98,7 +104,7 @@ module Brcobranca
       #
       def initialize(campos = {})
         padrao = {
-          data_emissao: Date.today,
+          data_emissao: Date.current,
           data_segundo_desconto:'00-00-00',
           tipo_mora: "3",
           valor_mora: 0.0,
@@ -112,6 +118,7 @@ module Brcobranca
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
           percentual_multa: 0.0,
+          parcela: '01',
           codigo_protesto: '3',
           dias_protesto: '00',
           codigo_baixa: '0',
@@ -210,6 +217,15 @@ module Brcobranca
         format_value(valor_mora, tamanho)
       end
 
+      # Formata o campo valor da multa
+      #
+      # @param tamanho [Integer]
+      #   quantidade de caracteres a ser retornado
+      #
+      def formata_valor_multa(tamanho = 6)
+        format_value(percentual_multa, tamanho)
+      end
+
       # Formata o campo valor do desconto
       #
       # @param tamanho [Integer]
@@ -266,7 +282,7 @@ module Brcobranca
       private
 
       def format_value(value, tamanho)
-        raise ValorInvalido.new('Deve ser um Float') if !(value.to_s =~ /\./)
+        raise ValorInvalido, 'Deve ser um Float' unless value.to_s =~ /\./
 
         sprintf('%.2f', value).delete('.').rjust(tamanho, '0')
       end

@@ -68,7 +68,9 @@ module Brcobranca
             parse.field :juros_mora, 17..31
             parse.field :outros_recebimento, 122..136
             parse.field :valor_tarifa, 198..212
-            parse.field :motivo_ocorrencia, 213..222
+            parse.field :motivo_ocorrencia, 213..222, ->(motivos) do
+              motivos.scan(/.{2}/).reject(&:blank?).reject{|motivo| motivo == '00'}
+            end
           end
         end
       end

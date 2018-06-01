@@ -109,7 +109,7 @@ module Brcobranca
                        when 7 then
                          10
                        else
-                         fail Brcobranca::NaoImplementado.new('Tipo de convênio não implementado.')
+                         raise Brcobranca::NaoImplementado, 'Tipo de convênio não implementado.'
                        end
           nosso_numero = nosso_numero.to_s.rjust(quantidade, '0')
 

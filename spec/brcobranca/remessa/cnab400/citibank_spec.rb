@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
+      data_vencimento: Date.current,
       nosso_numero: 123,
       documento: 6969,
       documento_sacado: '12345678901',
@@ -113,7 +113,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
         detalhe = citibank.monta_detalhe pagamento, 1
         expect(detalhe[37..61]).to eq "6969".ljust(25) # nosso numero
         expect(detalhe[64..75]).to eq '000000000123' # nosso numero
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
         expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
