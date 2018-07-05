@@ -112,7 +112,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
         header = santander.monta_header
         expect(header[1]).to eq '1'                                 # tipo operacao (1 = remessa)
         expect(header[2..8]).to eq 'REMESSA'                        # literal da operacao
-        expect(header[26..45]).to eq santander.info_conta   # informacoes da conta
+        expect(header[26..45]).to eq santander.info_conta           # informacoes da conta
         expect(header[76..78]).to eq '033'                          # codigo do banco
         expect(header[100..115]).to eq ''.rjust(16, "0")            # zeros
         expect(header[116..390]).to eq ''.rjust(275,' ')            # campos mensagens vazios
@@ -123,12 +123,22 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Santander do
     context 'detalhe' do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = santander.monta_detalhe pagamento, 1
-        expect(detalhe[37..61]).to eq "6969".ljust(25) # nosso numero
-        expect(detalhe[62..69]).to eq '00000123' # nosso numero
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
-        expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
-        expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
-        expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+        expect(detalhe[17..36]).to eq "17777751042700080112"              # agencia + conta
+        expect(detalhe[37..61]).to eq "6969".ljust(25)                    # nosso numero
+        expect(detalhe[62..69]).to eq '00000123'                          # nosso numero
+        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y')     # data de vencimento
+        expect(detalhe[126..138]).to eq '0000000019990'                   # valor do titulo
+        expect(detalhe[220..233]).to eq '00012345678901'                  # documento do pagador
+        expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE '  # nome do pagador
+      end
+
+      it 'adiciona a conta de movimento quando informada' do
+        santander.agencia = "1777"
+        santander.conta_movimento = "012000123"
+        santander.conta_corrente = "00080112"
+
+        detalhe = santander.monta_detalhe pagamento, 1
+        expect(detalhe[17..36]).to eq "17770120001200080112"              # agencia + conta
       end
     end
 
