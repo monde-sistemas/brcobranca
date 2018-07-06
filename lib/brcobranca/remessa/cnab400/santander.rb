@@ -11,6 +11,7 @@ module Brcobranca
         attr_accessor :codigo_transmissao
 
         attr_accessor :codigo_carteira
+        attr_accessor :conta_movimento
 
         validates_presence_of :documento_cedente, :codigo_transmissao
         validates_presence_of :digito_conta, if: :conta_padrao_novo?
@@ -104,8 +105,8 @@ module Brcobranca
           detalhe = '1'                                                     # identificacao transacao               9[01]
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
-          detalhe << codigo_transmissao                                     # Código de Transmissão                 9[20]
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')                                      # identificacao do tit. na empresa      X[25]
+          detalhe << agencia_conta_movimento                                # conta corrente                        9[20]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')      # identificacao do tit. na empresa      X[25]
           detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')              # nosso numero                          9[8]
           detalhe << pagamento.formata_data_segundo_desconto                # data limite para o segundo desconto   9[06]
           detalhe << ''.rjust(1, ' ')                                       # brancos                               X[1]
@@ -186,6 +187,11 @@ module Brcobranca
           detalhe << ''.rjust(1, ' ')                                       # Brancos                               X[1]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
+        end
+
+        def agencia_conta_movimento
+          return codigo_transmissao if conta_movimento.nil?
+          "#{agencia}#{conta_movimento[0..7]}#{conta_corrente[0..7]}"
         end
 
         def identificador_movimento_complemento
