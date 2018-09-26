@@ -13,7 +13,7 @@ module Brcobranca
         # Nova instancia do Banco do Nordeste
         def initialize(campos = {})
           campos = {
-            aceite: 'N',
+            aceite: 'N'
           }.merge!(campos)
 
           super(campos)
@@ -79,25 +79,25 @@ module Brcobranca
         end
 
         def monta_nosso_numero(pagamento)
-          return nosso_numero.rjust(12, "0") if carteira == "3"
+          return nosso_numero.rjust(12, '0') if carteira == '3'
 
-          formacao = "#{carteira}#{pagamento.nosso_numero.to_s.rjust(6, "0")}#{cod_banco}"
+          formacao = "#{carteira}#{pagamento.nosso_numero.to_s.rjust(6, '0')}#{cod_banco}"
 
           formacao << formacao.modulo10.to_s
           formacao << formacao.modulo11(
             multiplicador: (2..7).to_a,
-            mapeamento: { 10 => 0, 11 => 0}
+            mapeamento: { 10 => 0, 11 => 0 }
           ) { |total| 11 - (total % 11) }.to_s
         end
 
         def codigo_tipo_juros(pagamento)
-          return "50" if pagamento.valor_mora.to_f > 0.0
-          "00"
+          return '50' if pagamento.valor_mora.to_f > 0.0
+          '00'
         end
 
         def codigo_tipo_desconto(pagamento)
-          return "52" if pagamento.valor_desconto.to_f > 0.0
-          "00"
+          return '52' if pagamento.valor_desconto.to_f > 0.0
+          '00'
         end
 
         # Dígito verificador do nosso número.
@@ -105,7 +105,7 @@ module Brcobranca
         # @param nosso_numero
         #
         # @return [String] 1 caracteres numéricos.
-        def digito_nosso_numero(nosso_numero)
+        def digito_nosso_numero(_nosso_numero)
         end
 
         # Detalhe do arquivo
@@ -117,7 +117,7 @@ module Brcobranca
         #
         # @return [String]
         #
-        def monta_detalhe(pagamento, sequencial)
+        def monta_detalhe(pagamento, _sequencial)
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
           detalhe = '01'                                                    # identificacao transacao               9[02]
@@ -130,16 +130,16 @@ module Brcobranca
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
           detalhe << pagamento.cep_sacado                                   # cep do pagador                        9[08]
           detalhe << pagamento.identificacao_sacado(false).to_s             # tipo de pessoa                        9[01]
-          detalhe << pagamento.documento_ou_numero.to_s.rjust(13, "0")                                      # seu numero                            9[13]
+          detalhe << pagamento.documento_ou_numero.to_s.rjust(13, '0') # seu numero                            9[13]
           detalhe << codigo_carteira                                        # categoria de cobranca                 9[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%Y')              # data de emissao                       9[08]
-          detalhe << "21"                                                   # tipo do documento                     9[02]
-          detalhe << "0"                                                    # código da natureza                    9[01]
-          detalhe << "0"                                                    # código da cond. pagamento             9[02]
-          detalhe << "02"                                                   # código da moeda                       9[02]
+          detalhe << '21'                                                   # tipo do documento                     9[02]
+          detalhe << '0'                                                    # código da natureza                    9[01]
+          detalhe << '0'                                                    # código da cond. pagamento             9[02]
+          detalhe << '02'                                                   # código da moeda                       9[02]
           detalhe << cod_banco                                              # código do banco                       9[03]
-          detalhe << agencia.rjust(4, "0")                                  # código da agênica                     9[04]
-          detalhe << ''.rjust(30, " ")                                      # praca de cobranca                     X[30]
+          detalhe << agencia.rjust(4, '0')                                  # código da agênica                     9[04]
+          detalhe << ''.rjust(30, ' ')                                      # praca de cobranca                     X[30]
           detalhe << pagamento.data_vencimento.strftime('%d%m%Y')           # data do vencimento                    9[08]
           detalhe << pagamento.formata_valor(14)                            # valor do documento                    9[14]
           detalhe << monta_nosso_numero(pagamento)                          # nosso numero                          9[12]
@@ -149,11 +149,11 @@ module Brcobranca
           detalhe << codigo_tipo_desconto(pagamento)                        # codigo tipo desconto                  9[02]
           detalhe << pagamento.formata_data_desconto('%d%m%Y')              # data limite para desconto             9[08]
           detalhe << pagamento.formata_valor_desconto(14)                   # valor do desconto                     9[14]
-          detalhe << "00"                                                   # primeira instrucao                    9[02]
-          detalhe << "00"                                                   # prazo da instrucao                    9[02]
-          detalhe << "00"                                                   # segunda instrucao                     9[02]
-          detalhe << "00"                                                   # prazo da instrucao                    9[02]
-          detalhe << "00000"                                                # taxa referente a instrucao            9[05]
+          detalhe << '00'                                                   # primeira instrucao                    9[02]
+          detalhe << '00'                                                   # prazo da instrucao                    9[02]
+          detalhe << '00'                                                   # segunda instrucao                     9[02]
+          detalhe << '00'                                                   # prazo da instrucao                    9[02]
+          detalhe << '00000'                                                # taxa referente a instrucao            9[05]
           detalhe << empresa_mae.format_size(40)                            # emitente do titulo                    X[40]
           detalhe << ''.rjust(40, ' ')                                      # mensagem livre                        X[40]
           detalhe << ''.rjust(32, ' ')                                      # branco                                X[32]

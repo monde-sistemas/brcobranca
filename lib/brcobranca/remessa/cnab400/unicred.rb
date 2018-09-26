@@ -79,7 +79,7 @@ module Brcobranca
         end
 
         def identificador_complemento
-          " "
+          ' '
         end
 
         # Retorna o nosso numero
@@ -105,12 +105,12 @@ module Brcobranca
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25)                                      # numero de controle do participante    X[25]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25) # numero de controle do participante    X[25]
           detalhe << formata_nosso_numero(pagamento.nosso_numero)           # nosso numero                          X[20]
           detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
           detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
           detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero.to_s.rjust(10, '0')         # numero do documento                   X[10]
+          detalhe << pagamento.numero.to_s.rjust(10, '0') # numero do documento                   X[10]
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    9[06]
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << cod_banco                                              # codigo banco                          9[03]
@@ -118,8 +118,8 @@ module Brcobranca
           detalhe << '01'                                                   # especie  do titulo                    X[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
-          detalhe << "".rjust(4, "0")                                       # instrucao                             9[04]
-          detalhe << "0"                                                    # zero                                  9[01]
+          detalhe << ''.rjust(4, '0')                                       # instrucao                             9[04]
+          detalhe << '0'                                                    # zero                                  9[01]
           detalhe << pagamento.formata_valor_mora(12)                       # valor mora ao dia                     9[12]
           detalhe << pagamento.formata_data_desconto                        # data limite para desconto             9[06]
           detalhe << pagamento.formata_valor_desconto                       # valor do desconto                     9[13]
@@ -135,7 +135,7 @@ module Brcobranca
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         X[02]
           detalhe << pagamento.nome_avalista.format_size(40)                # nome do sacador/avalista              X[40]
           detalhe << pagamento.dias_protesto.rjust(2, '0')                  # numero de dias para proteste          9[02]
-          detalhe << "9"                                                    # moeda                                 9[01]
+          detalhe << '9'                                                    # moeda                                 9[01]
           detalhe << sequencial.to_s.rjust(6, '0')                          # numero do registro no arquivo         9[06]
           detalhe
         end

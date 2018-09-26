@@ -93,8 +93,6 @@ module Brcobranca
       validates_numericality_of :convenio, :agencia, :conta_corrente, :numero, allow_nil: true
       validate :data_vencimento_maior_que_data_documento
 
-
-
       # Nova instancia da classe Base
       # @param [Hash] campos
       def initialize(campos = {})
@@ -147,7 +145,6 @@ module Brcobranca
       def conta_corrente_dv
         conta_corrente.modulo11
       end
-
 
       def documento_ou_numero
         documento.present? ? documento : numero
@@ -253,7 +250,7 @@ module Brcobranca
       # @return [boolean]
       def data_vencimento_maior_que_data_documento
         if data_vencimento < data_documento
-          errors.add(:data_vencimento, "deve ser maior que a data do boleto.")
+          errors.add(:data_vencimento, 'deve ser maior que a data do boleto.')
         end
       end
     end

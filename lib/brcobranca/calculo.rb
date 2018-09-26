@@ -95,22 +95,20 @@ module Brcobranca
     def duplo_digito
       fail ArgumentError, 'Número inválido' unless self.is_number?
 
-      digito_1 = self.modulo10
+      digito_1 = modulo10
       digito_2 = "#{self}#{digito_1}".modulo11(multiplicador: [2, 3, 4, 5, 6, 7]) { |total| 11 - (total % 11) }
 
       while digito_2 == 1
         if digito_1 == 9
           digito_1 = 0
         else
-          digito_1 = digito_1 + 1
+          digito_1 += 1
         end
 
         digito_2 = "#{self}#{digito_1}".modulo11(multiplicador: [2, 3, 4, 5, 6, 7])
       end
 
-      if digito_2 != 0
-        digito_2 = 11 - digito_2
-      end
+      digito_2 = 11 - digito_2 if digito_2 != 0
 
       "#{digito_1}#{digito_2}"
     end
@@ -141,7 +139,6 @@ module Brcobranca
     def modulo11_duplo_dv
       modulo11(multiplicador: (2..7).to_a, mapeamento: { 0 => 1, 11 => 0 }) { |total| 11 - (total % 11) }
     end
-
   end
 end
 

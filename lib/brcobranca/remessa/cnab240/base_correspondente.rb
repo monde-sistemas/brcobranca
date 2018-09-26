@@ -34,7 +34,7 @@ module Brcobranca
 
         validates_presence_of :agencia, :conta_corrente, :documento_cedente
         validates_length_of :codigo_carteira, :forma_cadastramento,
-          :emissao_boleto, :distribuicao_boleto, is: 1
+                            :emissao_boleto, :distribuicao_boleto, is: 1
 
         def initialize(campos = {})
           campos = { codigo_carteira: '1',
@@ -128,7 +128,6 @@ module Brcobranca
           segmento_p
         end
 
-
         # Monta o registro segmento Q do arquivo
         #
         # @param pagamento [Brcobranca::Remessa::Pagamento]
@@ -178,7 +177,6 @@ module Brcobranca
           "0#{pagamento.identificacao_avalista(false)}"
         end
 
-
         # Monta o registro trailer do arquivo
         #
         # @param nro_lotes [Integer]
@@ -210,9 +208,9 @@ module Brcobranca
         #
         # @return [Array]
         #
-        def monta_lote(nro_lote)
+        def monta_lote(_nro_lote)
           # contador dos registros do lote
-          contador = 1 #header
+          contador = 1 # header
 
           lote = []
 
@@ -224,7 +222,7 @@ module Brcobranca
             lote << monta_segmento_q(pagamento, contador)
             contador += 1
           end
-          contador += 1 #trailer
+          contador += 1 # trailer
 
           lote
         end
@@ -291,7 +289,7 @@ module Brcobranca
         #
         # Sobreescreva caso necessário
         def codigo_protesto
-          "0"
+          '0'
         end
       end
     end

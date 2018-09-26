@@ -74,14 +74,14 @@ module Brcobranca
           detalhe << ''.rjust(16, ' ')                                # brancos                                     9[16]       002 a 017
           detalhe << codigo_cedente.rjust(13, ' ')                    # código do cedente                           X[13]       018 a 030
           detalhe << ''.rjust(7, ' ')                                 # brancos                                     X[07]       031 a 037
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')# num. controle                               X[25]       038 a 062
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ') # num. controle                               X[25]       038 a 062
           detalhe << pagamento.nosso_numero.to_s.rjust(8, '0')        # identificação do título (nosso número)      9[08]       063 a 070
           detalhe << digito_nosso_numero(pagamento.nosso_numero)      # dígitos de conferência do nosso número (dv) 9[02]       071 a 072
           detalhe << ''.rjust(32, ' ')                                # mensagem no bloqueto                        X[32]       073 a 104
           detalhe << ''.rjust(3, ' ')                                 # brancos                                     X[03]       105 a 107
           detalhe << carteira                                         # carteira                                    9[01]       108 a 108
           detalhe << pagamento.identificacao_ocorrencia               # identificacao ocorrencia                    9[02]       109 a 110
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ')# numero do documento alfanum.                X[10]       111 a 120
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(10, ' ') # numero do documento alfanum.                X[10]       111 a 120
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')     # data de vencimento                          9[06]       121 a 126
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
           detalhe << cod_banco                                        # banco encarregado                           9[03]       140 a 142
@@ -118,7 +118,7 @@ module Brcobranca
         end
 
         def monta_trailer(sequencial)
-          trailer = "9"
+          trailer = '9'
           trailer << ''.rjust(26, ' ')                                # brancos                                     X[26]       002 a 027
           trailer << valor_titulos_carteira(13)                       # total geral/valores dos títulos             9[13]       028 a 040
           trailer << ''.rjust(354, ' ')                               # brancos                                     X[354]      041 a 394
@@ -129,7 +129,7 @@ module Brcobranca
         private
 
         def codigo_primeira_instrucao(pagamento)
-          return "18" if pagamento.percentual_multa.to_f > 0.00
+          return '18' if pagamento.percentual_multa.to_f > 0.00
           pagamento.cod_primeira_instrucao
         end
 
@@ -139,7 +139,7 @@ module Brcobranca
         end
 
         def formata_percentual_multa(pagamento)
-          raise ValorInvalido.new('Deve ser um Float') if !(pagamento.percentual_multa.to_s =~ /\./)
+          fail ValorInvalido.new('Deve ser um Float') unless pagamento.percentual_multa.to_s =~ /\./
 
           sprintf('%.1f', pagamento.percentual_multa).delete('.').rjust(3, '0')
         end
@@ -148,7 +148,6 @@ module Brcobranca
           return ''.rjust(tamanho, ' ') if pagamento.tipo_mora == '3'
           pagamento.formata_valor_mora(tamanho)
         end
-
       end
     end
   end

@@ -170,18 +170,18 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     end
 
     it 'complemento trailer deve retornar espacos em branco com a totalização das cobranças' do
-      total_cobranca_simples    = "".rjust(23, "0")
-      total_cobranca_vinculada  = "".rjust(23, "0")
-      total_cobranca_caucionada = "".rjust(23, "0")
-      total_cobranca_descontada = "".rjust(23, "0")
+      total_cobranca_simples    = ''.rjust(23, '0')
+      total_cobranca_vinculada  = ''.rjust(23, '0')
+      total_cobranca_caucionada = ''.rjust(23, '0')
+      total_cobranca_descontada = ''.rjust(23, '0')
 
       expect(sicredi.complemento_trailer).to eq "#{total_cobranca_simples}#{total_cobranca_vinculada}"\
         "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
     end
 
     it 'formata o nosso numero' do
-      nosso_numero = sicredi.formata_nosso_numero "072000031"
-      expect(nosso_numero.strip).to eq "072000031"
+      nosso_numero = sicredi.formata_nosso_numero '072000031'
+      expect(nosso_numero.strip).to eq '072000031'
     end
 
     it 'convenio deve ser adicionado no caso de conta beneficiario' do
@@ -192,7 +192,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       expect(segmento_p[35..36]).to eql '  '
     end
 
-    it "data de mora deve ser após o vencimento quando informada" do
+    it 'data de mora deve ser após o vencimento quando informada' do
       segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
 
       expect(segmento_p[77..84]).to eql '14072007'    # data de vencimento

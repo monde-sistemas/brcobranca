@@ -2,7 +2,6 @@
 require 'spec_helper'
 
 RSpec.describe 'Brcobranca' do
-
   describe 'gerador' do
     context 'rghost' do
       before { Brcobranca.configuration.gerador = :rghost }

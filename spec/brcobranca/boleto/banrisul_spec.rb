@@ -90,24 +90,24 @@ RSpec.describe Brcobranca::Boleto::Banrisul do
     expect(boleto_novo.agencia_conta_boleto).to eql('1102.48 / 9000150-46')
   end
 
-  describe "#agencia_dv" do
-    it { expect(described_class.new(agencia: "0567").agencia_dv).to eq("82") }
-    it { expect(described_class.new(agencia: "0085").agencia_dv).to eq("16") }
-    it { expect(described_class.new(agencia: "0100").agencia_dv).to eq("81") }
-    it { expect(described_class.new(agencia: "1015").agencia_dv).to eq("75") }
-    it { expect(described_class.new(agencia: "0028").agencia_dv).to eq("28") }
-    it { expect(described_class.new(agencia: "0831").agencia_dv).to eq("86") }
-    it { expect(described_class.new(agencia: "0843").agencia_dv).to eq("36") }
-    it { expect(described_class.new(agencia: "0025").agencia_dv).to eq("77") }
-    it { expect(described_class.new(agencia: "1004").agencia_dv).to eq("12") }
-    it { expect(described_class.new(agencia: "0156").agencia_dv).to eq("01") }
-    it { expect(described_class.new(agencia: "0039").agencia_dv).to eq("80") }
+  describe '#agencia_dv' do
+    it { expect(described_class.new(agencia: '0567').agencia_dv).to eq('82') }
+    it { expect(described_class.new(agencia: '0085').agencia_dv).to eq('16') }
+    it { expect(described_class.new(agencia: '0100').agencia_dv).to eq('81') }
+    it { expect(described_class.new(agencia: '1015').agencia_dv).to eq('75') }
+    it { expect(described_class.new(agencia: '0028').agencia_dv).to eq('28') }
+    it { expect(described_class.new(agencia: '0831').agencia_dv).to eq('86') }
+    it { expect(described_class.new(agencia: '0843').agencia_dv).to eq('36') }
+    it { expect(described_class.new(agencia: '0025').agencia_dv).to eq('77') }
+    it { expect(described_class.new(agencia: '1004').agencia_dv).to eq('12') }
+    it { expect(described_class.new(agencia: '0156').agencia_dv).to eq('01') }
+    it { expect(described_class.new(agencia: '0039').agencia_dv).to eq('80') }
   end
 
-  describe "#nosso_numero_dv" do
-    it { expect(described_class.new(numero: "22832563").nosso_numero_dv).to eq("51") }
-    it { expect(described_class.new(numero: "84736").nosso_numero_dv).to eq("84") }
-    it { expect(described_class.new(numero: "00649").nosso_numero_dv).to eq("47") }
+  describe '#nosso_numero_dv' do
+    it { expect(described_class.new(numero: '22832563').nosso_numero_dv).to eq('51') }
+    it { expect(described_class.new(numero: '84736').nosso_numero_dv).to eq('84') }
+    it { expect(described_class.new(numero: '00649').nosso_numero_dv).to eq('47') }
   end
 
   describe 'Busca logotipo do banco' do

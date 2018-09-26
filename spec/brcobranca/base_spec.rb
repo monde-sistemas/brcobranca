@@ -22,7 +22,7 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Criar nova instancia com atributos padrões' do
-    boleto_novo = Brcobranca::Boleto::Base.new
+    boleto_novo = described_class.new
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
@@ -37,7 +37,7 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Criar nova instancia com atributos válidos' do
-    boleto_novo = Brcobranca::Boleto::Base.new(@valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
@@ -60,7 +60,7 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Calcula agencia_dv' do
-    boleto_novo = Brcobranca::Boleto::Base.new(@valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     boleto_novo.agencia = '85068014982'
     expect(boleto_novo.agencia_dv).to eql(9)
     boleto_novo.agencia = '05009401448'
@@ -88,7 +88,7 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Calcula conta_corrente_dv' do
-    boleto_novo = Brcobranca::Boleto::Base.new(@valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     boleto_novo.conta_corrente = '85068014982'
     expect(boleto_novo.conta_corrente_dv).to eql(9)
     boleto_novo.conta_corrente = '05009401448'
@@ -116,7 +116,7 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Calcula o valor do documento' do
-    boleto_novo = Brcobranca::Boleto::Base.new(@valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     boleto_novo.quantidade = 1
     boleto_novo.valor = 1
     expect(boleto_novo.valor_documento).to eql(1.0)
@@ -138,30 +138,30 @@ RSpec.describe Brcobranca::Boleto::Base do
   end
 
   it 'Mostrar aviso sobre sobrecarga de métodos padrões' do
-    boleto_novo = Brcobranca::Boleto::Base.new(@valid_attributes)
+    boleto_novo = described_class.new(@valid_attributes)
     expect { boleto_novo.codigo_barras_segunda_parte }.to raise_error(Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando')
     expect { boleto_novo.nosso_numero_boleto }.to raise_error(Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando')
     expect { boleto_novo.agencia_conta_boleto }.to raise_error(Brcobranca::NaoImplementado, 'Sobreescreva este método na classe referente ao banco que você esta criando')
   end
 
   it 'Incluir módulos de template na classe' do
-    expect(Brcobranca::Boleto::Base.respond_to?(:lote)).to be_truthy
-    expect(Brcobranca::Boleto::Base.respond_to?(:to)).to be_truthy
+    expect(described_class.respond_to?(:lote)).to be_truthy
+    expect(described_class.respond_to?(:to)).to be_truthy
   end
 
   it 'Incluir módulos de template na instancia' do
-    boleto_novo = Brcobranca::Boleto::Base.new
+    boleto_novo = described_class.new
     expect(boleto_novo.respond_to?(:lote)).to be_truthy
     expect(boleto_novo.respond_to?(:to)).to be_truthy
   end
 
   it 'data_documento em string' do
-    boleto_novo = Brcobranca::Boleto::Base.new(data_documento: '2015-06-15')
-    expect(boleto_novo.data_documento).to eql("2015-06-15")
+    boleto_novo = described_class.new(data_documento: '2015-06-15')
+    expect(boleto_novo.data_documento).to eql('2015-06-15')
   end
 
   it 'data_vencimento em string' do
-    boleto_novo = Brcobranca::Boleto::Base.new(data_vencimento: '2015-06-15')
-    expect(boleto_novo.data_vencimento).to eql("2015-06-15")
+    boleto_novo = described_class.new(data_vencimento: '2015-06-15')
+    expect(boleto_novo.data_vencimento).to eql('2015-06-15')
   end
 end

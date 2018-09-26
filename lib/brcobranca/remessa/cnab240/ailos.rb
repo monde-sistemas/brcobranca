@@ -2,7 +2,7 @@
 module Brcobranca
   module Remessa
     module Cnab240
-      class Cecred < Brcobranca::Remessa::Cnab240::Base
+      class Ailos < Brcobranca::Remessa::Cnab240::Base
         # digito da agencia
         attr_accessor :digito_agencia
 
@@ -32,7 +32,7 @@ module Brcobranca
         end
 
         def nome_banco
-          'CECRED'.ljust(30, ' ')
+          'AILOS'.ljust(30, ' ')
         end
 
         def versao_layout_arquivo
@@ -78,7 +78,7 @@ module Brcobranca
         end
 
         def agencia_conta_corrente_dv
-          " "
+          ' '
         end
 
         def complemento_header
@@ -90,7 +90,7 @@ module Brcobranca
         end
 
         def tipo_documento
-          "1"
+          '1'
         end
 
         def complemento_p(pagamento)
@@ -107,7 +107,7 @@ module Brcobranca
         end
 
         def identificacao_titulo_empresa(pagamento)
-          pagamento.documento_ou_numero.to_s.ljust(25, " ")
+          pagamento.documento_ou_numero.to_s.ljust(25, ' ')
         end
 
         def complemento_trailer
@@ -121,9 +121,9 @@ module Brcobranca
           # Qt. Títulos em Cobrança Descontada  6
           # Vl. Títulos em Carteira Descontada  15 + 2 decimais
           total_cobranca_simples    = "#{quantidade_titulos_cobranca}#{valor_titulos_carteira}"
-          total_cobranca_vinculada  = "".rjust(23, "0")
-          total_cobranca_caucionada = "".rjust(23, "0")
-          total_cobranca_descontada = "".rjust(23, "0")
+          total_cobranca_vinculada  = ''.rjust(23, '0')
+          total_cobranca_caucionada = ''.rjust(23, '0')
+          total_cobranca_descontada = ''.rjust(23, '0')
 
           "#{total_cobranca_simples}#{total_cobranca_vinculada}#{total_cobranca_caucionada}"\
             "#{total_cobranca_descontada}".ljust(217, ' ')
@@ -138,11 +138,11 @@ module Brcobranca
           super(pagamento, nro_lote, contador)
         end
 
-        def codigo_baixa(pagamento)
+        def codigo_baixa(_pagamento)
           '2'
         end
 
-        def dias_baixa(pagamento)
+        def dias_baixa(_pagamento)
           ''.rjust(3, ' ')
         end
       end

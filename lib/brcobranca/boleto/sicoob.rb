@@ -10,7 +10,7 @@ module Brcobranca
       validates_length_of :quantidade, maximum: 3
 
       def initialize(campos = {})
-        campos = { carteira: "1", variacao: '01', quantidade: '001' }.merge!(campos)
+        campos = { carteira: '1', variacao: '01', quantidade: '001' }.merge!(campos)
         super(campos)
       end
 
@@ -18,21 +18,21 @@ module Brcobranca
       #
       # @return [String] 3 caracteres numéricos.
       def banco
-        "756"
+        '756'
       end
 
       # Dígito verificador do banco
       #
       # @return [String] 1 caractere.
       def banco_dv
-        "0"
+        '0'
       end
 
       # Agência
       #
       # @return [String] 4 caracteres numéricos.
       def agencia=(valor)
-        @agencia = valor.to_s.rjust(4, "0") if valor
+        @agencia = valor.to_s.rjust(4, '0') if valor
       end
 
       # Dígito verificador da agência
@@ -45,21 +45,21 @@ module Brcobranca
       #
       # @return [String] 7 caracteres numéricos.
       def convenio=(valor)
-        @convenio = valor.to_s.rjust(7, "0") if valor
+        @convenio = valor.to_s.rjust(7, '0') if valor
       end
 
       # Número documento
       #
       # @return [String] 7 caracteres numéricos.
       def numero=(valor)
-        @numero = valor.to_s.rjust(7, "0") if valor
+        @numero = valor.to_s.rjust(7, '0') if valor
       end
 
       # Quantidade
       #
       # @return [String] 3 caracteres numéricos.
       def quantidade=(valor)
-        @quantidade = valor.to_s.rjust(3, "0") if valor
+        @quantidade = valor.to_s.rjust(3, '0') if valor
       end
 
       # Nosso número para exibição no boleto.
@@ -98,7 +98,7 @@ module Brcobranca
       #     Ex.: 11 – 3 = 8, então Nosso Número + DV = 21-8
       #
       def nosso_numero_dv
-        "#{agencia}#{convenio.rjust(10, "0")}#{numero}".modulo11(
+        "#{agencia}#{convenio.rjust(10, '0')}#{numero}".modulo11(
           reverse: false,
           multiplicador: [3, 1, 9, 7],
           mapeamento: { 10 => 0, 11 => 0 }

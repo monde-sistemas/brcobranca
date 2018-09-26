@@ -85,8 +85,8 @@ module Brcobranca
       attr_accessor :dias_baixa
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
-        :documento_sacado, :nome_sacado, :endereco_sacado,
-        :cep_sacado, :cidade_sacado, :uf_sacado
+                            :documento_sacado, :nome_sacado, :endereco_sacado,
+                            :cep_sacado, :cidade_sacado, :uf_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
       validates_length_of :especie_titulo, is: 2, allow_blank: true
@@ -99,8 +99,8 @@ module Brcobranca
       def initialize(campos = {})
         padrao = {
           data_emissao: Date.today,
-          data_segundo_desconto:'00-00-00',
-          tipo_mora: "3",
+          data_segundo_desconto: '00-00-00',
+          tipo_mora: '3',
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,
@@ -266,7 +266,7 @@ module Brcobranca
       private
 
       def format_value(value, tamanho)
-        raise ValorInvalido.new('Deve ser um Float') if !(value.to_s =~ /\./)
+        fail ValorInvalido.new('Deve ser um Float') unless value.to_s =~ /\./
 
         sprintf('%.2f', value).delete('.').rjust(tamanho, '0')
       end

@@ -4,19 +4,19 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-       data_vencimento: Date.today,
-       nosso_numero: 123,
-       documento: 6969,
-       dias_protesto: '6',
-       valor_mora: "8.00",
-       percentual_multa: "2.00",
-       documento_sacado: '12345678901',
-       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
-       bairro_sacado: 'São josé dos quatro apostolos magros',
-       cep_sacado: '12345678',
-       cidade_sacado: 'Santa rita de cássia maria da silva',
-       uf_sacado: 'SP')
+                                       data_vencimento: Date.today,
+                                       nosso_numero: 123,
+                                       documento: 6969,
+                                       dias_protesto: '6',
+                                       valor_mora: '8.00',
+                                       percentual_multa: '2.00',
+                                       documento_sacado: '12345678901',
+                                       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
+                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       bairro_sacado: 'São josé dos quatro apostolos magros',
+                                       cep_sacado: '12345678',
+                                       cidade_sacado: 'Santa rita de cássia maria da silva',
+                                       uf_sacado: 'SP')
   end
   let(:params) do
     {
@@ -151,7 +151,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[17..20]).to eq '0001'                                        # agência
         expect(detalhe[22..29]).to eq '00000002'                                    # conta corrente
         expect(detalhe[30]).to eq '7'                                               # dígito da conta corrente
-        expect(detalhe[37..61]).to eq "6969".ljust(25)                             # número controle cliente
+        expect(detalhe[37..61]).to eq '6969'.ljust(25) # número controle cliente
         expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
         expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
         expect(detalhe[110..119]).to eq '0000000000'                                # número documento
@@ -172,8 +172,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[326..333]).to eq '12345678'                                  # cep sacado
         expect(detalhe[334..348]).to eq 'Santa rita de c'                           # cidade sacado
         expect(detalhe[349..350]).to eq 'SP'                                        # uf sacado
-        expect(detalhe[351..375]).to eq ''.rjust(25, " ")                           # nome avalista
-        expect(detalhe[377..390]).to eq ''.rjust(14, " ")                           # documento avalista
+        expect(detalhe[351..375]).to eq ''.rjust(25, ' ')                           # nome avalista
+        expect(detalhe[377..390]).to eq ''.rjust(14, ' ')                           # documento avalista
         expect(detalhe[391..392]).to eq '06'                                        # dias para envio a protesto
       end
     end

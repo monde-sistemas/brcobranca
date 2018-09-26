@@ -51,16 +51,15 @@ module Brcobranca
         # @return [String]
         #
         def zeros
-          "".ljust(16, "0")
+          ''.ljust(16, '0')
         end
-
 
         # Complemento do header
         #
         # @return [String]
         #
         def complemento
-          "".ljust(275, " ")
+          ''.ljust(275, ' ')
         end
 
         # Numero da versão da remessa
@@ -68,7 +67,7 @@ module Brcobranca
         # @return [String]
         #
         def versao
-          "058"
+          '058'
         end
 
         def monta_header
@@ -124,7 +123,7 @@ module Brcobranca
           # 5 = RÁPIDA COM REGISTRO
           # (BLOQUETE EMITIDO PELO CLIENTE) 6 = CAUCIONADA RAPIDA
           # 7 = DESCONTADA ELETRÔNICA
-          detalhe << codigo_carteira                                        # codigo da carteira                    9[01]
+          detalhe << codigo_carteira # codigo da carteira                    9[01]
 
           # Código da ocorrência:
           # 01 = ENTRADA DE TÍTULO
@@ -136,8 +135,8 @@ module Brcobranca
           # 08 = ALTERAÇÃO DO SEU NÚMERO
           # 09 = PROTESTAR
           # 18 = SUSTAR PROTESTO
-          detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero.to_s.rjust(10, '0')         # numero do documento                   X[10]
+          detalhe << pagamento.identificacao_ocorrencia # identificacao ocorrencia              9[02]
+          detalhe << pagamento.numero.to_s.rjust(10, '0') # numero do documento                   X[10]
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    9[06]
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << cod_banco                                              # codigo banco                          9[03]
@@ -213,8 +212,8 @@ module Brcobranca
         # @return [String]
         #
         def total_titulos
-          total = sprintf "%.2f", pagamentos.map(&:valor).inject(:+)
-          total.to_s.somente_numeros.rjust(13, "0")
+          total = sprintf '%.2f', pagamentos.map(&:valor).inject(:+)
+          total.to_s.somente_numeros.rjust(13, '0')
         end
 
         # Trailer do arquivo remessa
@@ -231,7 +230,7 @@ module Brcobranca
           # valor total titulos [13]
           # zeros               [374]     0
           # num. sequencial     [6]
-          "9#{sequencial.to_s.rjust(6, '0')}#{total_titulos}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, "0")}"
+          "9#{sequencial.to_s.rjust(6, '0')}#{total_titulos}#{''.rjust(374, '0')}#{sequencial.to_s.rjust(6, '0')}"
         end
       end
     end

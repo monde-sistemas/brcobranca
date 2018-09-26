@@ -94,7 +94,7 @@ module Brcobranca
   end
 
   def self.i18n
-    I18n.load_path += Dir.glob(File.dirname(__FILE__) + "/locales/pt-BR.yml")
+    I18n.load_path += Dir.glob(File.dirname(__FILE__) + '/locales/pt-BR.yml')
     I18n.available_locales = [:en, 'pt-BR']
     I18n.locale = 'pt-BR'
   end
@@ -116,7 +116,7 @@ module Brcobranca
     autoload :Santander,     'brcobranca/boleto/santander'
     autoload :Banestes,      'brcobranca/boleto/banestes'
     autoload :Credisis,      'brcobranca/boleto/credisis'
-    autoload :Cecred,        'brcobranca/boleto/cecred'
+    autoload :Ailos, 'brcobranca/boleto/ailos'
 
     # Módulos para classes de template
     module Template
@@ -143,13 +143,12 @@ module Brcobranca
       autoload :Unicred,       'brcobranca/retorno/cnab400/unicred'
       autoload :Credisis,      'brcobranca/retorno/cnab400/credisis'
       autoload :Santander,     'brcobranca/retorno/cnab400/santander'
-
     end
 
     module Cnab240
       autoload :Base,          'brcobranca/retorno/cnab240/base'
       autoload :Santander,     'brcobranca/retorno/cnab240/santander'
-      autoload :Cecred,        'brcobranca/retorno/cnab240/cecred'
+      autoload :Ailos, 'brcobranca/retorno/cnab240/ailos'
       autoload :Sicredi,       'brcobranca/retorno/cnab240/sicredi'
       autoload :Sicoob,        'brcobranca/retorno/cnab240/sicoob'
     end
@@ -174,10 +173,10 @@ module Brcobranca
     end
 
     module Cnab240
-      autoload :Base,         'brcobranca/remessa/cnab240/base'
-      autoload :BaseCorrespondente,'brcobranca/remessa/cnab240/base_correspondente'
-      autoload :Caixa,        'brcobranca/remessa/cnab240/caixa'
-      autoload :Cecred,       'brcobranca/remessa/cnab240/cecred'
+      autoload :Base, 'brcobranca/remessa/cnab240/base'
+      autoload :BaseCorrespondente, 'brcobranca/remessa/cnab240/base_correspondente'
+      autoload :Caixa, 'brcobranca/remessa/cnab240/caixa'
+      autoload :Ailos, 'brcobranca/remessa/cnab240/ailos'
       autoload :BancoBrasil,  'brcobranca/remessa/cnab240/banco_brasil'
       autoload :Sicoob,       'brcobranca/remessa/cnab240/sicoob'
       autoload :SicoobBancoBrasil, 'brcobranca/remessa/cnab240/sicoob_banco_brasil'

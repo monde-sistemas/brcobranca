@@ -2,7 +2,6 @@
 require 'spec_helper'
 
 RSpec.describe Brcobranca::FormatacaoString do
-
   context 'no arguments' do
     it { expect { ''.format_size }.to raise_error(ArgumentError) }
   end
@@ -21,5 +20,4 @@ RSpec.describe Brcobranca::FormatacaoString do
     it { expect('SOCIEDADE'.format_size(30)).to eql('SOCIEDADE                     ') }
     it { expect('caçaróla'.format_size(30)).to eql('cacarola                      ') }
   end
-
 end

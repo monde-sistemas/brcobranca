@@ -24,10 +24,10 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
   end
 
   it 'Tamanho do número da agência deve ser de 4 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(agencia: "0001")
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: '0001')
     expect(boleto_novo.agencia).to eq('0001')
 
-    boleto_novo = described_class.new @valid_attributes.merge(agencia: "00001")
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: '00001')
     expect(boleto_novo).not_to be_valid
   end
 
@@ -106,7 +106,7 @@ RSpec.describe Brcobranca::Boleto::Credisis do #:nodoc:[all]
     expect(boleto_novo.conta_corrente_dv).to eql(7)
     expect(boleto_novo.nosso_numero_dv).to eql(7)
 
-    @valid_attributes[:codigo_cedente] = "6641"
+    @valid_attributes[:codigo_cedente] = '6641'
     segundo_boleto = described_class.new(@valid_attributes)
 
     expect(segundo_boleto.codigo_barras_segunda_parte).to eql('0000001000000664100009518')

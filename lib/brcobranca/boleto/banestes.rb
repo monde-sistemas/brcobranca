@@ -9,7 +9,7 @@ module Brcobranca
       validates_length_of :carteira, maximum: 2
 
       def initialize(campos = {})
-        campos = { carteira: "11", variacao: '2' }.merge!(campos)
+        campos = { carteira: '11', variacao: '2' }.merge!(campos)
         super(campos)
       end
 
@@ -17,35 +17,35 @@ module Brcobranca
       #
       # @return [String] 3 caracteres numéricos.
       def banco
-        "021"
+        '021'
       end
 
       # Dígito verificador do banco
       #
       # @return [String] 1 caractere.
       def banco_dv
-        "3"
+        '3'
       end
 
       # Agência
       #
       # @return [String] 4 caracteres numéricos.
       def agencia=(valor)
-        @agencia = valor.to_s.rjust(4, "0") if valor
+        @agencia = valor.to_s.rjust(4, '0') if valor
       end
 
       # Conta
       #
       # @return [String] 7 caracteres numéricos.
       def conta_corrente=(valor)
-        @conta_corrente = valor.to_s.rjust(11, "0") if valor
+        @conta_corrente = valor.to_s.rjust(11, '0') if valor
       end
 
       # Número documento
       #
       # @return [String] 8 caracteres numéricos.
       def numero=(valor)
-        @numero = valor.to_s.rjust(8, "0") if valor
+        @numero = valor.to_s.rjust(8, '0') if valor
       end
 
       # Nosso número para exibição no boleto.
@@ -65,7 +65,6 @@ module Brcobranca
       def agencia_conta_boleto
         "#{agencia} / #{conta_corrente}"
       end
-
 
       # Nosso Numero 'N'        | Nosso número sem os dígitos                                    | 08
       # Conta corrente 'C'      | No da conta corrente                                             | 11

@@ -81,7 +81,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
         expect(sicoob_banco_brasil.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 8 caracteres).')
       end
     end
-
   end
 
   context 'formatacoes' do
@@ -108,7 +107,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
 
     it 'formata o nosso numero' do
       nosso_numero = sicoob_banco_brasil.formata_nosso_numero 1
-      expect(nosso_numero).to eq "12345678900000001"
+      expect(nosso_numero).to eq '12345678900000001'
     end
   end
 
@@ -161,7 +160,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(segmento_p[100..105]).to eq ''.rjust(6, '0')             # zeros
       expect(segmento_p[106]).to eq 'N'                               # aceite
       expect(segmento_p[107..108]).to eq '  '                         # brancos
-      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y')# data de emissao
+      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
       expect(segmento_p[117]).to eq '1'                               # tipo da mora
       expect(segmento_p[118..132]).to eq ''.rjust(15, '0')            # valor juros/mora
       expect(segmento_p[133..141]).to eq ''.rjust(9, '0')             # zeros
@@ -204,7 +203,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::SicoobBancoBrasil do
       expect(segmento_q[153..154]).to eq '01'                         # tipo inscricao avalista
       expect(segmento_q[155..168]).to eq '00012345678901'             # documento avalista
       expect(segmento_q[169..208]).to eq 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUE' # nome do avalista
-      expect(segmento_q[209..239]).to eq ''.rjust(31, ' ')              # brancos
+      expect(segmento_q[209..239]).to eq ''.rjust(31, ' ') # brancos
     end
   end
 

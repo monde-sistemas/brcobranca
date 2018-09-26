@@ -19,10 +19,10 @@ module Brcobranca
 
         def initialize(campos = {})
           campos = { emissao_boleto: '0',
-            distribuicao_boleto: '0',
-            especie_titulo: '02',
-            codigo_baixa: '00',
-            codigo_carteira: '7',}.merge!(campos)
+                     distribuicao_boleto: '0',
+                     especie_titulo: '02',
+                     codigo_baixa: '00',
+                     codigo_carteira: '7' }.merge!(campos)
           super(campos)
         end
 
@@ -226,7 +226,7 @@ module Brcobranca
           # No caso de carteira 31 ou carteira 11/17 modalidade Vinculada,
           # se não informado nenhum código,
           # o sistema assume automaticamente Protesto em 3 dias úteis.
-          segmento_p << pagamento.codigo_protesto                       # cod. para protesto                    1
+          segmento_p << pagamento.codigo_protesto # cod. para protesto                    1
           # Preencher de acordo com o código informado na posição 221.
           # Para código '1' – é possível, de 6 a 29 dias, 35o, 40o, dia corrido.
           # Para código '2' – é possível, 3o, 4o ou 5o dia útil.

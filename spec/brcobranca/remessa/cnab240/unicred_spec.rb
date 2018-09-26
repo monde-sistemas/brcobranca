@@ -168,18 +168,18 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
     end
 
     it 'complemento trailer deve retornar espacos em branco com a totalização das cobranças' do
-      total_cobranca_simples    = "".rjust(23, "0")
-      total_cobranca_vinculada  = "".rjust(23, "0")
-      total_cobranca_caucionada = "".rjust(23, "0")
-      total_cobranca_descontada = "".rjust(23, "0")
+      total_cobranca_simples    = ''.rjust(23, '0')
+      total_cobranca_vinculada  = ''.rjust(23, '0')
+      total_cobranca_caucionada = ''.rjust(23, '0')
+      total_cobranca_descontada = ''.rjust(23, '0')
 
       expect(unicred.complemento_trailer).to eq "#{total_cobranca_simples}#{total_cobranca_vinculada}"\
         "#{total_cobranca_caucionada}#{total_cobranca_descontada}".ljust(217, ' ')
     end
 
     it 'formata o nosso numero' do
-      nosso_numero = unicred.formata_nosso_numero "072000031"
-      expect(nosso_numero.strip).to eq "072000031"
+      nosso_numero = unicred.formata_nosso_numero '072000031'
+      expect(nosso_numero.strip).to eq '072000031'
     end
   end
 

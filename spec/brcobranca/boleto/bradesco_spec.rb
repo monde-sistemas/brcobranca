@@ -2,18 +2,20 @@
 require 'spec_helper'
 
 RSpec.describe Brcobranca::Boleto::Bradesco do
-  let(:valid_attributes) {{
-    valor: 0.0,
-    local_pagamento: 'Pagável preferencialmente na Rede Bradesco ou Bradesco Expresso',
-    cedente: 'Kivanio Barbosa',
-    documento_cedente: '12345678912',
-    sacado: 'Claudio Pozzebom',
-    sacado_documento: '12345678900',
-    agencia: '4042',
-    conta_corrente: '61900',
-    convenio: 12_387_989,
-    numero: '777700168'
-  }}
+  let(:valid_attributes) do
+    {
+      valor: 0.0,
+      local_pagamento: 'Pagável preferencialmente na Rede Bradesco ou Bradesco Expresso',
+      cedente: 'Kivanio Barbosa',
+      documento_cedente: '12345678912',
+      sacado: 'Claudio Pozzebom',
+      sacado_documento: '12345678900',
+      agencia: '4042',
+      conta_corrente: '61900',
+      convenio: 12_387_989,
+      numero: '777700168'
+    }
+  end
 
   it 'Criar nova instancia com atributos padrões' do
     boleto_novo = described_class.new
@@ -176,32 +178,32 @@ RSpec.describe Brcobranca::Boleto::Bradesco do
     end
   end
 
-  describe "#agencia_dv" do
-    it { expect(described_class.new(agencia: "0255").agencia_dv).to eq(0) }
-    it { expect(described_class.new(agencia: "0943").agencia_dv).to eq(1) }
-    it { expect(described_class.new(agencia: "1467").agencia_dv).to eq(2) }
-    it { expect(described_class.new(agencia: "0794").agencia_dv).to eq(3) }
-    it { expect(described_class.new(agencia: "0155").agencia_dv).to eq(4) }
-    it { expect(described_class.new(agencia: "0650").agencia_dv).to eq(5) }
-    it { expect(described_class.new(agencia: "0199").agencia_dv).to eq(6) }
-    it { expect(described_class.new(agencia: "1425").agencia_dv).to eq(7) }
-    it { expect(described_class.new(agencia: "2839").agencia_dv).to eq(8) }
-    it { expect(described_class.new(agencia: "2332").agencia_dv).to eq(9) }
-    it { expect(described_class.new(agencia: "0121").agencia_dv).to eq("P") }
+  describe '#agencia_dv' do
+    it { expect(described_class.new(agencia: '0255').agencia_dv).to eq(0) }
+    it { expect(described_class.new(agencia: '0943').agencia_dv).to eq(1) }
+    it { expect(described_class.new(agencia: '1467').agencia_dv).to eq(2) }
+    it { expect(described_class.new(agencia: '0794').agencia_dv).to eq(3) }
+    it { expect(described_class.new(agencia: '0155').agencia_dv).to eq(4) }
+    it { expect(described_class.new(agencia: '0650').agencia_dv).to eq(5) }
+    it { expect(described_class.new(agencia: '0199').agencia_dv).to eq(6) }
+    it { expect(described_class.new(agencia: '1425').agencia_dv).to eq(7) }
+    it { expect(described_class.new(agencia: '2839').agencia_dv).to eq(8) }
+    it { expect(described_class.new(agencia: '2332').agencia_dv).to eq(9) }
+    it { expect(described_class.new(agencia: '0121').agencia_dv).to eq('P') }
   end
 
-  describe "#conta_corrente_dv" do
-    it { expect(described_class.new(conta_corrente: "0325620").conta_corrente_dv).to eq(0) }
-    it { expect(described_class.new(conta_corrente: "0284025").conta_corrente_dv).to eq(1) }
-    it { expect(described_class.new(conta_corrente: "0238069").conta_corrente_dv).to eq(2) }
-    it { expect(described_class.new(conta_corrente: "0135323").conta_corrente_dv).to eq(3) }
-    it { expect(described_class.new(conta_corrente: "0010667").conta_corrente_dv).to eq(4) }
-    it { expect(described_class.new(conta_corrente: "0420571").conta_corrente_dv).to eq(5) }
-    it { expect(described_class.new(conta_corrente: "0510701").conta_corrente_dv).to eq(6) }
-    it { expect(described_class.new(conta_corrente: "0420536").conta_corrente_dv).to eq(7) }
-    it { expect(described_class.new(conta_corrente: "0012500").conta_corrente_dv).to eq(8) }
-    it { expect(described_class.new(conta_corrente: "0010673").conta_corrente_dv).to eq(9) }
-    it { expect(described_class.new(conta_corrente: "0019669").conta_corrente_dv).to eq("P") }
-    it { expect(described_class.new(conta_corrente: "0301357").conta_corrente_dv).to eq("P") }
+  describe '#conta_corrente_dv' do
+    it { expect(described_class.new(conta_corrente: '0325620').conta_corrente_dv).to eq(0) }
+    it { expect(described_class.new(conta_corrente: '0284025').conta_corrente_dv).to eq(1) }
+    it { expect(described_class.new(conta_corrente: '0238069').conta_corrente_dv).to eq(2) }
+    it { expect(described_class.new(conta_corrente: '0135323').conta_corrente_dv).to eq(3) }
+    it { expect(described_class.new(conta_corrente: '0010667').conta_corrente_dv).to eq(4) }
+    it { expect(described_class.new(conta_corrente: '0420571').conta_corrente_dv).to eq(5) }
+    it { expect(described_class.new(conta_corrente: '0510701').conta_corrente_dv).to eq(6) }
+    it { expect(described_class.new(conta_corrente: '0420536').conta_corrente_dv).to eq(7) }
+    it { expect(described_class.new(conta_corrente: '0012500').conta_corrente_dv).to eq(8) }
+    it { expect(described_class.new(conta_corrente: '0010673').conta_corrente_dv).to eq(9) }
+    it { expect(described_class.new(conta_corrente: '0019669').conta_corrente_dv).to eq('P') }
+    it { expect(described_class.new(conta_corrente: '0301357').conta_corrente_dv).to eq('P') }
   end
 end
