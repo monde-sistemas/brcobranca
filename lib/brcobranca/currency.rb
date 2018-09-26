@@ -11,7 +11,7 @@ module Brcobranca #:nodoc:[all]
 
     module String #:nodoc:[all]
       def to_number(_options = {})
-        return gsub(/,/, '.').to_f if self.numeric?
+        return tr(',', '.').to_f if self.numeric?
         nil
       end
 

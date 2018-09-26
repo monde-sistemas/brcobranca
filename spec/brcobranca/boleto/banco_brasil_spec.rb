@@ -62,11 +62,11 @@ RSpec.describe Brcobranca::Boleto::BancoBrasil do #:nodoc:[all]
   end
 
   it 'Criar nova instancia com documento' do
-    @valid_attributes[:documento] = "020"
+    @valid_attributes[:documento] = '020'
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.numero).to eql('777700168')
-    expect(boleto_novo.documento).to eql("020")
-    expect(boleto_novo.documento_ou_numero).to eql("020")
+    expect(boleto_novo.documento).to eql('020')
+    expect(boleto_novo.documento_ou_numero).to eql('020')
   end
 
   it 'Montar código de barras para convenio de 8 digitos e nosso número de 9' do
@@ -261,7 +261,7 @@ RSpec.describe Brcobranca::Boleto::BancoBrasil do #:nodoc:[all]
     expect(boleto_novo.nosso_numero_boleto).to eql('12387989000000719-2')
     expect(boleto_novo.nosso_numero_dv).to eql(2)
     boleto_novo.numero = 719
-    boleto_novo.convenio = 1234567
+    boleto_novo.convenio = 1_234_567
     expect(boleto_novo.nosso_numero_boleto).to eql('12345670000000719')
   end
 

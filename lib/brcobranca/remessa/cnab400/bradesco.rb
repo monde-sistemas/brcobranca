@@ -82,7 +82,7 @@ module Brcobranca
           detalhe << ''.rjust(7, '0')                                 # conta corrente (op)                         9[07]       013 a 019
           detalhe << ''.rjust(1, '0')                                 # digito da conta corrente (op)               X[01]       020 a 020
           detalhe << identificacao_empresa                            # identficacao da empresa                     X[17]       021 a 037
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ')   # num. controle                               X[25]       038 a 062
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25, ' ') # num. controle                               X[25]       038 a 062
           detalhe << ''.rjust(3, '0')                                 # codigo do banco (debito automatico apenas)  9[03]       063 a 065
           detalhe << pagamento.codigo_multa                           # campo da multa (0 = sem, 2 = com)           9[01]       066 a 066 *
           detalhe << pagamento.formata_percentual_multa               # percentual multa                            9[04]       067 a 070 *

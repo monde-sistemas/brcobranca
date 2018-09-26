@@ -2,21 +2,21 @@
 shared_examples_for 'cnab240' do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
-      nosso_numero: 123,
-      documento_sacado: '12345678901',
-      nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-      endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
-      bairro_sacado: 'São josé dos quatro apostolos magros',
-      cep_sacado: '12345678',
-      cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'SP',
-      valor_iof: 9.9,
-      valor_abatimento: 24.35,
-      documento_avalista: '12345678901',
-      nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
-      numero: '123',
-      documento: 6969)
+                                       data_vencimento: Date.today,
+                                       nosso_numero: 123,
+                                       documento_sacado: '12345678901',
+                                       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
+                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       bairro_sacado: 'São josé dos quatro apostolos magros',
+                                       cep_sacado: '12345678',
+                                       cidade_sacado: 'Santa rita de cássia maria da silva',
+                                       uf_sacado: 'SP',
+                                       valor_iof: 9.9,
+                                       valor_abatimento: 24.35,
+                                       documento_avalista: '12345678901',
+                                       nome_avalista: 'ISABEL CRISTINA LEOPOLDINA ALGUSTA MIGUELA GABRIELA RAFAELA GONZAGA DE BRAGANÇA E BOURBON',
+                                       numero: '123',
+                                       documento: 6969)
   end
   let(:params) do
     p = {
@@ -32,15 +32,15 @@ shared_examples_for 'cnab240' do
     }
     if subject.class == Brcobranca::Remessa::Cnab240::Caixa
       p.merge!(versao_aplicativo: '1234',
-        digito_agencia: '1')
+               digito_agencia: '1')
     elsif subject.class == Brcobranca::Remessa::Cnab240::BancoBrasil
       p.merge!(carteira: '12',
-        variacao: '123')
+               variacao: '123')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Sicredi
       p.merge!(byte_idt: '2', posto: '14', digito_conta: '5')
     elsif subject.class == Brcobranca::Remessa::Cnab240::Unicred
       p.merge!(byte_idt: '2', posto: '14', digito_conta: '5')
-    elsif subject.class == Brcobranca::Remessa::Cnab240::Cecred
+    elsif subject.class == Brcobranca::Remessa::Cnab240::Ailos
       pagamento.codigo_multa = '2'
       pagamento.percentual_multa =  2.00
       p.merge!(digito_agencia: '1', pagamentos: [pagamento])
@@ -125,12 +125,12 @@ shared_examples_for 'cnab240' do
     end
 
     it 'segmento P deve ter as informações sobre o protesto' do
-      pagamento.codigo_protesto = "1"
-      pagamento.dias_protesto =  "6"
+      pagamento.codigo_protesto = '1'
+      pagamento.dias_protesto = '6'
       segmento_p = objeto.monta_segmento_p pagamento, 1, 2
 
-      expect(segmento_p[220]).to eq "1"
-      expect(segmento_p[221..222]).to eq "06"
+      expect(segmento_p[220]).to eq '1'
+      expect(segmento_p[221..222]).to eq '06'
     end
   end
 
@@ -170,16 +170,16 @@ shared_examples_for 'cnab240' do
     it 'segmento R deve ter as informacoes nas posicoes corretas' do
       segmento_r = objeto.monta_segmento_r(pagamento, 1, 4)
       expect(segmento_r[0..2]).to eq objeto.cod_banco         # codigo banco
-      expect(segmento_r[3..6]).to eq "0001"                   # lote de servico
-      expect(segmento_r[7]).to eq "3"                         # tipo de registro
-      expect(segmento_r[8..12]).to eq "00004"                 # nro seq. registro no lote
-      expect(segmento_r[13]).to eq "R"                        # cod. segmento
-      expect(segmento_r[14]).to eq " "                        # branco
-      expect(segmento_r[15..16]).to eq "01"                   # cod. movimento remessa
-      expect(segmento_r[17..40]).to eq "".rjust(24,  '0')   # desconto 2
-      expect(segmento_r[41..64]).to eq "".rjust(24,  '0')   # desconto 3
+      expect(segmento_r[3..6]).to eq '0001'                   # lote de servico
+      expect(segmento_r[7]).to eq '3'                         # tipo de registro
+      expect(segmento_r[8..12]).to eq '00004'                 # nro seq. registro no lote
+      expect(segmento_r[13]).to eq 'R'                        # cod. segmento
+      expect(segmento_r[14]).to eq ' '                        # branco
+      expect(segmento_r[15..16]).to eq '01'                   # cod. movimento remessa
+      expect(segmento_r[17..40]).to eq ''.rjust(24,  '0')   # desconto 2
+      expect(segmento_r[41..64]).to eq ''.rjust(24,  '0')   # desconto 3
 
-      if objeto.cod_banco == "085"
+      if objeto.cod_banco == '085'
         expect(segmento_r[65]).to eq '2'                        # cod. multa
         expect(segmento_r[66..73]).to eq '14072015'             # data multa
         expect(segmento_r[74..88]).to eq '000000000000200'      # valor multa

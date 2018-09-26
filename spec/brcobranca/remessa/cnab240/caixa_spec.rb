@@ -7,19 +7,19 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
-      nosso_numero: 123,
-      numero: 123,
-      documento: 6969,
-      documento_sacado: '12345678901',
-      nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-      endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
-      bairro_sacado: 'São josé dos quatro apostolos magros',
-      cep_sacado: '12345678',
-      cidade_sacado: 'Santa rita de cássia maria da silva',
-      tipo_mora: "1",
-      codigo_multa: "2",
-      uf_sacado: 'SP')
+                                       data_vencimento: Date.today,
+                                       nosso_numero: 123,
+                                       numero: 123,
+                                       documento: 6969,
+                                       documento_sacado: '12345678901',
+                                       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
+                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       bairro_sacado: 'São josé dos quatro apostolos magros',
+                                       cep_sacado: '12345678',
+                                       cidade_sacado: 'Santa rita de cássia maria da silva',
+                                       tipo_mora: '1',
+                                       codigo_multa: '2',
+                                       uf_sacado: 'SP')
   end
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
@@ -139,17 +139,17 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
 
     it 'deve conter a identificacao do titulo da empresa' do
       segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[195..205]).to eq "00000006969"
+      expect(segmento_p[195..205]).to eq '00000006969'
     end
 
     it 'data da mora deve ser no dia posterior ao vencimento' do
       segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[118..125]).to eq "15072015"
+      expect(segmento_p[118..125]).to eq '15072015'
     end
 
     it 'data da multa deve ser no dia posterior ao vencimento' do
       segmento_r = caixa.monta_segmento_r(pagamento, 1, 4)
-      expect(segmento_r[66..73]).to eq "15072015"
+      expect(segmento_r[66..73]).to eq '15072015'
     end
   end
 

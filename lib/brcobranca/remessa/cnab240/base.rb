@@ -38,7 +38,7 @@ module Brcobranca
 
         validates_presence_of :agencia, :conta_corrente, :documento_cedente
         validates_length_of :codigo_carteira, :forma_cadastramento,
-          :emissao_boleto, :distribuicao_boleto, is: 1
+                            :emissao_boleto, :distribuicao_boleto, is: 1
 
         def initialize(campos = {})
           campos = {
@@ -210,7 +210,7 @@ module Brcobranca
           segmento_q << pagamento.cidade_sacado.format_size(15)         # cidade                               15
           segmento_q << pagamento.uf_sacado                             # uf                                   2
           segmento_q << pagamento.identificacao_avalista(false)         # identificacao do sacador             1
-          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0')# documento sacador                    15
+          segmento_q << pagamento.documento_avalista.to_s.rjust(15, '0') # documento sacador                    15
           segmento_q << pagamento.nome_avalista.format_size(40)         # nome avalista                        40
           segmento_q << ''.rjust(3, '0')                                # cod. banco correspondente            3
           segmento_q << ''.rjust(20, ' ')                               # nosso numero banco correspondente    20
@@ -238,12 +238,12 @@ module Brcobranca
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
           segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
-          segmento_r << "0"                                             # cod. desconto 2                      1
-          segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
-          segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
-          segmento_r << "0"                                             # cod. desconto 3                      1
-          segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
-          segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
+          segmento_r << '0'                                             # cod. desconto 2                      1
+          segmento_r << ''.rjust(8, '0') # data desconto 2                      8
+          segmento_r << ''.rjust(15, '0') # valor desconto 2                     15
+          segmento_r << '0' # cod. desconto 3                      1
+          segmento_r << ''.rjust(8, '0') # data desconto 3                      8
+          segmento_r << ''.rjust(15, '0') # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
           segmento_r << data_multa(pagamento)                           # data multa                           8
           segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
@@ -308,7 +308,7 @@ module Brcobranca
         #
         def monta_lote(nro_lote)
           # contador dos registros do lote
-          contador = 1 #header
+          contador = 1 # header
 
           lote = [monta_header_lote(nro_lote)]
 
@@ -327,7 +327,7 @@ module Brcobranca
               contador += 1
             end
           end
-          contador += 1 #trailer
+          contador += 1 # trailer
 
           lote << monta_trailer_lote(nro_lote, contador)
 
@@ -461,8 +461,8 @@ module Brcobranca
         end
 
         def data_mora(pagamento)
-          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
-          pagamento.data_vencimento.strftime("%d%m%Y")
+          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
+          pagamento.data_vencimento.strftime('%d%m%Y')
         end
 
         def codigo_desconto(pagamento)
@@ -474,7 +474,7 @@ module Brcobranca
         end
 
         def dias_baixa(pagamento)
-          pagamento.dias_baixa.to_s.rjust(3, "0")
+          pagamento.dias_baixa.to_s.rjust(3, '0')
         end
 
         # Identificacao do titulo da empresa
@@ -492,7 +492,7 @@ module Brcobranca
         #
         # Sobreescreva caso necessário
         def exclusivo_servico
-          "".rjust(2, " ")
+          ''.rjust(2, ' ')
         end
 
         def dv_agencia_cobradora

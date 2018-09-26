@@ -134,6 +134,7 @@ module Brcobranca
           @y += y
           doc.moveto x: "#{@x} cm", y: "#{@y} cm"
         end
+
         # Monta o cabeçalho do layout do boleto
         def modelo_generico_cabecalho(doc, boleto)
           # INICIO Primeira parte do BOLETO
@@ -224,7 +225,7 @@ module Brcobranca
           move_more(doc, 15.8, 0)
           doc.show boleto.agencia_conta_boleto
 
-          move_more(doc, -15.8 , -0.9)
+          move_more(doc, -15.8, -0.9)
           doc.show boleto.data_documento.to_s_br if boleto.data_documento
 
           move_more(doc, 3.5, 0)
@@ -278,7 +279,6 @@ module Brcobranca
             move_more(doc, 0, -0.4)
             doc.show boleto.instrucao6
           end
-
 
           move_more(doc, 0.5, -1.9)
           doc.show "#{boleto.sacado} - CPF/CNPJ: #{boleto.sacado_documento.formata_documento}" if boleto.sacado && boleto.sacado_documento

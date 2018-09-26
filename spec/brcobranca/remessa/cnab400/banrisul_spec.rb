@@ -4,17 +4,17 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-      data_vencimento: Date.today,
-      nosso_numero: 22832563,
-      documento: '1',
-      documento_sacado: '12345678901',
-      nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-      endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
-      bairro_sacado: 'São josé dos quatro apostolos magros',
-      cep_sacado: '12345678',
-      cidade_sacado: 'Santa rita de cássia maria da silva',
-      percentual_multa: 2.0,
-      uf_sacado: 'SP')
+                                       data_vencimento: Date.today,
+                                       nosso_numero: 22_832_563,
+                                       documento: '1',
+                                       documento_sacado: '12345678901',
+                                       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
+                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       bairro_sacado: 'São josé dos quatro apostolos magros',
+                                       cep_sacado: '12345678',
+                                       cidade_sacado: 'Santa rita de cássia maria da silva',
+                                       percentual_multa: 2.0,
+                                       uf_sacado: 'SP')
   end
   let(:params) do
     {
@@ -115,7 +115,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Banrisul do
     end
 
     it 'calcula o dígito verificador do nosso número' do
-      expect(banrisul.digito_nosso_numero(22832563)).to eq("51")
+      expect(banrisul.digito_nosso_numero(22_832_563)).to eq('51')
     end
   end
 

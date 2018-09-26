@@ -19,7 +19,7 @@ module Brcobranca
         validates_length_of :digito_conta, is: 1
         validates_length_of :posto, maximum: 2
         validates_length_of :byte_idt, is: 1,
-          message: 'deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário'
+                                       message: 'deve ser 1 se o numero foi gerado pela agencia ou 2-9 se foi gerado pelo beneficiário'
 
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
@@ -53,11 +53,11 @@ module Brcobranca
         end
 
         def digito_agencia
-          " "
+          ' '
         end
 
         def dv_agencia_cobradora
-          " "
+          ' '
         end
 
         def uso_exclusivo_banco
@@ -100,10 +100,10 @@ module Brcobranca
           # Vl. Títulos em Carteira Caucionada  15 + 2 decimais
           # Qt. Títulos em Cobrança Descontada  6
           # Vl. Títulos em Carteira Descontada  15 + 2 decimais
-          total_cobranca_simples    = "".rjust(23, "0")
-          total_cobranca_vinculada  = "".rjust(23, "0")
-          total_cobranca_caucionada = "".rjust(23, "0")
-          total_cobranca_descontada = "".rjust(23, "0")
+          total_cobranca_simples    = ''.rjust(23, '0')
+          total_cobranca_vinculada  = ''.rjust(23, '0')
+          total_cobranca_caucionada = ''.rjust(23, '0')
+          total_cobranca_descontada = ''.rjust(23, '0')
 
           "#{total_cobranca_simples}#{total_cobranca_vinculada}#{total_cobranca_caucionada}"\
             "#{total_cobranca_descontada}".ljust(217, ' ')
@@ -159,21 +159,21 @@ module Brcobranca
           doc.ljust(15, '0')[0...15]
         end
 
-        def codigo_desconto(pagamento)
+        def codigo_desconto(_pagamento)
           '1'
         end
 
-        def codigo_baixa(pagamento)
+        def codigo_baixa(_pagamento)
           '1'
         end
 
-        def dias_baixa(pagamento)
+        def dias_baixa(_pagamento)
           '060'
         end
 
         def data_mora(pagamento)
-          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
-          pagamento.data_vencimento.next_day.strftime("%d%m%Y")
+          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
+          pagamento.data_vencimento.next_day.strftime('%d%m%Y')
         end
 
         private

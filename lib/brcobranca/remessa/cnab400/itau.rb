@@ -3,8 +3,8 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Itau < Brcobranca::Remessa::Cnab400::Base
-        VALOR_EM_REAIS = "1"
-        VALOR_EM_PERCENTUAL = "2"
+        VALOR_EM_REAIS = '1'
+        VALOR_EM_PERCENTUAL = '2'
 
         # documento do cedente
         attr_accessor :documento_cedente

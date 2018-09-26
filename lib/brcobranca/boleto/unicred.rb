@@ -2,7 +2,6 @@
 module Brcobranca
   module Boleto
     class Unicred < Brcobranca::Boleto::Sicredi
-
       # Nova instancia do Unicred
       # @param (see Brcobranca::Boleto::Base#initialize)
       def initialize(campos = {})

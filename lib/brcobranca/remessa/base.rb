@@ -61,7 +61,7 @@ module Brcobranca
       end
 
       def quantidade_titulos_cobranca
-        pagamentos.length.to_s.rjust(6, "0")
+        pagamentos.length.to_s.rjust(6, '0')
       end
 
       def totaliza_valor_titulos
@@ -69,10 +69,9 @@ module Brcobranca
       end
 
       def valor_titulos_carteira(tamanho = 17)
-        total = sprintf "%.2f", totaliza_valor_titulos
-        total.somente_numeros.rjust(tamanho, "0")
+        total = sprintf '%.2f', totaliza_valor_titulos
+        total.somente_numeros.rjust(tamanho, '0')
       end
-
     end
   end
 end

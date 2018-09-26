@@ -3,7 +3,6 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Sicoob < Brcobranca::Remessa::Cnab240::Base
-
         attr_accessor :modalidade_carteira
         # identificacao da emissao do boleto (attr na classe base)
         #   opcoes:
@@ -37,13 +36,13 @@ module Brcobranca
 
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
-            distribuicao_boleto: '2',
-            especie_titulo: '02',
-            tipo_formulario: '4',
-            parcela: '01',
-            modalidade_carteira: '01',
-            forma_cadastramento: '0',
-            posto: '00'}.merge!(campos)
+                     distribuicao_boleto: '2',
+                     especie_titulo: '02',
+                     tipo_formulario: '4',
+                     parcela: '01',
+                     modalidade_carteira: '01',
+                     forma_cadastramento: '0',
+                     posto: '00' }.merge!(campos)
           super(campos)
         end
 
@@ -120,9 +119,9 @@ module Brcobranca
           # Qt. Títulos em Cobrança Descontada  6
           # Vl. Títulos em Carteira Descontada  15 + 2 decimais
           total_cobranca_simples    = "#{quantidade_titulos_cobranca}#{valor_titulos_carteira}"
-          total_cobranca_vinculada  = "".rjust(23, "0")
-          total_cobranca_caucionada = "".rjust(23, "0")
-          total_cobranca_descontada = "".rjust(23, "0")
+          total_cobranca_vinculada  = ''.rjust(23, '0')
+          total_cobranca_caucionada = ''.rjust(23, '0')
+          total_cobranca_descontada = ''.rjust(23, '0')
 
           "#{total_cobranca_simples}#{total_cobranca_vinculada}#{total_cobranca_caucionada}"\
             "#{total_cobranca_descontada}".ljust(217, ' ')
@@ -158,7 +157,6 @@ module Brcobranca
           "#{conta_corrente.rjust(12, '0')}#{digito_conta} #{formata_nosso_numero(pagamento.nosso_numero)}"
         end
 
-
         def monta_segmento_r(pagamento, nro_lote, sequencial)
           segmento_r = ''                                               # CAMPO                                TAMANHO
           segmento_r << cod_banco                                       # codigo banco                         3
@@ -168,12 +166,12 @@ module Brcobranca
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
           segmento_r << '01'                                            # cod. movimento remessa               2
-          segmento_r << "0"                                             # cod. desconto 2                      1
-          segmento_r << "".rjust(8,  '0')                               # data desconto 2                      8
-          segmento_r << "".rjust(15,  '0')                              # valor desconto 2                     15
-          segmento_r << "0"                                             # cod. desconto 3                      1
-          segmento_r << "".rjust(8,  '0')                               # data desconto 3                      8
-          segmento_r << "".rjust(15,  '0')                              # valor desconto 3                     15
+          segmento_r << '0'                                             # cod. desconto 2                      1
+          segmento_r << ''.rjust(8, '0') # data desconto 2                      8
+          segmento_r << ''.rjust(15, '0') # valor desconto 2                     15
+          segmento_r << '0' # cod. desconto 3                      1
+          segmento_r << ''.rjust(8, '0') # data desconto 3                      8
+          segmento_r << ''.rjust(15, '0') # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
           segmento_r << data_multa(pagamento)                           # data multa                           8
           segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
@@ -217,7 +215,7 @@ module Brcobranca
           "#{nosso_numero.to_s.rjust(10, '0')}#{parcela}#{modalidade_carteira}#{tipo_formulario}     "
         end
 
-        def dias_baixa(pagamento)
+        def dias_baixa(_pagamento)
           ''.rjust(3, ' ')
         end
       end

@@ -11,7 +11,7 @@ module Brcobranca
       attr_accessor :emissao
 
       # Validações
-      #Modalidade/Carteira de Cobrança (RG-Registrada | SR-Sem Registro)
+      # Modalidade/Carteira de Cobrança (RG-Registrada | SR-Sem Registro)
       validates_inclusion_of :carteira, in: %w( RG SR ), message: 'não existente para esse banco.'
       # Emissão do boleto (4-Beneficiário)
       validates_length_of :emissao, is: 1
@@ -46,8 +46,8 @@ module Brcobranca
 
       def numero_carteira(carteira)
         carteiras = {
-          "RG" => "1",
-          "SR" => "2"
+          'RG' => '1',
+          'SR' => '2'
         }
 
         carteiras[carteira]

@@ -65,10 +65,10 @@ RSpec.describe Brcobranca::Boleto::BancoBrasilia do #:nodoc:[all]
   end
 
   it 'Tamanho do número da agência deve ser de 3 dígitos' do
-    boleto_novo = described_class.new @valid_attributes.merge(agencia: "80")
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: '80')
     expect(boleto_novo.agencia).to eq('080')
 
-    boleto_novo = described_class.new @valid_attributes.merge(agencia: "0080")
+    boleto_novo = described_class.new @valid_attributes.merge(agencia: '0080')
     expect(boleto_novo.agencia).to eq('080')
   end
 

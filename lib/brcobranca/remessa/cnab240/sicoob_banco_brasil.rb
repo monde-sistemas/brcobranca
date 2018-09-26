@@ -61,8 +61,8 @@ module Brcobranca
         end
 
         def valor_titulos_carteira
-          total = sprintf "%.2f", totaliza_valor_titulos
-          total.somente_numeros.rjust(17, "0")
+          total = sprintf '%.2f', totaliza_valor_titulos
+          total.somente_numeros.rjust(17, '0')
         end
 
         def complemento_trailer
@@ -78,7 +78,7 @@ module Brcobranca
         #
         # @return [String]
         #
-        def monta_trailer_arquivo(nro_lotes, sequencial)
+        def monta_trailer_arquivo(nro_lotes, _sequencial)
           # CAMPO                     TAMANHO
           # zeros                     7
           # registro trailer lote     1

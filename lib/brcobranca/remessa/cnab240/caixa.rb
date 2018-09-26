@@ -101,7 +101,7 @@ module Brcobranca
         end
 
         def exclusivo_servico
-          "00"
+          '00'
         end
 
         def complemento_trailer
@@ -109,7 +109,7 @@ module Brcobranca
         end
 
         def tipo_documento
-          "2"
+          '2'
         end
 
         def complemento_p(pagamento)
@@ -129,11 +129,11 @@ module Brcobranca
         end
 
         def numero(pagamento)
-          "#{pagamento.formata_documento_ou_numero(11, "0")}#{''.rjust(4, ' ')}"
+          "#{pagamento.formata_documento_ou_numero(11, '0')}#{''.rjust(4, ' ')}"
         end
 
         def identificacao_titulo_empresa(pagamento)
-          "#{pagamento.formata_documento_ou_numero(11, "0")}#{''.rjust(14, ' ')}"
+          "#{pagamento.formata_documento_ou_numero(11, '0')}#{''.rjust(14, ' ')}"
         end
 
         def data_multa(pagamento)
@@ -143,19 +143,19 @@ module Brcobranca
         end
 
         def codigo_baixa(pagamento)
-          return "1" if pagamento.codigo_protesto.to_s == "3"
-          "2"
+          return '1' if pagamento.codigo_protesto.to_s == '3'
+          '2'
         end
 
         def dias_baixa(pagamento)
-          return "120" if pagamento.codigo_protesto.to_s == "3"
-          "000"
+          return '120' if pagamento.codigo_protesto.to_s == '3'
+          '000'
         end
 
         def data_mora(pagamento)
-          return "".rjust(8, "0") unless %w( 1 2 ).include? pagamento.tipo_mora
+          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
           data_mora = pagamento.data_vencimento + 1
-          data_mora.strftime("%d%m%Y")
+          data_mora.strftime('%d%m%Y')
         end
       end
     end

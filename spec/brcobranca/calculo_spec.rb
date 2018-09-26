@@ -81,7 +81,6 @@ RSpec.describe Brcobranca::Calculo do
   end
 
   describe 'Módulo 11 de 9 até 2 trocando 10 por X' do
-
     def modulo_11_de_9_ate_2_map_10_X(numero)
       numero.modulo11(mapeamento: { 10 => 'X' })
     end
@@ -141,9 +140,9 @@ RSpec.describe Brcobranca::Calculo do
       ) { |t| 11 - (t % 11) }
     end
 
-    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 "000100000000190000045").to eql(4) }
-    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 "442300000520270100183").to eql(4) }
-    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 "442300000520270100184").to eql(1) }
+    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 '000100000000190000045').to eql(4) }
+    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 '442300000520270100183').to eql(4) }
+    it { expect(modulo_11_com_3_7_9_1_map_10_e_10_por_0 '442300000520270100184').to eql(1) }
   end
 
   # Ex: Bradesco
@@ -172,11 +171,11 @@ RSpec.describe Brcobranca::Calculo do
   end
 
   describe '#duplo_digito' do
-    it { expect(111.duplo_digito).to eql("50") }
-    it { expect(8.duplo_digito).to eql("38") }
-    it { expect('111'.duplo_digito).to eql("50") }
-    it { expect('8'.duplo_digito).to eql("38") }
-    it { expect(0.duplo_digito).to eql("00") }
-    it { expect(19669.duplo_digito).to eql("11") }
+    it { expect(111.duplo_digito).to eql('50') }
+    it { expect(8.duplo_digito).to eql('38') }
+    it { expect('111'.duplo_digito).to eql('50') }
+    it { expect('8'.duplo_digito).to eql('38') }
+    it { expect(0.duplo_digito).to eql('00') }
+    it { expect(19_669.duplo_digito).to eql('11') }
   end
 end
