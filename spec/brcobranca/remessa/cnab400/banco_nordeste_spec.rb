@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-                                       data_vencimento: Date.today,
+                                       data_vencimento: Date.current,
                                        nosso_numero: 123,
                                        documento: 6969,
                                        documento_sacado: '12345678901',
@@ -172,7 +172,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
         expect(detalhe[37..61]).to eq '6969'.ljust(25) # documento
         expect(detalhe[62..68]).to eq '0000123'                       # nosso numero
         expect(detalhe[69]).to eq '6'                                 # digito verificador
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y') # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
         expect(detalhe[156..159]).to eq '0000'                        # instrução

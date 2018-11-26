@@ -2,7 +2,7 @@
 shared_examples_for 'cnab240' do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-                                       data_vencimento: Date.today,
+                                       data_vencimento: Date.current,
                                        nosso_numero: 123,
                                        documento_sacado: '12345678901',
                                        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
@@ -108,9 +108,9 @@ shared_examples_for 'cnab240' do
       else
         expect(segmento_p[62..76]).to eq '000000000006969' # numero do documento
       end
-      expect(segmento_p[77..84]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
+      expect(segmento_p[77..84]).to eq Date.current.strftime('%d%m%Y') # data de vencimento
       expect(segmento_p[85..99]).to eq '000000000019990' # valor
-      expect(segmento_p[109..116]).to eq Date.today.strftime('%d%m%Y') # data de emissao
+      expect(segmento_p[109..116]).to eq Date.current.strftime('%d%m%Y') # data de emissao
 
       if objeto.cod_banco == '748'
         expect(segmento_p[141]).to eq '1' # codigo do desconto

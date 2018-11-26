@@ -22,8 +22,8 @@ RSpec.describe Brcobranca::Boleto::Itau do
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
-    expect(boleto_novo.data_documento).to eql(Date.today)
-    expect(boleto_novo.data_vencimento).to eql(Date.today)
+    expect(boleto_novo.data_documento).to eql(Date.current)
+    expect(boleto_novo.data_vencimento).to eql(Date.current)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
     expect(boleto_novo.valor).to eql(0.0)
@@ -38,8 +38,8 @@ RSpec.describe Brcobranca::Boleto::Itau do
     expect(boleto_novo.especie_documento).to eql('DM')
     expect(boleto_novo.especie).to eql('R$')
     expect(boleto_novo.moeda).to eql('9')
-    expect(boleto_novo.data_documento).to eql(Date.today)
-    expect(boleto_novo.data_vencimento).to eql(Date.today)
+    expect(boleto_novo.data_documento).to eql(Date.current)
+    expect(boleto_novo.data_vencimento).to eql(Date.current)
     expect(boleto_novo.aceite).to eql('S')
     expect(boleto_novo.quantidade).to eql(1)
     expect(boleto_novo.valor).to eql(0.0)
@@ -130,7 +130,7 @@ RSpec.describe Brcobranca::Boleto::Itau do
 
   context 'erro @data_vencimento' do
     it 'deve dar erro ao ser menor que data_documento' do
-      object = described_class.new(@valid_attributes.merge!(data_vencimento: Date.today - 10, data_documento: Date.today))
+      object = described_class.new(@valid_attributes.merge!(data_vencimento: Date.current - 10, data_documento: Date.current))
       expect(object.invalid?).to be true
       expect(object.errors.full_messages).to include('Data vencimento deve ser maior que a data do boleto.')
     end

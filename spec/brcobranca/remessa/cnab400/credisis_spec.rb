@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-                                       data_vencimento: Date.today,
+                                       data_vencimento: Date.current,
                                        nosso_numero: 123,
                                        documento: 6969,
                                        dias_protesto: '6',
@@ -155,10 +155,10 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
         expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
         expect(detalhe[110..119]).to eq '0000000000'                                # número documento
-        expect(detalhe[120..125]).to eq Date.today.strftime('%d%m%y')               # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')               # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'                             # valor do titulo
         expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
-        expect(detalhe[150..155]).to eq Date.today.strftime('%d%m%y')               # data emissão título
+        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')               # data emissão título
         expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
         expect(detalhe[160..165]).to eq '080000'                                    # mora
         expect(detalhe[166..171]).to eq '020000'                                    # multa

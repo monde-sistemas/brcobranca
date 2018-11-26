@@ -4,7 +4,7 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-                                       data_vencimento: Date.today,
+                                       data_vencimento: Date.current,
                                        nosso_numero: 123,
                                        documento: 6969,
                                        documento_sacado: '12345678901',
@@ -135,7 +135,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(detalhe[121..121]).to eq '1'                           # tipo de pessoa
         expect(detalhe[122..134]).to eq '6969'.rjust(13, '0') # seu numero
         expect(detalhe[135..135]).to eq '2'                           # categoria de cobranca
-        expect(detalhe[136..143]).to eq Date.today.strftime('%d%m%Y') # data de emissao
+        expect(detalhe[136..143]).to eq Date.current.strftime('%d%m%Y') # data de emissao
         expect(detalhe[144..145]).to eq '21'                          # tipo do documento
         expect(detalhe[146..146]).to eq '0'                           # código da natureza
         expect(detalhe[147..147]).to eq '0'                           # código da cond. pagamento
@@ -143,7 +143,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(detalhe[150..152]).to eq '070'                         # código do banco
         expect(detalhe[153..156]).to eq '0083'                        # código da agência
         expect(detalhe[157..186]).to eq ''.rjust(30, ' ')             # praça de cobranca
-        expect(detalhe[187..194]).to eq Date.today.strftime('%d%m%Y') # data de vencimento
+        expect(detalhe[187..194]).to eq Date.current.strftime('%d%m%Y') # data de vencimento
         expect(detalhe[195..208]).to eq '00000000019990'              # valor do titulo
         expect(detalhe[209..220]).to eq '200012307038'                # nosso numero
         expect(detalhe[221..222]).to eq '00'                          # tipo de juros
