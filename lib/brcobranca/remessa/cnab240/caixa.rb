@@ -148,7 +148,12 @@ module Brcobranca
         end
 
         def dias_baixa(pagamento)
-          return pagamento.dias_baixa.to_s.rjust(3, '0') if pagamento.dias_baixa.to_i >= 5
+          dias_baixa = pagamento.dias_baixa.to_i
+
+          if dias_baixa >= 5 && dias_baixa <= 120
+            return pagamento.dias_baixa.to_s.rjust(3, '0')
+          end
+
           return '120' if pagamento.codigo_protesto.to_s == '3'
           '000'
         end
