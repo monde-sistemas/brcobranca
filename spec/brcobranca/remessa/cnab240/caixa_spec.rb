@@ -147,6 +147,24 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
       expect(segmento_p[118..125]).to eq '15072015'
     end
 
+    it 'dias de baixa não deve constar quando tiver protesto' do
+      pagamento.codigo_protesto = '1'
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[224..226]).to eq '000'
+    end
+
+    it 'dias de baixa deve constar quando não tiver protesto' do
+      pagamento.codigo_protesto = '3'
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[224..226]).to eq '120'
+    end
+
+    it 'dias de baixa deve constar quando informado' do
+      pagamento.dias_baixa = 30
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[224..226]).to eq '030'
+    end
+
     it 'data da multa deve ser no dia posterior ao vencimento' do
       segmento_r = caixa.monta_segmento_r(pagamento, 1, 4)
       expect(segmento_r[66..73]).to eq '15072015'
