@@ -101,7 +101,7 @@ module Brcobranca
           # conta corrente         12
           # digito conta           1
           # digito agencia/conta   1
-          "#{agencia.rjust(5, '0')}#{digito_agencia}#{conta_corrente.rjust(12, '0')}#{digito_conta} "
+          "#{agencia.rjust(5, '0')}#{digito_agencia}#{conta_corrente.rjust(12, '0')}#{digito_conta}0"
         end
 
         def complemento_header
