@@ -3,9 +3,10 @@ require 'spec_helper'
 
 RSpec.describe Brcobranca::Boleto::Unicred do
   before do
+    Timecop.freeze(Time.local(2012, 1, 18, 16, 15, 15))
+
     @valid_attributes = {
       especie_documento: 'DM',
-      data_documento: Date.parse('2012-01-18'),
       valor: 0.0,
       cedente: 'Kivanio Barbosa',
       documento_cedente: '12345678912',
@@ -19,6 +20,8 @@ RSpec.describe Brcobranca::Boleto::Unicred do
       byte_idt: '7'
     }
   end
+
+  after { Timecop.return }
 
   it 'Criar nova instancia com atributos padrões' do
     boleto_novo = described_class.new
@@ -147,6 +150,8 @@ RSpec.describe Brcobranca::Boleto::Unicred do
   end
 
   it 'quando dígito verificador for 10 deve ser mapeado para 0' do
+    Timecop.freeze(Time.local(2015, 1, 18, 16, 15, 15))
+
     attributes = {
       convenio: '2442725',
       agencia: '0217',
