@@ -101,9 +101,39 @@ module Brcobranca
           # conta corrente         12
           # digito conta           1
           # digito agencia/conta   1
-          "#{agencia.rjust(5, '0')}#{digito_agencia}#{conta_corrente.rjust(12, '0')}#{digito_conta} "
+          "#{agencia.rjust(5, '0')}#{digito_agencia}#{conta_corrente.rjust(12, '0')}#{digito_conta}0"
         end
 
+        # Monta o registro header do lote
+        #
+        # @param nro_lote [Integer]
+        #   numero do lote no arquivo (iterar a cada novo lote)
+        #
+        # @return [String]
+        #
+        def monta_header_lote(nro_lote)
+          header_lote = ''                                      # CAMPO                   TAMANHO
+          header_lote << cod_banco                              # codigo banco            3
+          header_lote << nro_lote.to_s.rjust(4, '0')            # lote servico            4
+          header_lote << '1'                                    # tipo de registro        1
+          header_lote << 'R'                                    # tipo de operacao        1
+          header_lote << '01'                                   # tipo de servico         2
+          header_lote << exclusivo_servico                      # uso exclusivo           2
+          header_lote << versao_layout_lote                     # num.versao layout lote  3
+          header_lote << ' '                                    # uso exclusivo           1
+          header_lote << Brcobranca::Util::Empresa.new(documento_cedente, false).tipo # tipo de inscricao       1
+          header_lote << documento_cedente.to_s.rjust(15, '0')  # inscricao cedente       15
+          header_lote << convenio_lote                          # codigo do convenio      20
+          header_lote << info_conta[0..18] + ' '                # informacoes conta       20
+          header_lote << empresa_mae.format_size(30)            # nome empresa            30
+          header_lote << mensagem_1.to_s.format_size(40)        # 1a mensagem             40
+          header_lote << mensagem_2.to_s.format_size(40)        # 2a mensagem             40
+          header_lote << sequencial_remessa.to_s.rjust(8, '0')  # numero remessa          8
+          header_lote << data_geracao                           # data gravacao           8
+          header_lote << ''.rjust(8, '0')                       # data do credito         8
+          header_lote << ''.rjust(33, ' ')                      # complemento             33
+          header_lote
+        end
         def complemento_header
           ''.rjust(29, ' ')
         end

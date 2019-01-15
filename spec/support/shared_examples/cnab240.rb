@@ -80,7 +80,12 @@ shared_examples_for 'cnab240' do
       expect(header[17]).to eq '1' # tipo inscricao do cedente
       expect(header[18..32]).to eq '000012345678901' # documento do cedente
       expect(header[33..52]).to eq objeto.convenio_lote # informacoes do convenio
-      expect(header[53..72]).to eq objeto.info_conta # informacoes da conta
+      if objeto.cod_banco == '756'
+        expect(header[53..71]).to eq objeto.info_conta.chop # informacoes da conta
+        expect(header[72]).to eq ' ' # informacoes da conta
+      else
+        expect(header[53..72]).to eq objeto.info_conta # informacoes da conta
+      end
       expect(header[73..102]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOG' # razao social do cedente
       expect(header[103..142]).to eq 'Campo destinado ao preenchimento no mome' # 1a mensagem
       expect(header[143..182]).to eq 'Campo destinado ao preenchimento no mome' # 2a mensagem
