@@ -72,7 +72,7 @@ module Brcobranca
       end
 
       def numero_with_byte_idt
-        "#{data_documento.strftime('%y')}#{byte_idt}#{numero}"
+        "#{Date.current.strftime('%y')}#{byte_idt}#{numero}"
       end
 
       # Número seqüencial utilizado para identificar o boleto.
