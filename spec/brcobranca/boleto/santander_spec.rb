@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
       agencia: '0059',
       convenio: 1_899_775,
       numero: '90000267',
-      conta_corrente: '013000123',
+      conta_corrente: '013000123'
     }
   end
 
