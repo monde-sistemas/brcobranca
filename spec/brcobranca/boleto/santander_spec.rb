@@ -12,7 +12,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
       agencia: '0059',
       convenio: 1_899_775,
       numero: '90000267',
-      conta_corrente: '013000123'
+      conta_corrente: '013000123',
     }
   end
 
@@ -58,6 +58,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
   it 'Gerar boleto' do
     @valid_attributes[:data_vencimento] = Date.parse('2011/10/09')
     @valid_attributes[:data_documento] = Date.parse('2011/10/09')
+    @valid_attributes[:carteira] = "CSR"
     boleto_novo = described_class.new(@valid_attributes)
     expect(boleto_novo.codigo_barras_segunda_parte).to eql('9189977500009000026700102')
     expect(boleto_novo.codigo_barras).to eql('03398511500000025009189977500009000026700102')
@@ -66,10 +67,11 @@ RSpec.describe Brcobranca::Boleto::Santander do
     @valid_attributes[:valor] = 54.00
     @valid_attributes[:numero] = '90002720'
     @valid_attributes[:data_vencimento] = Date.parse('2012/09/08')
+    @valid_attributes[:carteira] = "RCR"
     boleto_novo = described_class.new(@valid_attributes)
-    expect(boleto_novo.codigo_barras_segunda_parte).to eql('9189977500009000272070102')
-    expect(boleto_novo.codigo_barras).to eql('03399545000000054009189977500009000272070102')
-    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('03399.18997 77500.009004 02720.701024 9 54500000005400')
+    expect(boleto_novo.codigo_barras_segunda_parte).to eql('9189977500009000272070101')
+    expect(boleto_novo.codigo_barras).to eql('03391545000000054009189977500009000272070101')
+    expect(boleto_novo.codigo_barras.linha_digitavel).to eql('03399.18997 77500.009004 02720.701016 1 54500000005400')
   end
 
   it 'Não permitir gerar boleto com atributos inválido' do
@@ -108,6 +110,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
 
   it 'Gerar boleto nos formatos válidos com método to_' do
     @valid_attributes[:data_documento] = Date.parse('2009/08/13')
+    @valid_attributes[:carteira] = "CSR"
     boleto_novo = described_class.new(@valid_attributes)
 
     %w(pdf jpg tif png).each do |format|
@@ -124,6 +127,7 @@ RSpec.describe Brcobranca::Boleto::Santander do
 
   it 'Gerar boleto nos formatos válidos' do
     @valid_attributes[:data_documento] = Date.parse('2009/08/13')
+    @valid_attributes[:carteira] = "CSR"
     boleto_novo = described_class.new(@valid_attributes)
 
     %w(pdf jpg tif png).each do |format|
