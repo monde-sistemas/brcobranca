@@ -184,14 +184,6 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       expect(nosso_numero.strip).to eq '072000031'
     end
 
-    it 'convenio deve ser adicionado no caso de conta beneficiario' do
-      sicredi.convenio = '0123'
-      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
-
-      expect(segmento_p[23..34]).to eql '000000000123'
-      expect(segmento_p[35..36]).to eql '  '
-    end
-
     it 'data de mora deve ser após o vencimento quando informada' do
       segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
 
