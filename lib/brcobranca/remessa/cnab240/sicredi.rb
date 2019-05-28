@@ -131,11 +131,7 @@ module Brcobranca
         end
 
         def numero_conta_corrente_complemento_p
-          if convenio.blank? || conta_corrente == convenio
-            "#{conta_corrente.rjust(12, '0')}#{digito_conta} "
-          else
-            "#{convenio.rjust(12, '0')}  "
-          end
+          "#{conta_corrente.rjust(12, '0')}#{digito_conta} "
         end
 
         def complemento_p(pagamento)
