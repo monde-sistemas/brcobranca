@@ -6,7 +6,7 @@ module Brcobranca
       validates_length_of :conta_corrente, maximum: 8
       validates_length_of :numero, maximum: 8
       validates_length_of :convenio, maximum: 7
-      validates_length_of :variacao, in: 1..2
+      validates_length_of :variacao, is: 2
       validates_length_of :quantidade, maximum: 3
 
       def initialize(campos = {})
