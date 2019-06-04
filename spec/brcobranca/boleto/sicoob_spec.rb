@@ -74,6 +74,11 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     boleto_novo = described_class.new(@valid_attributes)
     expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
     expect(boleto_novo.errors.count).to eql(1)
+
+    @valid_attributes[:variacao] = '1'
+    boleto_novo = described_class.new(@valid_attributes)
+    expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
+    expect(boleto_novo.errors.count).to eql(1)
   end
 
   it 'Montar nosso numero dv' do
