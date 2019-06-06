@@ -4,14 +4,16 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'pry', '~> 0.10.0'
-  gem 'rubocop', '~> 0.34.2'
-  gem 'rubocop-rspec', '~> 1.3.0'
+  gem 'pry'
+  gem 'rubocop'
+  gem 'rubocop-rspec'
 end
 
 group :test do
-  gem 'codeclimate-test-reporter', require: nil
   gem 'coveralls', require: false
+  gem 'json'
+  gem 'simplecov'
+  gem 'codeclimate-test-reporter'
   gem 'rspec'
   gem 'rake'
   gem 'timecop'
