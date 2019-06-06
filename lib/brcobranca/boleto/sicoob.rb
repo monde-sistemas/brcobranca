@@ -8,6 +8,7 @@ module Brcobranca
       validates_length_of :convenio, maximum: 7
       validates_length_of :variacao, in: 1..2
       validates_length_of :quantidade, maximum: 3
+      validates_length_of :carteira, is: 1
 
       def initialize(campos = {})
         campos = { carteira: '1', variacao: '01', quantidade: '001' }.merge!(campos)
