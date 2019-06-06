@@ -69,6 +69,13 @@ RSpec.describe Brcobranca::Boleto::Sicoob do #:nodoc:[all]
     expect(boleto_novo.errors.count).to eql(3)
   end
 
+  it 'Validar a presença do campo carteira' do
+    @valid_attributes[:carteira] = ''
+    boleto_novo = described_class.new(@valid_attributes)
+    expect { boleto_novo.codigo_barras }.to raise_error(Brcobranca::BoletoInvalido)
+    expect(boleto_novo.errors.count).to eql(1)
+  end
+
   it 'Validar a presença do campo variacao' do
     @valid_attributes[:variacao] = ''
     boleto_novo = described_class.new(@valid_attributes)

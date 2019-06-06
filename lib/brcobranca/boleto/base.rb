@@ -202,7 +202,7 @@ module Brcobranca
       # @raise [Brcobranca::BoletoInvalido] Caso as informações fornecidas não sejam suficientes ou sejam inválidas.
       # @return [String] código de barras formado por 44 caracteres numéricos.
       def codigo_barras
-        fail Brcobranca::BoletoInvalido.new(self) unless self.valid?
+        raise Brcobranca::BoletoInvalido, self unless self.valid?
         codigo = codigo_barras_primeira_parte # 18 digitos
         codigo << codigo_barras_segunda_parte # 25 digitos
         if codigo =~ /^(\d{4})(\d{39})$/
@@ -215,7 +215,8 @@ module Brcobranca
           codigo = "#{Regexp.last_match[1]}#{codigo_dv}#{Regexp.last_match[2]}"
           codigo
         else
-          fail Brcobranca::BoletoInvalido.new(self)
+          self.errors.add(:base, :too_long, message: "código de barras(#{codigo}) inválido, deveria ter 43 dígitos porém possuí #{codigo.size} dígitos")
+          raise Brcobranca::BoletoInvalido, self
         end
       end
 
