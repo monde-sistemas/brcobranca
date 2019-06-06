@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 require 'coveralls'
-Coveralls.wear!
+require 'simplecov'
 
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start
+Coveralls.wear!
+SimpleCov.start
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
