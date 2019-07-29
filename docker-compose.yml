@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+  brcobranca:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    tty: true
+    container_name: brcobranca
+    restart: on-failure
+    image: brcobranca:dev
+    volumes:
+      - .:/app/
+      - brcobranca:/cache/
+
+volumes:
+  brcobranca:
+    driver: local

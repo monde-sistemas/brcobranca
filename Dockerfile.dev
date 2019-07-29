@@ -1,0 +1,22 @@
+FROM circleci/ruby:2.6.3
+
+USER root
+
+RUN set -x \
+    && apt-get update \
+    && apt-get install -y ghostscript    
+
+RUN sudo mkdir -p /app
+RUN sudo mkdir -p /cache
+
+ENV BUNDLE_PATH /cache/bundle
+ENV BUNDLE_JOBS 3
+ENV BUNDLE_RETRY 3
+ENV GEM_PATH /cache/gems
+ENV GEM_HOME /cache/gems
+
+WORKDIR /app
+RUN gem install bundler
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["bash", "-c", "tail -f /dev/null"]
