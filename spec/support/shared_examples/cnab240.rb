@@ -229,11 +229,17 @@ shared_examples_for 'cnab240' do
   end
 
   context 'monta lote' do
+    let(:quantidade_registros) do
+      quantidade = 5 # header, segmento p, segmento q, segmento r e trailer
+      quantidade = quantidade + 1 if subject.incluir_segmento_s?
+      quantidade
+    end
+
     it 'retorno de lote deve ser uma colecao com os registros' do
       lote = objeto.monta_lote(1)
 
       expect(lote.is_a?(Array)).to be true
-      expect(lote.count).to be 5 # header, segmento p, segmento q, segmento r e trailer
+      expect(lote.count).to be quantidade_registros
     end
 
     it 'contador de registros deve acrescer 1 a cada registro' do
@@ -242,7 +248,12 @@ shared_examples_for 'cnab240' do
       expect(lote[1][8..12]).to eq '00001' # segmento P
       expect(lote[2][8..12]).to eq '00002' # segmento Q
       expect(lote[3][8..12]).to eq '00003' # segmento R
-      expect(lote[4][17..22]).to eq '000005' # trailer do lote
+      if subject.incluir_segmento_s?
+        expect(lote[4][8..12]).to eq '00004' # segmento S
+        expect(lote[5][17..22]).to eq '000006' # trailer do lote
+      else
+        expect(lote[4][17..22]).to eq '000005' # trailer do lote
+      end
     end
   end
 
@@ -254,13 +265,16 @@ shared_examples_for 'cnab240' do
     it 'remessa deve conter os registros mais as quebras de linha' do
       remessa = objeto.gera_arquivo
 
-      expect(remessa.size).to eq 1692
+      size = 1692
+      size = size + 242 if subject.incluir_segmento_s?
+      expect(remessa.size).to eq size
       # quebras de linha
       expect(remessa[240..241]).to eq "\r\n"
       expect(remessa[482..483]).to eq "\r\n"
       expect(remessa[724..725]).to eq "\r\n"
       expect(remessa[966..967]).to eq "\r\n"
       expect(remessa[1208..1209]).to eq "\r\n"
+      expect(remessa[1450..1451]).to eq "\r\n" if subject.incluir_segmento_s?
     end
   end
 end

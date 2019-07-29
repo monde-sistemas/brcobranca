@@ -254,6 +254,34 @@ module Brcobranca
           segmento_r
         end
 
+        # Monta o registro segmento S do arquivo
+        #
+        # @param pagamento [Brcobranca::Remessa::Pagamento]
+        #   objeto contendo os detalhes do boleto (valor, vencimento, sacado, etc)
+        # @param nro_lote [Integer]
+        #   numero do lote que o segmento esta inserido
+        # @param sequencial [Integer]
+        #   numero sequencial do registro no lote
+        #
+        # @return [String]
+        #
+        def monta_segmento_s(pagamento, nro_lote, sequencial)
+          segmento_s = ''
+          segmento_s << cod_banco                                       # Código banco                         3
+          segmento_s << nro_lote.to_s.rjust(4, '0')                     # Lote de servico                      4
+          segmento_s << '3'                                             # Lote de servico                      1
+          segmento_s << sequencial.to_s.rjust(5, '0')                   # Num. sequencial do registro no lote  5
+          segmento_s << 'S'                                             # Cod. segmento                        1
+          segmento_s << ' '                                             # Exclusivo FEBRABAN                   1
+          segmento_s << pagamento.identificacao_ocorrencia              # Cod. movimento remessa               2
+          segmento_s << '1'                                             # Identificação da impressão           1
+          segmento_s << '00'                                            # Número da linha                      2
+          segmento_s << ''.rjust(140, ' ')                              # Mensagem                             140
+          segmento_s << '00'                                            # Tipo de fonte                        2
+          segmento_s << ''.rjust(78, ' ')                               # Exclusivo FEBRABAN                   78
+          segmento_s
+        end
+
         # Monta o registro trailer do lote
         #
         # @param nro_lote [Integer]
@@ -324,6 +352,11 @@ module Brcobranca
 
             if seg_r.present?
               lote << seg_r
+              contador += 1
+            end
+
+            if incluir_segmento_s?
+              lote << monta_segmento_s(pagamento, nro_lote, contador)
               contador += 1
             end
           end
@@ -497,6 +530,10 @@ module Brcobranca
 
         def dv_agencia_cobradora
           '0'
+        end
+
+        def incluir_segmento_s?
+          false
         end
       end
     end
