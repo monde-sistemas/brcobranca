@@ -60,6 +60,23 @@ Caso queira verificar(ou adicionar) alguma documentação, acesse [nosso wiki](h
 - [versão estável](http://rubydoc.info/gems/brcobranca)
 - [versão de desenvolvimento](http://rubydoc.info/github/kivanio/brcobranca/master/frames)
 
+### Desenvolvimento utilizando o Docker
+
+Para desenvolver utilizando o Docker, instale o Docker em seu ambiente e execute:
+
+```
+docker-compose build
+docker-compose up
+```
+
+Edite os arquivos normalmente no host e conecte-se ao container para executar os testes, ex:
+
+```
+docker-compose exec brcobranca bash
+```
+
+No Windows é recomendável utilizar o plugin [EditorConfig](https://editorconfig.org/) em seu editor para manter as quebras de linhas corretas.
+
 ### Apoio
 
 [![RubyMine](http://www.jetbrains.com/ruby/features/ruby_banners/ruby1/ruby468x60_rubin.gif)](http://www.jetbrains.com/ruby/features?utm_source=RubyMineUser&utm_medium=Banner&utm_campaign=RubyMine)
