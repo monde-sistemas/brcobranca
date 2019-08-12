@@ -48,7 +48,7 @@ module Brcobranca
 
         def codigo_instrucao(pagamento)
           # 06 = protestar, 07 = negativar
-          pagamento.dias_protesto.to_i.positive? ? "06" : "00"
+          pagamento.dias_protesto.to_i > 0 ? "06" : "00"
         end
 
         def identificacao_empresa
