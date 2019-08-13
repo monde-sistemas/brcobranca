@@ -46,6 +46,11 @@ module Brcobranca
           "#{''.rjust(8, ' ')}MX#{sequencial_remessa}#{''.rjust(277, ' ')}"
         end
 
+        def codigo_instrucao(pagamento)
+          # 06 = protestar, 07 = negativar
+          pagamento.dias_protesto.to_i > 0 ? "06" : "00"
+        end
+
         def identificacao_empresa
           # identificacao da empresa no banco
           identificacao = '0'                            # vazio                       [1]
@@ -104,8 +109,8 @@ module Brcobranca
           detalhe << '01'                                             # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
-          detalhe << ''.rjust(2, '0')                                 # 1a instrucao                                9[02]       157 a 158
-          detalhe << ''.rjust(2, '0')                                 # 2a instrucao                                9[02]       159 a 160
+          detalhe << codigo_instrucao(pagamento)                      # 1a instrucao                                9[02]       157 a 158
+          detalhe << pagamento.dias_protesto.rjust(2, '0')            # 2a instrucao                                9[02]       159 a 160
           detalhe << pagamento.formata_valor_mora                     # mora                                        9[13]       161 a 173
           detalhe << pagamento.formata_data_desconto                  # data desconto                               9[06]       174 a 179
           detalhe << pagamento.formata_valor_desconto                 # valor desconto                              9[13]       180 a 192
