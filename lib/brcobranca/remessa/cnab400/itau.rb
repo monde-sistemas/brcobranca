@@ -5,6 +5,23 @@ module Brcobranca
       class Itau < Brcobranca::Remessa::Cnab400::Base
         VALOR_EM_REAIS = '1'
         VALOR_EM_PERCENTUAL = '2'
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'NS' => '03',
+          'ME' => '04',
+          'RC' => '05',
+          'CT' => '06',
+          'CS' => '07',
+          'DS' => '08',
+          'DI' => '08',
+          'LC' => '09',
+          'ND' => '13',
+          'DV' => '15',
+          'EC' => '16',
+          'CP' => '17',
+          '' => '99'
+        }
 
         # documento do cedente
         attr_accessor :documento_cedente
@@ -32,6 +49,10 @@ module Brcobranca
 
         def carteira=(valor)
           @carteira = valor.to_s.rjust(3, '0') if valor
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '99'
         end
 
         def cod_banco
@@ -111,7 +132,7 @@ module Brcobranca
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << cod_banco                                              # codigo banco                          9[03]
           detalhe << ''.rjust(5, '0')                                       # agencia cobradora - deixar zero       9[05]
-          detalhe << '99'                                                   # especie  do titulo                    X[02]
+          detalhe << especie_titulo(pagamento)                              # especie  do titulo                    X[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << pagamento.cod_primeira_instrucao                       # 1a instrucao - deixar zero            X[02]
