@@ -13,7 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       especie_titulo: 'DM')
   end
   let(:params) do
     {
@@ -112,6 +113,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
       it 'informacoes devem estar posicionadas corretamente no detalhe' do
         detalhe = citibank.monta_detalhe pagamento, 1
         expect(detalhe[37..61]).to eq '6969'.ljust(25) # nosso numero
+        expect(detalhe[62..63]).to eq '02'
         expect(detalhe[64..75]).to eq '000000000123' # nosso numero
         expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do titulo
