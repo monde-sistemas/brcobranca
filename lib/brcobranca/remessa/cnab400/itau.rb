@@ -3,8 +3,8 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Itau < Brcobranca::Remessa::Cnab400::Base
-        VALOR_EM_REAIS = '1'
-        VALOR_EM_PERCENTUAL = '2'
+        VALOR_EM_REAIS = '1'.freeze
+        VALOR_EM_PERCENTUAL = '2'.freeze
         ESPECIES_TITULOS = {
           'DM' => '01',
           'NP' => '02',
@@ -20,8 +20,9 @@ module Brcobranca
           'DV' => '15',
           'EC' => '16',
           'CP' => '17',
+          'BP' => '18',
           'OU' => '99'
-        }
+        }.freeze
 
         # documento do cedente
         attr_accessor :documento_cedente
