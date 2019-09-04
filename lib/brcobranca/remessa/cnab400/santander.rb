@@ -3,6 +3,15 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Santander < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'AP' => '03',
+          'NS' => '03',
+          'RC' => '05',
+          'DS' => '06',
+          'LC' => '07'
+        }.freeze
         # documento do cedente
         attr_accessor :documento_cedente
 
@@ -68,6 +77,14 @@ module Brcobranca
         #
         def versao
           '058'
+        end
+
+        # Espécie de documento
+        #
+        # @return [String]
+        #
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
         end
 
         def monta_header
@@ -149,7 +166,7 @@ module Brcobranca
           # 05 = RECIBO
           # 06 = DUPLICATA DE SERVIÇO
           # 07 = LETRA DE CAMBIO
-          detalhe << pagamento.especie_titulo                               # Espécie de documento                  9[02]
+          detalhe << especie_titulo(pagamento)                              # Espécie de documento                  9[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
 
