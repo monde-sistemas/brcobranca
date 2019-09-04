@@ -3,6 +3,18 @@ module Brcobranca
   module Remessa
     module Cnab400
       class BancoNordeste < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'CH' => '03',
+          'CN' => '04',
+          'RC' => '05',
+          'AL' => '16',
+          'AE' => '17',
+          'AR' => '18',
+          'OU' => '19'
+        }.freeze
+
         # documento do cedente
         attr_accessor :documento_cedente
         # 1 - Emitido pelo banco
@@ -46,6 +58,10 @@ module Brcobranca
 
         def nome_banco
           'B.DO NORDESTE'.ljust(15, ' ')
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
         end
 
         # Informacoes da conta corrente do cedente
@@ -133,7 +149,7 @@ module Brcobranca
           detalhe << cod_banco                                              # codigo banco                          9[03]
           detalhe << ''.rjust(4, '0')                                       # agencia cobradora - deixar zero       9[05]
           detalhe << ' '                                                    # filler                                 [01]
-          detalhe << '01'                                                   # especie  do titulo                    X[02]
+          detalhe << especie_titulo(pagamento)                              # especie  do titulo                    X[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << ''.rjust(4, '0')                                       # instrucao - deixar zero                [04]
