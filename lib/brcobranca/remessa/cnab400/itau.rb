@@ -20,7 +20,7 @@ module Brcobranca
           'DV' => '15',
           'EC' => '16',
           'CP' => '17',
-          '' => '99'
+          'OU' => '99'
         }
 
         # documento do cedente
