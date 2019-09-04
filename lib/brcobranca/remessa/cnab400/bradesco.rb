@@ -3,6 +3,18 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Bradesco < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'NS' => '03',
+          'CS' => '04',
+          'RC' => '05',
+          'LC' => '10',
+          'ND' => '11',
+          'DS' => '12',
+          'OU' => '99'
+        }.freeze
+
         # codigo da empresa (informado pelo Bradesco no cadastramento)
         attr_accessor :codigo_empresa
 
@@ -40,6 +52,10 @@ module Brcobranca
 
         def nome_banco
           'BRADESCO'.ljust(15, ' ')
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
         end
 
         def complemento
@@ -106,7 +122,7 @@ module Brcobranca
           detalhe << pagamento.formata_valor                          # valor do titulo                             9[13]       127 a 139
           detalhe << ''.rjust(3, '0')                                 # banco encarregado (zeros)                   9[03]       140 a 142
           detalhe << ''.rjust(5, '0')                                 # agencia depositaria (zeros)                 9[05]       143 a 147
-          detalhe << '01'                                             # especie do titulo                           9[02]       148 a 149
+          detalhe << especie_titulo(pagamento)                        # especie do titulo                           9[02]       148 a 149
           detalhe << 'N'                                              # identificacao (sempre N)                    X[01]       150 a 150
           detalhe << pagamento.data_emissao.strftime('%d%m%y')        # data de emissao                             9[06]       151 a 156
           detalhe << codigo_instrucao(pagamento)                      # 1a instrucao                                9[02]       157 a 158
