@@ -3,6 +3,14 @@ module Brcobranca
   module Remessa
     module Cnab400
       class BancoBrasilia < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM': '21',
+          'NP': '22',
+          'RC': '25',
+          'DS': '31',
+          'OU': '39'
+        }.freeze
+
         attr_accessor :convenio
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta
@@ -37,6 +45,10 @@ module Brcobranca
 
         def nome_banco
           ''
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '21'
         end
 
         def data_formacao
@@ -133,7 +145,7 @@ module Brcobranca
           detalhe << pagamento.documento_ou_numero.to_s.rjust(13, '0') # seu numero                            9[13]
           detalhe << codigo_carteira                                        # categoria de cobranca                 9[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%Y')              # data de emissao                       9[08]
-          detalhe << '21'                                                   # tipo do documento                     9[02]
+          detalhe << especie_titulo(pagamento)                              # tipo do documento                     9[02]
           detalhe << '0'                                                    # código da natureza                    9[01]
           detalhe << '0'                                                    # código da cond. pagamento             9[02]
           detalhe << '02'                                                   # código da moeda                       9[02]

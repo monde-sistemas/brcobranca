@@ -13,7 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       especie_titulo: 'DM')
   end
   let(:params) do
     {
