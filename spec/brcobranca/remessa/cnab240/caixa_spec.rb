@@ -19,7 +19,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        tipo_mora: '1',
                                        codigo_multa: '2',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       especie_titulo: 'RC')
   end
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
@@ -174,6 +175,23 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
     it 'data da multa deve ser no dia posterior ao vencimento' do
       segmento_r = caixa.monta_segmento_r(pagamento, 1, 4)
       expect(segmento_r[66..73]).to eq '15072015'
+    end
+
+    it 'converte espécie título para código correspondente' do
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '17'
+    end
+
+    it 'converte espécie título TM para código correspondente' do
+      pagamento.especie_titulo = 'TM'
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '14'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = caixa.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '99'
     end
   end
 

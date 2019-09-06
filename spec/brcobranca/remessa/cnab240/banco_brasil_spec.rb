@@ -13,7 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::BancoBrasil do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       especie_titulo: 'DS')
   end
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
@@ -201,6 +202,23 @@ RSpec.describe Brcobranca::Remessa::Cnab240::BancoBrasil do
       identificador = banco_brasil.identificador_titulo 123
       expect(identificador[0..6]).to eq '1234567'
       expect(identificador[7..16]).to eq '0000000123'
+    end
+
+    it 'converte espécie título para código correspondente' do
+      segmento_p = banco_brasil.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '04'
+    end
+
+    it 'converte espécie título DR para código correspondente' do
+      pagamento.especie_titulo = 'DR'
+      segmento_p = banco_brasil.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '06'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = banco_brasil.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '02'
     end
   end
 
