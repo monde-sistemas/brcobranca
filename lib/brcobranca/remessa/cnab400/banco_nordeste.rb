@@ -61,6 +61,7 @@ module Brcobranca
         end
 
         def especie_titulo(pagamento)
+          p pagamento.especie_titulo
           ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
         end
 

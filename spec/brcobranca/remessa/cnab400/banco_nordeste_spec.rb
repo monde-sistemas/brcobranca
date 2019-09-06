@@ -14,7 +14,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        uf_sacado: 'SP',
-                                       especie_titulo: 'DM')
+                                       especie_titulo: 'AR')
   end
   let(:params) do
     {
@@ -176,10 +176,22 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoNordeste do
         expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
-        expect(detalhe[147..148]).to eq '01'                          # espécie do título
+        expect(detalhe[147..148]).to eq '18'                          # espécie do título
         expect(detalhe[156..159]).to eq '0000'                        # instrução
         expect(detalhe[220..233]).to eq '00012345678901'              # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+      end
+
+      it 'espécie do título CH converte para código correspondente' do
+        pagamento.especie_titulo = 'CH'
+        detalhe = banco_nordeste.monta_detalhe(pagamento, 1)
+        expect(detalhe[147..148]).to eq '03'
+      end
+
+      it 'espécie título não informada utiliza padrão' do
+        pagamento.especie_titulo = ''
+        detalhe = banco_nordeste.monta_detalhe pagamento, 1
+        expect(detalhe[147..148]).to eq '01'
       end
     end
 

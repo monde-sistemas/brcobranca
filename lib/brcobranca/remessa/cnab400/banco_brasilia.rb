@@ -4,11 +4,11 @@ module Brcobranca
     module Cnab400
       class BancoBrasilia < Brcobranca::Remessa::Cnab400::Base
         ESPECIES_TITULOS = {
-          'DM': '21',
-          'NP': '22',
-          'RC': '25',
-          'DS': '31',
-          'OU': '39'
+          'DM' => '21',
+          'NP' => '22',
+          'RC' => '25',
+          'DS' => '31',
+          'OU' => '39'
         }.freeze
 
         attr_accessor :convenio

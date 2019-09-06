@@ -14,7 +14,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        uf_sacado: 'SP',
-                                       especie_titulo: 'DM')
+                                       especie_titulo: 'DS')
   end
   let(:params) do
     {
@@ -137,7 +137,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(detalhe[122..134]).to eq '6969'.rjust(13, '0') # seu numero
         expect(detalhe[135..135]).to eq '2'                           # categoria de cobranca
         expect(detalhe[136..143]).to eq Date.current.strftime('%d%m%Y') # data de emissao
-        expect(detalhe[144..145]).to eq '21'                          # tipo do documento
+        expect(detalhe[144..145]).to eq '31'                          # tipo do documento
         expect(detalhe[146..146]).to eq '0'                           # código da natureza
         expect(detalhe[147..147]).to eq '0'                           # código da cond. pagamento
         expect(detalhe[148..149]).to eq '02'                          # código da moeda
@@ -154,6 +154,18 @@ RSpec.describe Brcobranca::Remessa::Cnab400::BancoBrasilia do
         expect(detalhe[253..260]).to eq ''.rjust(8, '0')              # data limite de desconto
         expect(detalhe[261..274]).to eq ''.rjust(14, '0')             # valor dos descontos
         expect(detalhe[288..327]).to eq 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA   ' # emitente do titulo
+      end
+
+      it 'espécie do título RC converte para código correspondente' do
+        pagamento.especie_titulo = 'RC'
+        detalhe = banco_brasilia.monta_detalhe(pagamento, 1)
+        expect(detalhe[144..145]).to eq '25'                          #  tipo documento (espécie título)
+      end
+
+      it 'espécie título não informada utiliza padrão' do
+        pagamento.especie_titulo = ''
+        detalhe = banco_brasilia.monta_detalhe pagamento, 1
+        expect(detalhe[144..145]).to eq '21'
       end
     end
 

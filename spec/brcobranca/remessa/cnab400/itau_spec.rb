@@ -180,6 +180,18 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
         expect(detalhe_multa[23..393]).to eq ''.rjust(371, ' ')           # Complemento                        [024..394]  X(370)
         expect(detalhe_multa[394..399]).to eq '000003'                    # Número sequencial                  [395..400]  9(006)
       end
+
+      it 'espécie do título CP converte para código correspondente' do
+        pagamento.especie_titulo = 'CP'
+        detalhe = itau.monta_detalhe(pagamento, 1)
+        expect(detalhe[147..148]).to eq '17'
+      end
+
+      it 'espécie do título não informada utiliza padrão' do
+        pagamento.especie_titulo = ''
+        detalhe = itau.monta_detalhe(pagamento, 1)
+        expect(detalhe[147..148]).to eq '99'
+      end
     end
 
     context 'arquivo' do
