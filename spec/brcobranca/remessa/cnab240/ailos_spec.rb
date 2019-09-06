@@ -164,7 +164,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Ailos do
     it 'espécie título não informada utiliza espécie padrão' do
       pagamento.especie_titulo = ''
       segmento_p = ailos.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[106..107]).to eq '23'
+      expect(segmento_p[106..107]).to eq '02'
     end
   end
 
