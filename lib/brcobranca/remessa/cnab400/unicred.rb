@@ -3,6 +3,16 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Unicred < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'AP' => '03',
+          'NS' => '03',
+          'RC' => '05',
+          'DS' => '06',
+          'LC' => '07'
+        }.freeze
+
         attr_accessor :posto, :byte_idt
 
         # documento do cedente
@@ -49,6 +59,10 @@ module Brcobranca
 
         def nome_banco
           'UNICRED'.ljust(15, ' ')
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
         end
 
         # Informacoes da conta corrente do cedente
@@ -115,7 +129,7 @@ module Brcobranca
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << cod_banco                                              # codigo banco                          9[03]
           detalhe << ''.rjust(5, '0')                                       # agencia cobradora - deixar zero       9[05]
-          detalhe << '01'                                                   # especie  do titulo                    X[02]
+          detalhe << especie_titulo(pagamento)                              # especie  do titulo                    X[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << ''.rjust(4, '0')                                       # instrucao                             9[04]

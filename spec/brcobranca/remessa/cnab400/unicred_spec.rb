@@ -13,7 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       especie_titulo: 'NP')
   end
   let(:params) do
     {
@@ -173,9 +174,22 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Unicred do
         expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'               # valor do titulo
         expect(detalhe[142..145]).to eq '0000'                        # agência cobradora
+        expect(detalhe[147..148]).to eq '02'                          # espécie do documento/título
         expect(detalhe[156..159]).to eq '0000'                        # instrução
         expect(detalhe[220..233]).to eq '00012345678901'              # documento do pagador
         expect(detalhe[234..263]).to eq 'PABLO DIEGO JOSE FRANCISCO DE ' # nome do pagador
+      end
+
+      it 'espécie do título LC converte para código correspondente' do
+        pagamento.especie_titulo = 'LC'
+        detalhe = unicred.monta_detalhe pagamento, 1
+        expect(detalhe[147..148]).to eq '07'                          #  tipo documento/título
+      end
+
+      it 'espécie título não informada utiliza padrão' do
+        pagamento.especie_titulo = ''
+        detalhe = unicred.monta_detalhe pagamento, 1
+        expect(detalhe[147..148]).to eq '01'
       end
     end
 
