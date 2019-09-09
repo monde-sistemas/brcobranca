@@ -17,7 +17,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       uf_sacado: 'RJ',
       tipo_mora: '0',
       codigo_protesto: '1',
-      especie_titulo: 'DI'
+      especie_titulo: 'DSI'
     )
   end
 

@@ -4,7 +4,7 @@ module Brcobranca
     module Cnab400
       class Citibank < Brcobranca::Remessa::Cnab400::Base
         ESPECIES_TITULOS = {
-          'MI' => '00',
+          'DMI' => '00',
           'DM' => '02'
         }.freeze
         # documento do cedente

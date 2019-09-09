@@ -4,12 +4,12 @@ module Brcobranca
     module Cnab240
       class Sicredi < Brcobranca::Remessa::Cnab240::Base
         ESPECIES_TITULOS = {
-          'MI' => '03',
-          'DI' => '05',
+          'DMI' => '03',
+          'DSI' => '05',
           'DR' => '06',
           'LC' => '07',
           'NP' => '12',
-          'NL' => '13',
+          'NPR' => '13',
           'NS' => '16',
           'RC' => '17',
           'ND' => '19',

@@ -16,7 +16,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Itau do
                                        codigo_multa: '1',
                                        percentual_multa: 2.00,
                                        uf_sacado: 'SP',
-                                       especie_titulo: 'DI')
+                                       especie_titulo: 'DSI')
   end
   let(:params) do
     { carteira: '123',

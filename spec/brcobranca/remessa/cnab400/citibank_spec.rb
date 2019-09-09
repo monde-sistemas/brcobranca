@@ -14,7 +14,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Citibank do
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        uf_sacado: 'SP',
-                                       especie_titulo: 'MI')
+                                       especie_titulo: 'DMI')
   end
   let(:params) do
     {
