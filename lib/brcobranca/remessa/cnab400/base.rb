@@ -105,6 +105,10 @@ module Brcobranca
         def complemento
           fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você esta criando')
         end
+
+        def especie_titulo_padrao
+          '01'
+        end
       end
     end
   end

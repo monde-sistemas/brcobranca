@@ -197,10 +197,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       expect(segmento_p[106..107]).to eq '06'
     end
 
-    it 'converte espécie título NP para código correspondente' do
-      pagamento.especie_titulo = 'NP'
+    it 'converte espécie título BP para código correspondente' do
+      pagamento.especie_titulo = 'BP'
       segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[106..107]).to eq '12'
+      expect(segmento_p[106..107]).to eq '32'
     end
 
     it 'espécie título não informada utiliza espécie padrão' do

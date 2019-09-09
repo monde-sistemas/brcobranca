@@ -46,10 +46,6 @@ module Brcobranca
           @codigo_transmissao = valor.to_s.strip.rjust(20, '0') if valor
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
-        end
-
         # Informacoes do Código de Transmissão
         #
         # @return [String]

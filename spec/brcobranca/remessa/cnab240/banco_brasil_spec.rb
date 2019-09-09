@@ -209,10 +209,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::BancoBrasil do
       expect(segmento_p[106..107]).to eq '04'
     end
 
-    it 'converte espécie título DR para código correspondente' do
-      pagamento.especie_titulo = 'DR'
+    it 'converte espécie título DA para código correspondente' do
+      pagamento.especie_titulo = 'DA'
       segmento_p = banco_brasil.monta_segmento_p(pagamento, 1, 2)
-      expect(segmento_p[106..107]).to eq '06'
+      expect(segmento_p[106..107]).to eq '29'
     end
 
     it 'espécie título não informada utiliza espécie padrão' do

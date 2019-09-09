@@ -54,10 +54,6 @@ module Brcobranca
           'BRADESCO'.ljust(15, ' ')
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
-        end
-
         def complemento
           "#{''.rjust(8, ' ')}MX#{sequencial_remessa}#{''.rjust(277, ' ')}"
         end

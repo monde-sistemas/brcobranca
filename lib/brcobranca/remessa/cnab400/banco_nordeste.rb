@@ -60,10 +60,6 @@ module Brcobranca
           'B.DO NORDESTE'.ljust(15, ' ')
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '01'
-        end
-
         # Informacoes da conta corrente do cedente
         #
         # @return [String]

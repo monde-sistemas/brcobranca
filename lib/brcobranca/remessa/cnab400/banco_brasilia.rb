@@ -47,8 +47,8 @@ module Brcobranca
           ''
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '21'
+        def especie_titulo_padrao
+          '21'
         end
 
         def data_formacao

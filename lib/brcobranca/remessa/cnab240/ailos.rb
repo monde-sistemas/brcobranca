@@ -64,8 +64,8 @@ module Brcobranca
           codigo_convenio
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '02'
+        def especie_titulo_padrao
+          '02'
         end
 
         def info_conta

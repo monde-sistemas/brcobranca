@@ -418,10 +418,6 @@ module Brcobranca
           pagamentos.size * 3
         end
 
-        def especie_titulo(pagamento)
-          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você está criando')
-        end
-
         # Complemento do registro
         #
         # Este metodo deve ser sobrescrevido na classe do banco

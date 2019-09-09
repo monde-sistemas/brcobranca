@@ -80,8 +80,8 @@ module Brcobranca
           'REMESSA-PRODUCAO'.ljust(20, ' ')
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '99'
+        def especie_titulo_padrao
+          '99'
         end
 
         def convenio_lote

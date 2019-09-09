@@ -81,8 +81,8 @@ module Brcobranca
           ''.rjust(20, ' ')
         end
 
-        def especie_titulo(pagamento)
-          ESPECIES_TITULOS[pagamento.especie_titulo] || '03'
+        def especie_titulo_padrao
+          '03'
         end
 
         def codigo_convenio
