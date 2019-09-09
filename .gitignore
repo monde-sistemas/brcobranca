@@ -13,6 +13,8 @@ tmtags
 ## VIM
 *.swp
 *.orig
+tags
+.starscope.db
 
 ## PROJECT::GENERAL
 coverage
