@@ -3,6 +3,35 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Base < Brcobranca::Remessa::Base
+        ESPECIES_TITULOS = {
+          'CH' => '01',
+          'DM' => '02',
+          'MI' => '03',
+          'DS' => '04',
+          'DI' => '05',
+          'DR' => '06',
+          'LC' => '07',
+          'NC' => '08',
+          'NE' => '09',
+          'NI' => '10',
+          'NR' => '11',
+          'NP' => '12',
+          'NL' => '13',
+          'TM' => '14',
+          'TS' => '15',
+          'NS' => '16',
+          'RC' => '17',
+          'FA' => '18',
+          'ND' => '19',
+          'AP' => '20',
+          'ME' => '21',
+          'PC' => '22',
+          'NF' => '23',
+          'DD' => '24',
+          'CR' => '25',
+          'OU' => '99'
+        }.freeze
+
         # documento do cedente (CPF/CNPJ)
         attr_accessor :documento_cedente
         # convenio do cedente
@@ -27,8 +56,6 @@ module Brcobranca
         attr_accessor :emissao_boleto
         # identificacao da distribuicao do boleto (verificar opcoes nas classes referentes aos bancos)
         attr_accessor :distribuicao_boleto
-        # especie do titulo (verificar o padrao nas classes referentes aos bancos)
-        attr_accessor :especie_titulo
         # tipo de documento (verificar o padrao nas classes referentes aos bancos)
         attr_accessor :tipo_documento
         # codigo_baixa (verificar o padrao nas classes referentes aos bancos)
@@ -158,7 +185,7 @@ module Brcobranca
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
           segmento_p << dv_agencia_cobradora                            # dv agencia cobradora                  1
-          segmento_p << especie_titulo                                  # especie do titulo                     2
+          segmento_p << especie_titulo(pagamento)                       # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
           segmento_p << pagamento.tipo_mora                             # cod. do mora                          1
@@ -389,6 +416,10 @@ module Brcobranca
 
         def total_segmentos(pagamentos)
           pagamentos.size * 3
+        end
+
+        def especie_titulo(pagamento)
+          fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você está criando')
         end
 
         # Complemento do registro

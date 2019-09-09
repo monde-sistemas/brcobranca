@@ -3,6 +3,20 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Sicredi < Brcobranca::Remessa::Cnab240::Base
+        ESPECIES_TITULOS = {
+          'MI' => '03',
+          'DI' => '05',
+          'DR' => '06',
+          'LC' => '07',
+          'NP' => '12',
+          'NL' => '13',
+          'NS' => '16',
+          'RC' => '17',
+          'ND' => '19',
+          'BP' => '32',
+          'OU' => '99'
+        }.freeze
+
         attr_accessor :modalidade_carteira
         attr_accessor :parcela
         #       Parcela - 02 posições (11 a 12) - "01" se parcela única
@@ -24,7 +38,6 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
                      distribuicao_boleto: '2',
-                     especie_titulo: '03',
                      parcela: '01',
                      modalidade_carteira: '01',
                      forma_cadastramento: '1',
@@ -66,6 +79,10 @@ module Brcobranca
 
         def uso_exclusivo_empresa
           ''.rjust(20, ' ')
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '03'
         end
 
         def codigo_convenio

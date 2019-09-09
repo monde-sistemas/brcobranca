@@ -3,6 +3,12 @@ module Brcobranca
   module Remessa
     module Cnab240
       class Ailos < Brcobranca::Remessa::Cnab240::Base
+        ESPECIES_TITULOS = {
+          'DM' => '02',
+          'DS' => '04',
+          'NF' => '23'
+        }.freeze
+
         # digito da agencia
         attr_accessor :digito_agencia
 
@@ -14,8 +20,7 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
                      forma_cadastramento: '0',
-                     distribuicao_boleto: '2',
-                     especie_titulo: '02' }.merge!(campos)
+                     distribuicao_boleto: '2' }.merge!(campos)
           super(campos)
         end
 
@@ -57,6 +62,10 @@ module Brcobranca
 
         def convenio_lote
           codigo_convenio
+        end
+
+        def especie_titulo(pagamento)
+          ESPECIES_TITULOS[pagamento.especie_titulo] || '02'
         end
 
         def info_conta

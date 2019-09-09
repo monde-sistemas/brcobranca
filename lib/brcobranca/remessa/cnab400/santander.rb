@@ -12,6 +12,7 @@ module Brcobranca
           'DS' => '06',
           'LC' => '07'
         }.freeze
+
         # documento do cedente
         attr_accessor :documento_cedente
 
