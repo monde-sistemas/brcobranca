@@ -45,6 +45,10 @@ module Brcobranca
       attr_accessor :valor_desconto
       # <b>OPCIONAL</b>: codigo do desconto (para CNAB240)
       attr_accessor :cod_desconto
+      # <b>OPCIONAL</b>: codigo do segundo desconto (para CNAB240)
+      attr_accessor :cod_segundo_desconto
+      # <b>OPCIONAL</b>: codigo do terceiro desconto (para CNAB240)
+      attr_accessor :cod_terceiro_desconto
       # <b>OPCIONAL</b>: valor do IOF
       attr_accessor :valor_iof
       # <b>OPCIONAL</b>: valor do abatimento
@@ -61,6 +65,10 @@ module Brcobranca
       attr_accessor :data_segundo_desconto
       # <b>OPCIONAL</b>: valor a ser concedido de desconto
       attr_accessor :valor_segundo_desconto
+      # <b>OPCIONAL</b>: data limite para o desconto
+      attr_accessor :data_terceiro_desconto
+      # <b>OPCIONAL</b>: valor a ser concedido de desconto
+      attr_accessor :valor_terceiro_desconto
       # <b>OPCIONAL</b>: espécie do título
       attr_accessor :especie_titulo
       # <b>OPCIONAL</b>: código da multa
@@ -89,6 +97,8 @@ module Brcobranca
                             :cep_sacado, :cidade_sacado, :uf_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
+      validates_length_of :cod_segundo_desconto, is: 1
+      validates_length_of :cod_terceiro_desconto, is: 1
       validates_length_of :especie_titulo, is: 2, allow_blank: true
       validates_length_of :identificacao_ocorrencia, is: 2
 
@@ -100,14 +110,18 @@ module Brcobranca
         padrao = {
           data_emissao: Date.current,
           data_segundo_desconto: '00-00-00',
+          data_terceiro_desconto: '00-00-00',
           tipo_mora: '3',
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,
+          valor_terceiro_desconto: 0.0,
           valor_iof: 0.0,
           valor_abatimento: 0.0,
           nome_avalista: '',
           cod_desconto: '0',
+          cod_segundo_desconto: '0',
+          cod_terceiro_desconto: '0',
           especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
@@ -148,6 +162,21 @@ module Brcobranca
       #
       def formata_data_segundo_desconto(formato = '%d%m%y')
         data_segundo_desconto.strftime(formato)
+      rescue
+        if formato == '%d%m%y'
+          '000000'
+        else
+          '00000000'
+        end
+      end
+
+
+      # Formata a data de terceiro desconto de acordo com o formato passado
+      #
+      # @return [String]
+      #
+      def formata_data_terceiro_desconto(formato = '%d%m%y')
+        data_terceiro_desconto.strftime(formato)
       rescue
         if formato == '%d%m%y'
           '000000'
@@ -226,6 +255,15 @@ module Brcobranca
       #
       def formata_valor_segundo_desconto(tamanho = 13)
         format_value(valor_segundo_desconto, tamanho)
+      end
+
+      # Formata o campo valor do terceiro desconto
+      #
+      # @param tamanho [Integer]
+      #   quantidade de caracteres a ser retornado
+      #
+      def formata_valor_terceiro_desconto(tamanho = 13)
+        format_value(valor_terceiro_desconto, tamanho)
       end
 
       # Formata o campo valor do IOF

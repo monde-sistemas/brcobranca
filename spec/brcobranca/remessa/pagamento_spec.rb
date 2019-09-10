@@ -83,6 +83,18 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Cod desconto deve ter 1 dígito.')
     end
+
+    it 'deve ser invalido se codigo do segundo desconto tiver mais de 1 digito' do
+      pagamento.cod_segundo_desconto = '123'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod segundo desconto deve ter 1 dígito.')
+    end
+
+    it 'deve ser invalido se codigo do terceiro desconto tiver mais de 1 digito' do
+      pagamento.cod_terceiro_desconto = '123'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod terceiro desconto deve ter 1 dígito.')
+    end
   end
 
   context 'informacoes padrao' do
@@ -127,6 +139,36 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       end
     end
 
+    context 'formata data do segundo desconto' do
+      it 'formata data limite do desconto de acordo com o formato passado' do
+        pagamento.data_segundo_desconto = Date.parse('2015-06-25')
+        # formato padrao: DDMMAA
+        expect(pagamento.formata_data_segundo_desconto).to eq '250615'
+        # outro formato
+        expect(pagamento.formata_data_segundo_desconto('%d%m%Y')).to eq '25062015'
+      end
+
+      it 'retorna zeros se a data estiver vazia' do
+        pagamento.data_segundo_desconto = nil
+        expect(pagamento.formata_data_segundo_desconto).to eq '000000'
+      end
+    end
+
+    context 'formata data do terceiro desconto' do
+      it 'formata data limite do desconto de acordo com o formato passado' do
+        pagamento.data_terceiro_desconto = Date.parse('2015-06-25')
+        # formato padrao: DDMMAA
+        expect(pagamento.formata_data_terceiro_desconto).to eq '250615'
+        # outro formato
+        expect(pagamento.formata_data_terceiro_desconto('%d%m%Y')).to eq '25062015'
+      end
+
+      it 'retorna zeros se a data estiver vazia' do
+        pagamento.data_terceiro_desconto = nil
+        expect(pagamento.formata_data_terceiro_desconto).to eq '000000'
+      end
+    end
+
     it 'formata valor com o numero de posicoes passadas' do
       # padrao com 13 posicoes
       expect(pagamento.formata_valor).to eq '0000000019990'
@@ -146,6 +188,22 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.formata_valor_desconto).to eq '0000000012900'
       # formata com o numero passado
       expect(pagamento.formata_valor_desconto(5)).to eq '12900'
+    end
+
+    it 'formata valor do segundo desconto com o número de posições passadas' do
+      # padrao com 13 posicoes
+      pagamento.valor_segundo_desconto = 129.0
+      expect(pagamento.formata_valor_segundo_desconto).to eq '0000000012900'
+      # formata com o numero passado
+      expect(pagamento.formata_valor_segundo_desconto(5)).to eq '12900'
+    end
+
+    it 'formata valor do terceiro desconto com o número de posições passadas' do
+      # padrao com 13 posicoes
+      pagamento.valor_terceiro_desconto = 129.0
+      expect(pagamento.formata_valor_terceiro_desconto).to eq '0000000012900'
+      # formata com o numero passado
+      expect(pagamento.formata_valor_terceiro_desconto(5)).to eq '12900'
     end
 
     it 'formata valor do IOF com o numero de posicoes passadas' do
