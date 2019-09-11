@@ -17,7 +17,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        uf_sacado: 'SP',
-                                       dias_protesto: '8')
+                                       dias_protesto: '8',
+                                       especie_titulo: 'LC')
   end
   let(:params) do
     { carteira: '01',
@@ -186,11 +187,24 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Bradesco do
         expect(detalhe[81]).to eq 'P' # digito nosso numero (para nosso numero 123 o digito e P)
         expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y') # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990' # valor do documento
+        expect(detalhe[147..148]).to eq '10' # Espécie do título
         expect(detalhe[156..157]).to eq '06' # código de protesto
         expect(detalhe[158..159]).to eq '08' # dias a protestar
         expect(detalhe[220..233]).to eq '00012345678901' # documento do pagador
         expect(detalhe[234..273]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN' # nome do pagador
         expect(detalhe[274..313]).to eq bradesco.formata_endereco_sacado(pagamento) # endereco do pagador
+      end
+
+      it 'espécie do título CS converte para código correspondente' do
+        pagamento.especie_titulo = 'CS'
+        detalhe = bradesco.monta_detalhe(pagamento, 1)
+        expect(detalhe[147..148]).to eq '04'
+      end
+
+      it 'espécie título não informada utiliza padrão' do
+        pagamento.especie_titulo = ''
+        detalhe = bradesco.monta_detalhe pagamento, 1
+        expect(detalhe[147..148]).to eq '01'
       end
     end
 

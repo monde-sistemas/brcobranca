@@ -15,7 +15,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'RJ'
+      uf_sacado: 'RJ',
+      especie_titulo: 'ND'
     )
   end
 
@@ -180,6 +181,17 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Unicred do
     it 'formata o nosso numero' do
       nosso_numero = unicred.formata_nosso_numero '072000031'
       expect(nosso_numero.strip).to eq '072000031'
+    end
+
+    it 'converte espécie título para o código correspondente' do
+      segmento_p = unicred.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '19'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = unicred.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '03'
     end
   end
 

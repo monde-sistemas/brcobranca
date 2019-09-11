@@ -89,7 +89,6 @@ module Brcobranca
                             :cep_sacado, :cidade_sacado, :uf_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
-      validates_length_of :especie_titulo, is: 2, allow_blank: true
       validates_length_of :identificacao_ocorrencia, is: 2
 
       # Nova instancia da classe Pagamento
@@ -108,7 +107,6 @@ module Brcobranca
           valor_abatimento: 0.0,
           nome_avalista: '',
           cod_desconto: '0',
-          especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
           percentual_multa: 0.0,

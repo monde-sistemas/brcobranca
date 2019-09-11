@@ -40,8 +40,7 @@ module Brcobranca
                      emissao_boleto: '2',
                      codigo_baixa: '2',
                      dias_baixa: '000',
-                     distribuicao_boleto: '0',
-                     especie_titulo: '99' }.merge!(campos)
+                     distribuicao_boleto: '0' }.merge!(campos)
           super(campos)
         end
 
@@ -79,6 +78,10 @@ module Brcobranca
 
         def uso_exclusivo_empresa
           'REMESSA-PRODUCAO'.ljust(20, ' ')
+        end
+
+        def especie_titulo_padrao
+          '99'
         end
 
         def convenio_lote

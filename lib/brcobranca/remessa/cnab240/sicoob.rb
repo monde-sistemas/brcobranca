@@ -37,7 +37,6 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '2',
                      distribuicao_boleto: '2',
-                     especie_titulo: '02',
                      tipo_formulario: '4',
                      parcela: '01',
                      modalidade_carteira: '01',
@@ -60,6 +59,10 @@ module Brcobranca
 
         def versao_layout_lote
           '040'
+        end
+
+        def especie_titulo_padrao
+          '02'
         end
 
         def uso_exclusivo_banco

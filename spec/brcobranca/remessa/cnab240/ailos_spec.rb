@@ -16,7 +16,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Ailos do
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
                                        uf_sacado: 'SP',
                                        codigo_multa: '2',
-                                       percentual_multa: 2.0)
+                                       percentual_multa: 2.0,
+                                       especie_titulo: 'DS')
   end
   let(:params) do
     { empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
@@ -147,6 +148,23 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Ailos do
     it 'deve conter a identificacao do titulo da empresa' do
       segmento_p = ailos.monta_segmento_p(pagamento, 1, 2)
       expect(segmento_p[195..219]).to eq '6969'.ljust(25, ' ')
+    end
+
+    it 'converte espécie título para código correspondente' do
+      segmento_p = ailos.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '04'
+    end
+
+    it 'converte espécie título NF para código correspondente' do
+      pagamento.especie_titulo = 'NF'
+      segmento_p = ailos.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '23'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = ailos.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '02'
     end
   end
 

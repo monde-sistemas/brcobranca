@@ -3,6 +3,16 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Unicred < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DM' => '01',
+          'NP' => '02',
+          'AP' => '03',
+          'NS' => '03',
+          'RC' => '05',
+          'DS' => '06',
+          'LC' => '07'
+        }.freeze
+
         attr_accessor :posto, :byte_idt
 
         # documento do cedente
@@ -105,17 +115,17 @@ module Brcobranca
           detalhe << Brcobranca::Util::Empresa.new(documento_cedente).tipo  # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << codigo_transmissao                                     # código da transmissao                 9[20]
-          detalhe << pagamento.documento_ou_numero.to_s.ljust(25) # numero de controle do participante    X[25]
+          detalhe << pagamento.documento_ou_numero.to_s.ljust(25)           # numero de controle do participante    X[25]
           detalhe << formata_nosso_numero(pagamento.nosso_numero)           # nosso numero                          X[20]
           detalhe << ''.rjust(25, ' ')                                      # brancos                               X[25]
           detalhe << codigo_carteira                                        # codigo da carteira                    X[01]
           detalhe << pagamento.identificacao_ocorrencia                     # identificacao ocorrencia              9[02]
-          detalhe << pagamento.numero.to_s.rjust(10, '0') # numero do documento                   X[10]
+          detalhe << pagamento.numero.to_s.rjust(10, '0')                   # numero do documento                   X[10]
           detalhe << pagamento.data_vencimento.strftime('%d%m%y')           # data do vencimento                    9[06]
           detalhe << pagamento.formata_valor                                # valor do documento                    9[13]
           detalhe << cod_banco                                              # codigo banco                          9[03]
           detalhe << ''.rjust(5, '0')                                       # agencia cobradora - deixar zero       9[05]
-          detalhe << '01'                                                   # especie  do titulo                    X[02]
+          detalhe << especie_titulo(pagamento)                              # especie  do titulo                    X[02]
           detalhe << aceite                                                 # aceite (A/N)                          X[01]
           detalhe << pagamento.data_emissao.strftime('%d%m%y')              # data de emissao                       9[06]
           detalhe << ''.rjust(4, '0')                                       # instrucao                             9[04]
