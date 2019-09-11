@@ -238,12 +238,12 @@ module Brcobranca
           segmento_r << 'R'                                             # cod. segmento                        1
           segmento_r << ' '                                             # uso exclusivo                        1
           segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
-          segmento_r << '0'                                             # cod. desconto 2                      1
-          segmento_r << ''.rjust(8, '0') # data desconto 2                      8
-          segmento_r << ''.rjust(15, '0') # valor desconto 2                     15
-          segmento_r << '0' # cod. desconto 3                      1
-          segmento_r << ''.rjust(8, '0') # data desconto 3                      8
-          segmento_r << ''.rjust(15, '0') # valor desconto 3                     15
+          segmento_r << codigo_segundo_desconto(pagamento)              # cod. desconto 2                      1
+          segmento_r << ''.rjust(8, '0')                                # data desconto 2                      8
+          segmento_r << ''.rjust(15, '0')                               # valor desconto 2                     15
+          segmento_r << codigo_terceiro_desconto(pagamento)             # cod. desconto 3                      1
+          segmento_r << ''.rjust(8, '0')                                # data desconto 3                      8
+          segmento_r << ''.rjust(15, '0')                               # valor desconto 3                     15
           segmento_r << pagamento.codigo_multa                          # codigo multa                         1
           segmento_r << data_multa(pagamento)                           # data multa                           8
           segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
@@ -500,6 +500,14 @@ module Brcobranca
 
         def codigo_desconto(pagamento)
           pagamento.cod_desconto
+        end
+
+        def codigo_segundo_desconto(pagamento)
+          pagamento.cod_segundo_desconto
+        end
+
+        def codigo_terceiro_desconto(pagamento)
+          pagamento.cod_terceiro_desconto
         end
 
         def codigo_baixa(pagamento)

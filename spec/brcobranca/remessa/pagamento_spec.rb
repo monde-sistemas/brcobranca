@@ -83,6 +83,18 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Cod desconto deve ter 1 dígito.')
     end
+
+    it 'deve ser invalido se codigo do segundo desconto tiver mais de 1 digito' do
+      pagamento.cod_segundo_desconto = '15'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod segundo desconto deve ter 1 dígito.')
+    end
+
+    it 'deve ser invalido se codigo do terceiro desconto tiver mais de 1 digito' do
+      pagamento.cod_desconto = '474'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod terceiro desconto deve ter 1 dígito.')
+    end
   end
 
   context 'informacoes padrao' do
