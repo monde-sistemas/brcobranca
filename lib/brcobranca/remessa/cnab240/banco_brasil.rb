@@ -239,6 +239,18 @@ module Brcobranca
           segmento_p << ' '                                             # uso exclusivo                         1
           segmento_p
         end
+
+        def dados_segundo_desconto_validos?(pagamento)
+          desconto_valido = pagamento_sem_desconto?(pagamento.cod_segundo_desconto, pagamento.data_segundo_desconto, pagamento.valor_segundo_desconto)
+          pagamento.errors.add(:cod_segundo_desconto, 'não é tratado, informações devem estar zeradas') unless desconto_valido
+          desconto_valido
+        end
+
+        def dados_terceiro_desconto_validos?(pagamento)
+          desconto_valido = pagamento_sem_desconto?(pagamento.cod_terceiro_desconto, pagamento.data_terceiro_desconto, pagamento.valor_terceiro_desconto)
+          pagamento.errors.add(:cod_terceiro_desconto, 'não é tratado, informações devem estar zeradas') unless desconto_valido
+          desconto_valido
+        end
       end
     end
   end
