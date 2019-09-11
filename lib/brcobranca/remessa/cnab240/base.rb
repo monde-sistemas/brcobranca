@@ -230,27 +230,27 @@ module Brcobranca
         # @return [String]
         #
         def monta_segmento_r(pagamento, nro_lote, sequencial)
-          segmento_r = ''                                               # CAMPO                                TAMANHO
-          segmento_r << cod_banco                                       # codigo banco                         3
-          segmento_r << nro_lote.to_s.rjust(4, '0')                     # lote de servico                      4
-          segmento_r << '3'                                             # tipo do registro                     1
-          segmento_r << sequencial.to_s.rjust(5, '0')                   # num. sequencial do registro no lote  5
-          segmento_r << 'R'                                             # cod. segmento                        1
-          segmento_r << ' '                                             # uso exclusivo                        1
-          segmento_r << pagamento.identificacao_ocorrencia              # cod. movimento remessa               2
-          segmento_r << '0'                                             # cod. desconto 2                      1
-          segmento_r << ''.rjust(8, '0') # data desconto 2                      8
-          segmento_r << ''.rjust(15, '0') # valor desconto 2                     15
-          segmento_r << '0' # cod. desconto 3                      1
-          segmento_r << ''.rjust(8, '0') # data desconto 3                      8
-          segmento_r << ''.rjust(15, '0') # valor desconto 3                     15
-          segmento_r << pagamento.codigo_multa                          # codigo multa                         1
-          segmento_r << data_multa(pagamento)                           # data multa                           8
-          segmento_r << pagamento.formata_percentual_multa(15)          # valor multa                          15
-          segmento_r << ''.rjust(10, ' ')                               # info pagador                         10
-          segmento_r << ''.rjust(40, ' ')                               # mensagem 3                           40
-          segmento_r << ''.rjust(40, ' ')                               # mensagem 4                           40
-          segmento_r << complemento_r                                   # complemento de acordo com o banco    61
+          segmento_r = ''                                                   # CAMPO                                TAMANHO
+          segmento_r << cod_banco                                           # codigo banco                         3
+          segmento_r << nro_lote.to_s.rjust(4, '0')                         # lote de servico                      4
+          segmento_r << '3'                                                 # tipo do registro                     1
+          segmento_r << sequencial.to_s.rjust(5, '0')                       # num. sequencial do registro no lote  5
+          segmento_r << 'R'                                                 # cod. segmento                        1
+          segmento_r << ' '                                                 # uso exclusivo                        1
+          segmento_r << pagamento.identificacao_ocorrencia                  # cod. movimento remessa               2
+          segmento_r << codigo_segundo_desconto(pagamento)                  # cod. desconto 2                      1
+          segmento_r << pagamento.formata_data_segundo_desconto('%d%m%Y')   # data desconto 2                      8
+          segmento_r << pagamento.formata_valor_segundo_desconto(15)        # valor desconto 2                     15
+          segmento_r << codigo_terceiro_desconto(pagamento)                 # cod. desconto 3                      1
+          segmento_r << pagamento.formata_data_terceiro_desconto('%d%m%Y')  # data desconto 3                      8
+          segmento_r << pagamento.formata_valor_terceiro_desconto(15)       # valor desconto 3                     15
+          segmento_r << pagamento.codigo_multa                              # codigo multa                         1
+          segmento_r << data_multa(pagamento)                               # data multa                           8
+          segmento_r << pagamento.formata_percentual_multa(15)              # valor multa                          15
+          segmento_r << ''.rjust(10, ' ')                                   # info pagador                         10
+          segmento_r << ''.rjust(40, ' ')                                   # mensagem 3                           40
+          segmento_r << ''.rjust(40, ' ')                                   # mensagem 4                           40
+          segmento_r << complemento_r                                       # complemento de acordo com o banco    61
           segmento_r
         end
 
@@ -341,7 +341,7 @@ module Brcobranca
           lote = [monta_header_lote(nro_lote)]
 
           pagamentos.each do |pagamento|
-            fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
+            fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento_invalido?(pagamento)
 
             lote << monta_segmento_p(pagamento, nro_lote, contador)
             contador += 1
@@ -502,6 +502,14 @@ module Brcobranca
           pagamento.cod_desconto
         end
 
+        def codigo_segundo_desconto(pagamento)
+          pagamento.cod_segundo_desconto
+        end
+
+        def codigo_terceiro_desconto(pagamento)
+          pagamento.cod_terceiro_desconto
+        end
+
         def codigo_baixa(pagamento)
           pagamento.codigo_baixa
         end
@@ -534,6 +542,51 @@ module Brcobranca
 
         def incluir_segmento_s?
           false
+        end
+
+        def pagamento_invalido?(pagamento)
+          pagamento.invalid? || !dados_desconto_validos?(pagamento)
+        end
+
+        def dados_desconto_validos?(pagamento)
+          return false unless dados_primeiro_desconto_validos?(pagamento)
+          return false unless dados_segundo_desconto_validos?(pagamento)
+          return false unless dados_terceiro_desconto_validos?(pagamento)
+
+          true
+        end
+
+        def dados_terceiro_desconto_validos?(pagamento)
+          desconto_valido = desconto_valido?(pagamento.cod_terceiro_desconto, pagamento.data_terceiro_desconto, pagamento.valor_terceiro_desconto)
+          pagamento.errors.add(:data_terceiro_desconto, 'inválida para código desconto 3') unless desconto_valido
+          desconto_valido
+        end
+
+        def dados_segundo_desconto_validos?(pagamento)
+          desconto_valido = desconto_valido?(pagamento.cod_segundo_desconto, pagamento.data_segundo_desconto, pagamento.valor_segundo_desconto)
+          pagamento.errors.add(:data_segundo_desconto, 'inválida para código desconto 2') unless desconto_valido
+          desconto_valido
+        end
+
+        def dados_primeiro_desconto_validos?(pagamento)
+          desconto_valido = desconto_valido?(pagamento.cod_desconto, pagamento.data_desconto, pagamento.valor_desconto)
+          pagamento.errors.add(:data_desconto, 'inválida para código desconto 1') unless desconto_valido
+          desconto_valido
+        end
+
+        def desconto_valido?(codigo, data, valor)
+          return true if pagamento_sem_desconto?(codigo, data, valor)
+          return true unless pagamento_com_desconto_sem_data_desconto?(codigo, data)
+
+          false
+        end
+
+        def pagamento_sem_desconto?(codigo, data, valor)
+          codigo.to_i.zero? && data.nil? && valor.zero?
+        end
+
+        def pagamento_com_desconto_sem_data_desconto?(codigo, data)
+          codigo.to_i.positive? && data.nil?
         end
       end
     end
