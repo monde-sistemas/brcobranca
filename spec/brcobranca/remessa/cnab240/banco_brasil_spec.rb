@@ -204,6 +204,64 @@ RSpec.describe Brcobranca::Remessa::Cnab240::BancoBrasil do
     end
   end
 
+  context 'montar lote' do
+    context 'segmento P' do
+      it 'pagamento sem desconto' do
+        lote = banco_brasil.monta_lote(1)
+        segmento_p = lote[1]
+        expect(segmento_p[141..141]).to eql '0'
+        expect(segmento_p[142..149]).to eql '00000000'
+        expect(segmento_p[150..164]).to eql '000000000000000'
+      end
+
+      it 'pagamento com desconto' do
+        pagamento.cod_desconto = '1'
+        pagamento.data_desconto = Date.new(2019, 9, 11)
+        pagamento.valor_desconto = 15.50
+        lote = banco_brasil.monta_lote(1)
+        segmento_p = lote[1]
+        expect(segmento_p[141..141]).to eql '1'
+        expect(segmento_p[142..149]).to eql '11092019'
+        expect(segmento_p[150..164]).to eql '000000000001550'
+      end
+
+      it 'pagamento com desconto sem data de desconto' do
+        pagamento.cod_desconto = '1'
+        pagamento.valor_desconto = 10
+        expect { banco_brasil.monta_lote(1) }.to raise_error(Brcobranca::RemessaInvalida)
+      end
+    end
+
+    context 'segmento R' do
+      it 'informações referente o segundo desconto zeradas' do
+        lote = banco_brasil.monta_lote(1)
+        segmento_r = lote[3]
+        expect(segmento_r[17..17]).to eql '0'
+        expect(segmento_r[18..25]).to eql '00000000'
+        expect(segmento_r[26..40]).to eql '000000000000000'
+      end
+
+      it 'informações referente o terceiro desconto zeradas' do
+        lote = banco_brasil.monta_lote(1)
+        segmento_r = lote[3]
+        expect(segmento_r[41..41]).to eql '0'
+        expect(segmento_r[42..49]).to eql '00000000'
+        expect(segmento_r[50..64]).to eql '000000000000000'
+      end
+
+      it 'não gera remessa para pagamento com segundo desconto' do
+        pagamento.cod_segundo_desconto = '1'
+        pagamento.data_segundo_desconto = Date.today
+        expect { banco_brasil.monta_lote(1) }.to raise_error(Brcobranca::RemessaInvalida)
+      end
+
+      it 'não gera remessa para pagamento com terceiro desconto' do
+        pagamento.cod_terceiro_desconto = '2'
+        expect { banco_brasil.monta_lote(1) }.to raise_error(Brcobranca::RemessaInvalida)
+      end
+    end
+  end
+
   context 'geracao remessa' do
     it_behaves_like 'cnab240'
 
