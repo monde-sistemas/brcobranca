@@ -181,8 +181,14 @@ shared_examples_for 'cnab240' do
       expect(segmento_r[13]).to eq 'R'                        # cod. segmento
       expect(segmento_r[14]).to eq ' '                        # branco
       expect(segmento_r[15..16]).to eq '01'                   # cod. movimento remessa
-      expect(segmento_r[17..40]).to eq ''.rjust(24,  '0')   # desconto 2
-      expect(segmento_r[41..64]).to eq ''.rjust(24,  '0')   # desconto 3
+
+      if objeto.cod_banco == '748'
+        expect(segmento_r[17..40]).to eq '1'.ljust(24,  '0')   # desconto 2
+        expect(segmento_r[41..64]).to eq '1'.ljust(24,  '0')   # desconto 3
+      else
+        expect(segmento_r[17..40]).to eq ''.rjust(24,  '0')   # desconto 2
+        expect(segmento_r[41..64]).to eq ''.rjust(24,  '0')   # desconto 3
+      end
 
       if objeto.cod_banco == '085'
         expect(segmento_r[65]).to eq '2'                        # cod. multa
