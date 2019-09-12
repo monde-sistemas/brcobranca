@@ -74,6 +74,14 @@ module Brcobranca
         total = sprintf '%.2f', totaliza_valor_titulos
         total.somente_numeros.rjust(tamanho, '0')
       end
+
+      def especie_titulo(pagamento)
+        self.class::ESPECIES_TITULOS[pagamento.especie_titulo] || especie_titulo_padrao
+      end
+
+      def especie_titulo_padrao
+        fail Brcobranca::NaoImplementado.new('Sobreescreva este método na classe referente ao banco que você está criando')
+      end
     end
   end
 end

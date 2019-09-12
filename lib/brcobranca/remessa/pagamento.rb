@@ -95,7 +95,6 @@ module Brcobranca
       validates_length_of :cod_desconto, is: 1
       validates_length_of :cod_segundo_desconto, is: 1
       validates_length_of :cod_terceiro_desconto, is: 1
-      validates_length_of :especie_titulo, is: 2, allow_blank: true
       validates_length_of :identificacao_ocorrencia, is: 2
 
       # Nova instancia da classe Pagamento
@@ -116,7 +115,6 @@ module Brcobranca
           cod_desconto: '0',
           cod_segundo_desconto: '0',
           cod_terceiro_desconto: '0',
-          especie_titulo: '01',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
           percentual_multa: 0.0,

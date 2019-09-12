@@ -3,6 +3,10 @@ module Brcobranca
   module Remessa
     module Cnab400
       class Citibank < Brcobranca::Remessa::Cnab400::Base
+        ESPECIES_TITULOS = {
+          'DMI' => '00',
+          'DM' => '02'
+        }.freeze
         # documento do cedente
         attr_accessor :documento_cedente
         # Identificação do portfolio.
@@ -26,6 +30,10 @@ module Brcobranca
 
         def nome_banco
           'CITIBANK'.ljust(15, ' ')
+        end
+
+        def especie_titulo_padrao
+          '02'
         end
 
         # Informacoes da conta corrente do cedente
@@ -67,7 +75,7 @@ module Brcobranca
           detalhe << documento_cedente.to_s.rjust(14, '0')                  # cpf/cnpj da empresa                   9[14]
           detalhe << portfolio                                              # portfolio                             X[20]
           detalhe << pagamento.documento_ou_numero.to_s.ljust(25) # identificacao do tit. na empresa      X[25]
-          detalhe << pagamento.especie_titulo                               # espécie do título                     9[02] - 00 = DMI – Duplicata Mercantil por Indicação, 02 = DM – Duplicata Mercantil
+          detalhe << especie_titulo(pagamento)                              # espécie do título                     9[02] - 00 = DMI – Duplicata Mercantil por Indicação, 02 = DM – Duplicata Mercantil
           detalhe << pagamento.nosso_numero.to_s.rjust(12, '0')             # nosso numero                          9[12]
           detalhe << ''.rjust(6, ' ')                                       # brancos                               X[06]
           detalhe << pagamento.formata_data_segundo_desconto                # data limite para o segundo desconto   9[06]

@@ -16,7 +16,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       bairro_sacado: 'São josé dos quatro apostolos magros',
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
-      uf_sacado: 'RJ'
+      uf_sacado: 'RJ',
+      especie_titulo: 'DR'
     )
   end
 
@@ -189,6 +190,23 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
 
       expect(segmento_p[77..84]).to eql '14072007'    # data de vencimento
       expect(segmento_p[118..125]).to eql '15072007'  # data do juro de mora
+    end
+
+    it 'converte espécie título para código correspondente' do
+      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '06'
+    end
+
+    it 'converte espécie título BP para código correspondente' do
+      pagamento.especie_titulo = 'BP'
+      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '32'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '03'
     end
 
     it 'código segundo desconto segmento r deve ser 1' do

@@ -151,14 +151,14 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[17..20]).to eq '0001'                                        # agência
         expect(detalhe[22..29]).to eq '00000002'                                    # conta corrente
         expect(detalhe[30]).to eq '7'                                               # dígito da conta corrente
-        expect(detalhe[37..61]).to eq '6969'.ljust(25) # número controle cliente
+        expect(detalhe[37..61]).to eq '6969'.ljust(25)                              # número controle cliente
         expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
         expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
         expect(detalhe[110..119]).to eq '0000000000'                                # número documento
-        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')               # data de vencimento
+        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')             # data de vencimento
         expect(detalhe[126..138]).to eq '0000000019990'                             # valor do titulo
         expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
-        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')               # data emissão título
+        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')             # data emissão título
         expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
         expect(detalhe[160..165]).to eq '080000'                                    # mora
         expect(detalhe[166..171]).to eq '020000'                                    # multa

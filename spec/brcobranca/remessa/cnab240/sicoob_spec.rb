@@ -16,7 +16,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       cidade_sacado: 'Santa rita de cássia maria da silva',
       uf_sacado: 'RJ',
       tipo_mora: '0',
-      codigo_protesto: '1'
+      codigo_protesto: '1',
+      especie_titulo: 'DSI'
     )
   end
 
@@ -169,6 +170,23 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
     it 'formata o nosso numero' do
       nosso_numero = sicoob.formata_nosso_numero 1
       expect(nosso_numero).to eq '000000000101014     '
+    end
+
+    it 'converte espécie título para o código correspondente' do
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '05'
+    end
+
+    it 'converte espécie título NP para o código correspondente' do
+      pagamento.especie_titulo = 'NP'
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '12'
+    end
+
+    it 'espécie título não informada utiliza espécie padrão' do
+      pagamento.especie_titulo = ''
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+      expect(segmento_p[106..107]).to eq '02'
     end
   end
 

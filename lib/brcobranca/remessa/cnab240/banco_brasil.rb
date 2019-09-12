@@ -3,6 +3,23 @@ module Brcobranca
   module Remessa
     module Cnab240
       class BancoBrasil < Brcobranca::Remessa::Cnab240::Base
+        ESPECIES_TITULOS = {
+          'CH' => '01',
+          'DM' => '02',
+          'DS' => '04',
+          'DR' => '06',
+          'LC' => '07',
+          'NP' => '12',
+          'NS' => '16',
+          'RC' => '17',
+          'ND' => '19',
+          'AP' => '20',
+          'WA' => '26',
+          'DE' => '27',
+          'DU' => '28',
+          'DA' => '29'
+        }.freeze
+
         # variacao da carteira
         attr_accessor :variacao
         # identificacao da emissao do boleto (attr na classe base)
@@ -20,7 +37,6 @@ module Brcobranca
         def initialize(campos = {})
           campos = { emissao_boleto: '0',
                      distribuicao_boleto: '0',
-                     especie_titulo: '02',
                      codigo_baixa: '00',
                      codigo_carteira: '7' }.merge!(campos)
           super(campos)
@@ -40,6 +56,10 @@ module Brcobranca
 
         def versao_layout_lote
           '042'
+        end
+
+        def especie_titulo_padrao
+          '02'
         end
 
         def digito_agencia
@@ -206,7 +226,7 @@ module Brcobranca
           # Obs.: O Banco do Brasil encaminha para protesto os seguintes títulos:
           # Duplicata Mercantil, Rural e de Serviço, Letra de Câmbio, e
           # Certidão de Dívida Ativa da União, dos Estados e do Município.
-          segmento_p << especie_titulo                                  # especie do titulo                     2
+          segmento_p << especie_titulo(pagamento)                       # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
           segmento_p << pagamento.tipo_mora                             # cod. do juros                         1
