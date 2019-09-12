@@ -45,6 +45,10 @@ module Brcobranca
       attr_accessor :valor_desconto
       # <b>OPCIONAL</b>: codigo do desconto (para CNAB240)
       attr_accessor :cod_desconto
+      # <b>OPCIONAL</b>: codigo do segundo desconto (para CNAB240)
+      attr_accessor :cod_segundo_desconto
+      # <b>OPCIONAL</b>: codigo do segundo desconto (para CNAB240)
+      attr_accessor :cod_terceiro_desconto
       # <b>OPCIONAL</b>: valor do IOF
       attr_accessor :valor_iof
       # <b>OPCIONAL</b>: valor do abatimento
@@ -89,6 +93,8 @@ module Brcobranca
                             :cep_sacado, :cidade_sacado, :uf_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
+      validates_length_of :cod_segundo_desconto, is: 1
+      validates_length_of :cod_terceiro_desconto, is: 1
       validates_length_of :identificacao_ocorrencia, is: 2
 
       # Nova instancia da classe Pagamento
@@ -107,6 +113,8 @@ module Brcobranca
           valor_abatimento: 0.0,
           nome_avalista: '',
           cod_desconto: '0',
+          cod_segundo_desconto: '0',
+          cod_terceiro_desconto: '0',
           identificacao_ocorrencia: '01',
           codigo_multa: '0',
           percentual_multa: 0.0,

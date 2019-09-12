@@ -17,97 +17,109 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
   end
 
   context 'validacoes' do
-    it 'deve ser invalido se nao possuir nosso numero' do
+    it 'deve ser inválido se não possuir nosso numero' do
       pagamento.nosso_numero = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Nosso numero não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir data de vencimento' do
+    it 'deve ser inválido se não possuir data de vencimento' do
       pagamento.data_vencimento = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Data vencimento não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir valor do documento' do
+    it 'deve ser inválido se não possuir valor do documento' do
       pagamento.valor = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Valor não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir documento do sacado' do
+    it 'deve ser inválido se não possuir documento do sacado' do
       pagamento.documento_sacado = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Documento sacado não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir nome do sacado' do
+    it 'deve ser inválido se não possuir nome do sacado' do
       pagamento.nome_sacado = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Nome sacado não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir endereco do sacado' do
+    it 'deve ser inválido se não possuir endereco do sacado' do
       pagamento.endereco_sacado = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Endereco sacado não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir cidade do sacado' do
+    it 'deve ser inválido se não possuir cidade do sacado' do
       pagamento.cidade_sacado = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Cidade sacado não pode estar em branco.')
     end
 
-    it 'deve ser invalido se nao possuir UF do sacado' do
+    it 'deve ser inválido se não possuir UF do sacado' do
       pagamento.uf_sacado = nil
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Uf sacado não pode estar em branco.')
     end
 
     context '@cep' do
-      it 'deve ser invalido se nao possuir CEP' do
+      it 'deve ser inválido se não possuir CEP' do
         pagamento.cep_sacado = nil
         expect(pagamento.invalid?).to be true
         expect(pagamento.errors.full_messages).to include('Cep sacado não pode estar em branco.')
       end
 
-      it 'deve ser invalido se CEP nao tiver 8 digitos' do
+      it 'deve ser inválido se CEP não tiver 8 dígitos' do
         pagamento.cep_sacado = '123456789'
         expect(pagamento.invalid?).to be true
         expect(pagamento.errors.full_messages).to include('Cep sacado deve ter 8 dígitos.')
       end
     end
 
-    it 'deve ser invalido se codigo do desconto tiver mais de 1 digito' do
+    it 'deve ser inválido se código do desconto tiver mais de 1 dígito' do
       pagamento.cod_desconto = '123'
       expect(pagamento.invalid?).to be true
       expect(pagamento.errors.full_messages).to include('Cod desconto deve ter 1 dígito.')
     end
+
+    it 'deve ser inválido se código do segundo desconto tiver mais de 1 dígito' do
+      pagamento.cod_segundo_desconto = '15'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod segundo desconto deve ter 1 dígito.')
+    end
+
+    it 'deve ser inválido se código do terceiro desconto tiver mais de 1 dígito' do
+      pagamento.cod_terceiro_desconto = '474'
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Cod terceiro desconto deve ter 1 dígito.')
+    end
   end
 
-  context 'informacoes padrao' do
-    it 'data de emissao padrao deve ser o dia corrente' do
+  context 'informações padrão' do
+    it 'data de emissao padrão deve ser o dia corrente' do
       expect(pagamento.data_emissao).to eq Date.current
     end
 
-    it 'nome do avalista padrao deve ser vazio' do
+    it 'nome do avalista padrão deve ser vazio' do
       expect(pagamento.nome_avalista).to eq ''
     end
 
-    it 'valor da mora padrao deve ser zero' do
+    it 'valor da mora padrão deve ser zero' do
       expect(pagamento.valor_mora).to eq 0.0
     end
 
-    it 'valor do desconto padrao deve ser zero' do
+    it 'valor do desconto padrão deve ser zero' do
       expect(pagamento.valor_desconto).to eq 0.0
     end
 
-    it 'valor do IOF padrao deve ser zero' do
+    it 'valor do IOF padrão deve ser zero' do
       expect(pagamento.valor_iof).to eq 0.0
     end
 
-    it 'valor do abatimento padrao deve ser zero' do
+    it 'valor do abatimento padrão deve ser zero' do
       expect(pagamento.valor_abatimento).to eq 0.0
     end
   end
@@ -116,7 +128,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     context 'formata data do desconto' do
       it 'formata data limite do desconto de acordo com o formato passado' do
         pagamento.data_desconto = Date.parse('2015-06-25')
-        # formato padrao: DDMMAA
+        # formato padrão: DDMMAA
         expect(pagamento.formata_data_desconto).to eq '250615'
         # outro formato
         expect(pagamento.formata_data_desconto('%d%m%Y')).to eq '25062015'
@@ -129,20 +141,20 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     end
 
     it 'formata valor com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       expect(pagamento.formata_valor).to eq '0000000019990'
       # formata com o numero passado
       expect(pagamento.formata_valor(8)).to eq '00019990'
     end
 
     it 'formata valor de mora com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       pagamento.valor_mora = 9.0
       expect(pagamento.formata_valor_mora).to eq '0000000000900'
     end
 
     it 'formata valor de desconto com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       pagamento.valor_desconto = 129.0
       expect(pagamento.formata_valor_desconto).to eq '0000000012900'
       # formata com o numero passado
@@ -150,7 +162,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     end
 
     it 'formata valor do IOF com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       pagamento.valor_iof = 1.84
       expect(pagamento.formata_valor_iof).to eq '0000000000184'
       # formata com o numero passado
@@ -158,7 +170,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     end
 
     it 'formata valor do abatimento com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       pagamento.valor_abatimento = 34.9
       expect(pagamento.formata_valor_abatimento).to eq '0000000003490'
       # formata com o numero passado
@@ -166,7 +178,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     end
 
     it 'formata valor dos juros com o numero de posicoes passadas' do
-      # padrao com 13 posicoes
+      # padrão com 13 posicoes
       pagamento.valor_mora = 49.2
       expect(pagamento.formata_valor_mora).to eq '0000000004920'
       # formata com o tamanho passado
@@ -176,7 +188,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
     context 'formata valor do campo documento' do
       before { pagamento.documento = '2345' }
 
-      it 'deve formatar assumindo os valores padrao para os parametros tamanho e caracter' do
+      it 'deve formatar assumindo os valores padrão para os parametros tamanho e caracter' do
         expect(pagamento.formata_documento_ou_numero).to eql '2345'.rjust(25, ' ')
       end
 
@@ -197,8 +209,8 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       end
     end
 
-    context 'identificacao sacado' do
-      it 'verifica a identificacao do sacado (pessoa fisica ou juridica)' do
+    context 'identificação sacado' do
+      it 'verifica a identificação do sacado (pessoa fisica ou juridica)' do
         # pessoa fisica
         expect(pagamento.identificacao_sacado).to eq '01'
         # pessoa juridica
@@ -209,8 +221,8 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       end
     end
 
-    context 'identificacao avalista' do
-      it 'verifica a identificacao do avalista (pessoa fisica ou juridica)' do
+    context 'identificação avalista' do
+      it 'verifica a identificação do avalista (pessoa fisica ou juridica)' do
         # pessoa fisica
         pagamento.documento_avalista = '12345678901'
         expect(pagamento.identificacao_avalista).to eq '01'
@@ -219,7 +231,7 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
         expect(pagamento.identificacao_avalista).to eq '02'
       end
 
-      it 'formata a identificacao com o numero de caracteres informados' do
+      it 'formata a identificação com o numero de caracteres informados' do
         pagamento.documento_avalista = '12345678901'
         expect(pagamento.identificacao_avalista(false)).to eq '1'
       end

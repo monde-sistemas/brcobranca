@@ -176,6 +176,14 @@ module Brcobranca
           '1'
         end
 
+        def codigo_segundo_desconto(_pagamento)
+          '1'
+        end
+
+        def codigo_terceiro_desconto(_pagamento)
+          '1'
+        end
+
         def codigo_baixa(_pagamento)
           '1'
         end

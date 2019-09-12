@@ -208,6 +208,30 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
       segmento_p = sicredi.monta_segmento_p(pagamento, 1, 2)
       expect(segmento_p[106..107]).to eq '03'
     end
+
+    it 'código segundo desconto segmento r deve ser 1' do
+      segmento_r = sicredi.monta_segmento_r(pagamento, 1, 2)
+      expect(segmento_r[17..17]).to eql '1'
+    end
+
+    it 'data e valor do segundo desconto devem estar zerados' do
+      segmento_r = sicredi.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[18..25]).to eql '00000000'
+      expect(segmento_r[26..40]).to eql '000000000000000'
+    end
+
+    it 'código terceiro desconto segmento r deve ser 1' do
+      segmento_r = sicredi.monta_segmento_r(pagamento, 1, 2)
+      expect(segmento_r[41..41]).to eql '1'
+    end
+
+    it 'data e valor do segundo terceiro devem estar zerados' do
+      segmento_r = sicredi.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[42..49]).to eql '00000000'
+      expect(segmento_r[50..64]).to eql '000000000000000'
+    end
   end
 
   context 'geracao remessa' do
