@@ -193,13 +193,13 @@ module Brcobranca
         def data_multa(pagamento)
           return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
 
-          pagamento.data_vencimento.next_day.strftime('%d%m%Y')
+          pagamento.formata_proximo_dia_apos_data_vencimento
         end
 
         def data_mora(pagamento)
           return ''.rjust(8, '0') unless %w[1 2].include? pagamento.tipo_mora
 
-          pagamento.data_vencimento.next_day.strftime('%d%m%Y')
+          pagamento.formata_proximo_dia_apos_data_vencimento
         end
 
         # Retorna o nosso numero

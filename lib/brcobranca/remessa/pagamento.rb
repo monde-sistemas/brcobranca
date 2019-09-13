@@ -269,6 +269,14 @@ module Brcobranca
         Brcobranca::Util::Empresa.new(documento_avalista, zero).tipo
       end
 
+      def formata_proximo_dia_apos_data_vencimento(formato = '%d%m%Y')
+        data_vencimento.next_day.strftime(formato)
+      end
+
+      def formata_data_vencimento(formato = '%d%m%Y')
+        data_vencimento.strftime(formato)
+      end
+
       private
 
       def format_value(value, tamanho)
