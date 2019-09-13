@@ -2,15 +2,10 @@
 module Brcobranca
   module Boleto
     class Credisis < Base # CrediSIS
-      attr_accessor :codigo_cedente
-
-      validates_presence_of :codigo_cedente
-
       validates_length_of :agencia, maximum: 4
       validates_length_of :conta_corrente, maximum: 7
-      validates_length_of :codigo_cedente, is: 4
       validates_length_of :carteira, is: 2
-      validates_length_of :convenio, is: 7
+      validates_length_of :convenio, is: 4
 
       validates_length_of :numero, maximum: 6
 
