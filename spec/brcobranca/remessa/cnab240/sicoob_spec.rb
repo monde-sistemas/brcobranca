@@ -17,7 +17,8 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       uf_sacado: 'RJ',
       tipo_mora: '1',
       codigo_protesto: '1',
-      especie_titulo: 'DSI'
+      especie_titulo: 'DSI',
+      codigo_multa: '1'
     )
   end
 
@@ -213,6 +214,21 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
 
       expect(segmento_p[118..125]).to eql '00000000'
+    end
+
+    it 'data de multa deve ser após o vencimento quando codigo_multa for diferente de 0' do
+      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[65..65]).to eql '1'
+      expect(segmento_r[66..73]).to eql '15072015'
+    end
+
+    it 'data de multa deve estar zerada para codigo_multa 0' do
+      pagamento.codigo_multa = "0"
+      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[65..65]).to eql '0'
+      expect(segmento_r[66..73]).to eql '00000000'
     end
   end
 
