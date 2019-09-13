@@ -195,6 +195,12 @@ module Brcobranca
           pagamento.data_vencimento.strftime('%d%m%Y')
         end
 
+        def data_mora(pagamento)
+          return ''.rjust(8, '0') unless %w[1 2].include? pagamento.tipo_mora
+
+          pagamento.data_vencimento.next_day.strftime('%d%m%Y')
+        end
+
         # Retorna o nosso numero
         #
         # @return [String]
