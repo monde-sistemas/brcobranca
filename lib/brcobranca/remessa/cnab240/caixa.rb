@@ -38,7 +38,7 @@ module Brcobranca
           # Modalidade carteira: 14 (título Registrado emissão Cedente)
           campos = { modalidade_carteira: '14',
                      emissao_boleto: '2',
-                     codigo_baixa: '2',
+                     codigo_baixa: CODIGOS_BAIXA_DEVOLUCAO[:NAO_BAIXAR_DEVOLVER],
                      dias_baixa: '000',
                      distribuicao_boleto: '0' }.merge!(campos)
           super(campos)
@@ -146,9 +146,9 @@ module Brcobranca
         end
 
         def codigo_baixa(pagamento)
-          return '1' if pagamento.codigo_protesto.to_s == '3'
+          return CODIGOS_BAIXA_DEVOLUCAO[:BAIXAR_DEVOLVER] if pagamento.codigo_protesto.to_s == '3'
 
-          '2'
+          CODIGOS_BAIXA_DEVOLUCAO[:NAO_BAIXAR_DEVOLVER]
         end
 
         def dias_baixa(pagamento)
@@ -159,11 +159,12 @@ module Brcobranca
           end
 
           return '120' if pagamento.codigo_protesto.to_s == '3'
+
           '000'
         end
 
         def data_mora(pagamento)
-          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
+          return ''.rjust(8, '0') unless %w[1 2].include? pagamento.tipo_mora
 
           pagamento.formata_proximo_dia_apos_data_vencimento
         end

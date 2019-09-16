@@ -32,6 +32,11 @@ module Brcobranca
           'OU' => '99'
         }.freeze
 
+        CODIGOS_BAIXA_DEVOLUCAO = {
+          BAIXAR_DEVOLVER: '1',
+          NAO_BAIXAR_DEVOLVER: '2'
+        }.freeze
+
         # documento do cedente (CPF/CNPJ)
         attr_accessor :documento_cedente
         # convenio do cedente

@@ -185,7 +185,7 @@ module Brcobranca
         end
 
         def codigo_baixa(_pagamento)
-          '1'
+          CODIGOS_BAIXA_DEVOLUCAO[:BAIXAR_DEVOLVER]
         end
 
         def dias_baixa(_pagamento)
