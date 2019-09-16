@@ -15,9 +15,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
       uf_sacado: 'RJ',
-      tipo_mora: '0',
+      tipo_mora: '1',
       codigo_protesto: '1',
-      especie_titulo: 'DSI'
+      especie_titulo: 'DSI',
+      codigo_multa: '1'
     )
   end
 
@@ -34,6 +35,10 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
   end
 
   let(:sicoob) { subject.class.new(params) }
+
+  before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
+
+  after { Timecop.return }
 
   context 'validacoes' do
     context '@modalidade_carteira' do
@@ -188,15 +193,49 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
       expect(segmento_p[106..107]).to eq '02'
     end
+
+    it 'data de mora deve ser após o vencimento quando informada' do
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+
+      expect(segmento_p[77..84]).to eql '14072015'
+      expect(segmento_p[118..125]).to eql '15072015'
+    end
+
+    it 'data de mora deve ser após o vencimento quando informada e tipo de mora for 2' do
+      pagamento.tipo_mora = '2'
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+
+      expect(segmento_p[77..84]).to eql '14072015'
+      expect(segmento_p[118..125]).to eql '15072015'
+    end
+
+    it 'data de mora deve estar zerada caso tipo de mora seja 1 ou 2' do
+      pagamento.tipo_mora = '0'
+      segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
+
+      expect(segmento_p[118..125]).to eql '00000000'
+    end
+
+    it 'data de multa deve ser após o vencimento quando codigo_multa for diferente de 0' do
+      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[65..65]).to eql '1'
+      expect(segmento_r[66..73]).to eql '15072015'
+    end
+
+    it 'data de multa deve estar zerada para codigo_multa 0' do
+      pagamento.codigo_multa = "0"
+      segmento_r = sicoob.monta_segmento_r(pagamento, 1, 2)
+
+      expect(segmento_r[65..65]).to eql '0'
+      expect(segmento_r[66..73]).to eql '00000000'
+    end
   end
 
   context 'geracao remessa' do
     it_behaves_like 'cnab240'
 
     context 'arquivo' do
-      before { Timecop.freeze(Time.local(2015, 7, 14, 16, 15, 15)) }
-      after { Timecop.return }
-
       it { expect(sicoob.gera_arquivo).to eq(read_remessa('remessa-bancoob-cnab240.rem', sicoob.gera_arquivo)) }
     end
   end

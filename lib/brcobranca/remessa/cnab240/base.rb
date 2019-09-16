@@ -32,6 +32,11 @@ module Brcobranca
           'OU' => '99'
         }.freeze
 
+        CODIGOS_BAIXA_DEVOLUCAO = {
+          BAIXAR_DEVOLVER: '1',
+          NAO_BAIXAR_DEVOLVER: '2'
+        }.freeze
+
         # documento do cedente (CPF/CNPJ)
         attr_accessor :documento_cedente
         # convenio do cedente
@@ -181,7 +186,7 @@ module Brcobranca
           segmento_p << emissao_boleto                                  # identificaco emissao                  1
           segmento_p << distribuicao_boleto                             # indentificacao entrega                1
           segmento_p << numero(pagamento)                               # uso exclusivo                         4
-          segmento_p << pagamento.data_vencimento.strftime('%d%m%Y')    # data de venc.                         8
+          segmento_p << pagamento.formata_data_vencimento               # data de venc.                         8
           segmento_p << pagamento.formata_valor(15)                     # valor documento                       15
           segmento_p << ''.rjust(5, '0')                                # agencia cobradora                     5
           segmento_p << dv_agencia_cobradora                            # dv agencia cobradora                  1
@@ -517,12 +522,14 @@ module Brcobranca
 
         def data_multa(pagamento)
           return ''.rjust(8, '0') if pagamento.codigo_multa == '0'
-          pagamento.data_vencimento.strftime('%d%m%Y')
+
+          pagamento.formata_data_vencimento
         end
 
         def data_mora(pagamento)
           return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
-          pagamento.data_vencimento.strftime('%d%m%Y')
+
+          pagamento.formata_data_vencimento
         end
 
         def codigo_desconto(pagamento)
