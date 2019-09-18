@@ -1,5 +1,8 @@
 # -*- encoding: utf-8 -*-
 # @author Kivanio Barbosa
+require 'active_support/core_ext/date/calculations'
+require 'active_support/core_ext/time/calculations'
+
 module Brcobranca
   module Boleto
     # Classe base para todas as classes de boletos

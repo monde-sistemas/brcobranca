@@ -18,7 +18,8 @@ module Brcobranca
         attr_accessor :parcela
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela, :convenio
-        validates_length_of :agencia, :convenio, maximum: 4
+        validates_length_of :convenio, maximum: 6
+        validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 8
         validates_length_of :carteira, maximum: 2
         validates_length_of :digito_conta, maximum: 1
@@ -140,7 +141,7 @@ module Brcobranca
           # A – Código da Agência CrediSIS ao qual o Beneficiário possui Conta
           # C – Código de Convênio do Beneficiário no Sistema CrediSIS
           # S – Sequencial Único do Boleto
-          "097#{documento_cedente.modulo11}#{agencia.rjust(4, '0')}#{convenio.rjust(6, '0')}#{nosso_numero.rjust(6, '0')}"
+          "#{cod_banco}#{documento_cedente_dv}#{agencia.rjust(4, '0')}#{convenio.rjust(6, '0')}#{nosso_numero.rjust(6, '0')}"
         end
 
         def codigo_operacao
@@ -180,6 +181,10 @@ module Brcobranca
 
         def tipo_identificacao_cedente
           Brcobranca::Util::Empresa.new(documento_cedente).tipo
+        end
+
+        def documento_cedente_dv
+          documento_cedente.modulo11(mapeamento: { 10 => 'X' })
         end
       end
     end
