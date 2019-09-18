@@ -84,10 +84,10 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(object.errors.full_messages).to include('Convenio não pode estar em branco.')
       end
 
-      it 'deve ser inválido se o código do cedente tiver mais de 4 dígitos' do
-        credisis.convenio = '12345'
+      it 'deve ser inválido se o convênio tiver mais de 6 dígitos' do
+        credisis.convenio = '1234567'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Convenio é muito longo (máximo: 4 caracteres).')
+        expect(credisis.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
       end
     end
 
