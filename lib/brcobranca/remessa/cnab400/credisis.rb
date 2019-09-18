@@ -10,12 +10,13 @@ module Brcobranca
           'NP' => '12',
           'RC' => '17',
           'ME' => '21',
-          'NF' => '23' # TODO: Adicionar no monde
+          'NF' => '23'
         }
 
         attr_accessor :documento_cedente
         attr_accessor :convenio
         attr_accessor :parcela
+        attr_accessor :codigo_cedente
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela, :convenio
         validates_length_of :convenio, maximum: 6
