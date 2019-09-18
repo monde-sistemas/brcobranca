@@ -100,24 +100,7 @@ module Brcobranca
         "#{agencia}-#{agencia_dv} / #{conta_corrente}-#{conta_corrente_dv}"
       end
 
-      # Segunda parte do código de barras.
-      #
-      # 01 a 03 03 Código da IF “097”
-      # 04 a 04 01 Código da Moeda “9” (Real)
-      # 05 a 05 01 *Dígito Verificador (DV)
-      # 06 a 09 04 **Fator de Vencimento
-      # 10 a 19 10 Valor
-      # 20 a 44 25 ***Campo Livre (Nosso Número)
-      #
-      # MONTAGEM DO CÓDIGO DE BARRAS:
-      # 1     2   3   4     5            6        7
-      # AAA   B   K   UUUU  VVVVVVVVVV   CCCCC    DDDDDDDDDDEEEEEEEEEE
-      #
-      # 1. - Número do Banco: “097”
-      # 2. - Moeda: “9”
-      # 3. - DV do Código de Barras, Baseado no Módulo 11 (Vide Anexo X).
-      # 4. - Fator de Vencimento do Boleto (Vide Anexo VII).
-      # 5. - Valor do Título, expresso em Reais, com 02 casas decimais.
+      # Segunda parte do código de barras:
       # 6. - Fixo Zeros: Campo com preenchimento Zerado “00000”
       # 7. - Composição do Nosso Número: 097XAAAACCCCCCSSSSSS
       #
