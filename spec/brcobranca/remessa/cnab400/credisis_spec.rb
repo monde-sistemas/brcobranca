@@ -4,7 +4,8 @@ require 'spec_helper'
 RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
-                                       data_vencimento: Date.current,
+                                       data_vencimento: Date.new(2019, 9, 13),
+                                       data_emissao: Date.new(2019, 9, 10),
                                        nosso_numero: 123,
                                        documento: 6969,
                                        dias_protesto: '6',
@@ -23,7 +24,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       carteira: '18',
       agencia: '1',
       conta_corrente: '2',
-      codigo_cedente: '0027',
+      convenio: '0027',
       documento_cedente: '12345678901234',
       digito_conta: '7',
       sequencial_remessa: '3',
@@ -76,17 +77,17 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       end
     end
 
-    context '@codigo_cedente' do
+    context '@convenio' do
       it 'deve ser inválido se não possuir código do cedente' do
-        object = subject.class.new(params.merge!(codigo_cedente: nil))
+        object = subject.class.new(params.merge!(convenio: nil))
         expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Codigo cedente não pode estar em branco.')
+        expect(object.errors.full_messages).to include('Convenio não pode estar em branco.')
       end
 
-      it 'deve ser inválido se o código do cedente tiver mais de 4 dígitos' do
-        credisis.codigo_cedente = '12345'
+      it 'deve ser inválido se o convênio tiver mais de 6 dígitos' do
+        credisis.convenio = '1234567'
         expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Codigo cedente é muito longo (máximo: 4 caracteres).')
+        expect(credisis.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
       end
     end
 
@@ -149,32 +150,41 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[1..2]).to eq '02'                                            # tipo do documento do cedente
         expect(detalhe[3..16]).to eq '12345678901234'                               # documento do cedente
         expect(detalhe[17..20]).to eq '0001'                                        # agência
-        expect(detalhe[22..29]).to eq '00000002'                                    # conta corrente
-        expect(detalhe[30]).to eq '7'                                               # dígito da conta corrente
-        expect(detalhe[37..61]).to eq '6969'.ljust(25)                              # número controle cliente
-        expect(detalhe[62..72]).to eq '00027000123'                                 # nosso numero
-        expect(detalhe[73..109]).to eq ''.rjust(37, ' ')                            # brancos
-        expect(detalhe[110..119]).to eq '0000000000'                                # número documento
-        expect(detalhe[120..125]).to eq Date.current.strftime('%d%m%y')             # data de vencimento
-        expect(detalhe[126..138]).to eq '0000000019990'                             # valor do titulo
-        expect(detalhe[139..149]).to eq ''.rjust(11, ' ')                           # brancos
-        expect(detalhe[150..155]).to eq Date.current.strftime('%d%m%y')             # data emissão título
-        expect(detalhe[156..159]).to eq ''.rjust(4, ' ')                            # brancos
-        expect(detalhe[160..165]).to eq '080000'                                    # mora
-        expect(detalhe[166..171]).to eq '020000'                                    # multa
-        expect(detalhe[172..204]).to eq ''.rjust(33, ' ')                           # brancos
-        expect(detalhe[205..217]).to eq ''.rjust(13, '0')                           # desconto
-        expect(detalhe[218..219]).to eq '01'                                        # tipo documento sacado
-        expect(detalhe[220..233]).to eq '00012345678901'                            # documento sacado
-        expect(detalhe[234..273]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'  # nome sacado
-        expect(detalhe[274..310]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas'     # endereco sacado
-        expect(detalhe[311..325]).to eq 'Sao jose dos qu'                           # bairro sacado
-        expect(detalhe[326..333]).to eq '12345678'                                  # cep sacado
-        expect(detalhe[334..348]).to eq 'Santa rita de c'                           # cidade sacado
-        expect(detalhe[349..350]).to eq 'SP'                                        # uf sacado
-        expect(detalhe[351..375]).to eq ''.rjust(25, ' ')                           # nome avalista
-        expect(detalhe[377..390]).to eq ''.rjust(14, ' ')                           # documento avalista
-        expect(detalhe[391..392]).to eq '06'                                        # dias para envio a protesto
+        expect(detalhe[21..28]).to eq '00000002'                                    # conta corrente
+        expect(detalhe[29]).to eq '7'                                               # dígito da conta corrente
+        expect(detalhe[30..55]).to eq ' ' * 26                                      # brancos
+        expect(detalhe[56..75]).to eq '09700001000027000123'                        # nosso numero
+        expect(detalhe[76..77]).to eq '01'                                          # código da operacão
+        expect(detalhe[78..83]).to eq Date.current.strftime('%d%m%y')               # data da operacão
+        expect(detalhe[84..89]).to eq ' ' * 6                                       # brancos
+        expect(detalhe[90..91]).to eq '01'                                          # parcela
+        expect(detalhe[92]).to eq '3'                                               # tipo pagamento
+        expect(detalhe[93]).to eq '3'                                               # tipo recebimento
+        expect(detalhe[94..95]).to eq '02'                                          # especie titulo
+        expect(detalhe[96]).to eq '2'                                               # tipo protesto
+        expect(detalhe[97..98]).to eq '06'                                          # dias protesto
+        expect(detalhe[99..100]).to eq '03'                                         # tipo de envio do protesto
+        expect(detalhe[101..109]).to eq ' ' * 9                                     # brancos
+        expect(detalhe[110..119]).to eq '6969      '                                # numero documento
+        expect(detalhe[120..125]).to eq '130919'                                    # vencimento do documento
+        expect(detalhe[126..138]).to eq '0000000019990'                             # valor do documento
+        expect(detalhe[139..144]).to eq '130919'                                    # data limite do pagamento
+        expect(detalhe[145..149]).to eq ' ' * 5                                     # brancos
+        expect(detalhe[150..155]).to eq '100919'                                    # data de emissao
+        expect(detalhe[156]).to eq ' '                                              # data de emissao
+        expect(detalhe[157..158]).to eq '01'                                        # tipo do documento do sacado
+        expect(detalhe[159..172]).to eq '00012345678901'                            # cpf/cnpj sacado
+        expect(detalhe[173..212]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'  # nome do sacado
+        expect(detalhe[213..237]).to eq ' ' * 25                                    # nome fantasia
+        expect(detalhe[238..278]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas cac' # endereco do sacado
+        expect(detalhe[279..303]).to eq 'Sao jose dos quatro apost'                 # bairro do sacado
+        expect(detalhe[304..328]).to eq 'Santa rita de cassia mari'                 # cidade do sacado
+        expect(detalhe[329..330]).to eq 'SP'                                        # uf do sacado
+        expect(detalhe[331..338]).to eq '12345678'                                  # cep do sacado
+        expect(detalhe[339..349]).to eq ' ' * 11                                    # celular do sacado
+        expect(detalhe[350..392]).to eq ' ' * 43                                    # email do sacado
+        expect(detalhe[393]).to eq ' '                                              # brancos
+        expect(detalhe[394..399]).to eq '000001'                                    # sequencial remessa
       end
     end
 

@@ -2,16 +2,10 @@
 module Brcobranca
   module Boleto
     class Credisis < Base # CrediSIS
-      attr_accessor :codigo_cedente
-
-      validates_presence_of :codigo_cedente
-
       validates_length_of :agencia, maximum: 4
       validates_length_of :conta_corrente, maximum: 7
-      validates_length_of :codigo_cedente, is: 4
       validates_length_of :carteira, is: 2
-      validates_length_of :convenio, is: 7
-
+      validates_length_of :convenio, maximum: 6
       validates_length_of :numero, maximum: 6
 
       # Nova instancia do CrediSIS
@@ -61,9 +55,8 @@ module Brcobranca
         conta_corrente.modulo11(mapeamento: { 10 => 'X' })
       end
 
-      # Número seqüencial utilizado para identificar o boleto.
+      # Número sequencial utilizado para identificar o boleto.
       # (Número de dígitos depende do tipo de convênio).
-      # @raise  [Brcobranca::NaoImplementado] Caso o tipo de convênio não seja suportado pelo Brcobranca.
       #
       # @overload numero
       #   Nosso Número de 17 dígitos com Convenio de 7 dígitos e código do cooperado de 4 dígitos. (carteira 18)
@@ -80,11 +73,23 @@ module Brcobranca
       end
 
       # Nosso número para exibir no boleto.
+      # Composição do Nosso Número:
+      # 097XAAAACCCCCCSSSSSS
+      # 097 Fixo
+      # X Módulo 11 do CPF/CNPJ (Incluindo dígitos verificadores) do Beneficiário.
+      # AAAA Código da Agência CrediSIS ao qual o Beneficiário possui Conta.
+      # CCCCCC Código de Convênio do Beneficiário no Sistema CrediSIS
+      # SSSSSS Sequencial Único do Boleto
+      #
       # @return [String]
       # @example
       #  boleto.nosso_numero_boleto #=> "10000000027000095-7"
       def nosso_numero_boleto
-        "#{convenio}#{codigo_cedente}#{numero}"
+        "#{banco}#{documento_cedente_dv}#{agencia.rjust(4, '0')}#{convenio.rjust(6, '0')}#{numero.rjust(6, '0')}"
+      end
+
+      def documento_cedente_dv
+        documento_cedente.modulo11(mapeamento: { 10 => 'X' })
       end
 
       # Agência + conta corrente do cliente para exibir no boleto.
@@ -95,10 +100,13 @@ module Brcobranca
         "#{agencia}-#{agencia_dv} / #{conta_corrente}-#{conta_corrente_dv}"
       end
 
-      # Segunda parte do código de barras.
-      # @return [String] 25 caracteres numéricos.
+      # Segunda parte do código de barras:
+      # 6. - Fixo Zeros: Campo com preenchimento Zerado “00000”
+      # 7. - Composição do Nosso Número: 097XAAAACCCCCCSSSSSS
+      #
+      # @return [String] 25 caracteres numéricos..
       def codigo_barras_segunda_parte
-        "00#{convenio}#{codigo_cedente}#{numero}#{carteira}".rjust(25, '0')
+        "#{'0' * 5}#{nosso_numero_boleto}".rjust(25, '0')
       end
     end
   end
