@@ -2,6 +2,8 @@
 module Brcobranca
   module Boleto
     class Credisis < Base # CrediSIS
+      MAPEAMENTO_MODULO11 = { 0 => 1, 10 => 1, 11 => 1 }
+
       validates_length_of :agencia, maximum: 4
       validates_length_of :conta_corrente, maximum: 7
       validates_length_of :carteira, is: 2
@@ -33,14 +35,14 @@ module Brcobranca
       #
       # @return [String] 1 caracteres numéricos.
       def banco_dv
-        banco.modulo11(mapeamento: { 10 => 'X' })
+        banco.modulo11(mapeamento: MAPEAMENTO_MODULO11)
       end
 
       # Retorna dígito verificador da agência
       #
       # @return [String] 1 caracteres numéricos.
       def agencia_dv
-        agencia.modulo11(mapeamento: { 10 => 'X' })
+        agencia.modulo11(mapeamento: MAPEAMENTO_MODULO11)
       end
 
       # Conta corrente
@@ -52,7 +54,7 @@ module Brcobranca
       # Dígito verificador da conta corrente
       # @return [String] 1 caracteres numéricos.
       def conta_corrente_dv
-        conta_corrente.modulo11(mapeamento: { 10 => 'X' })
+        conta_corrente.modulo11(mapeamento: MAPEAMENTO_MODULO11)
       end
 
       # Número sequencial utilizado para identificar o boleto.
@@ -69,7 +71,7 @@ module Brcobranca
       # @return [String] 1 caracteres numéricos.
       # @see BancoBrasil#numero
       def nosso_numero_dv
-        "#{numero}".modulo11(mapeamento: { 10 => 'X' })
+        "#{numero}".modulo11(mapeamento: MAPEAMENTO_MODULO11)
       end
 
       # Nosso número para exibir no boleto.
@@ -89,7 +91,7 @@ module Brcobranca
       end
 
       def documento_cedente_dv
-        documento_cedente.modulo11(mapeamento: { 10 => 'X' })
+        documento_cedente.modulo11(mapeamento: MAPEAMENTO_MODULO11)
       end
 
       # Agência + conta corrente do cliente para exibir no boleto.

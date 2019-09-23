@@ -153,7 +153,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[21..28]).to eq '00000002'                                    # conta corrente
         expect(detalhe[29]).to eq '7'                                               # dígito da conta corrente
         expect(detalhe[30..55]).to eq ' ' * 26                                      # brancos
-        expect(detalhe[56..75]).to eq '09700001000027000123'                        # nosso numero
+        expect(detalhe[56..75]).to eq '09710001000027000123'                        # nosso numero
         expect(detalhe[76..77]).to eq '01'                                          # código da operacão
         expect(detalhe[78..83]).to eq Date.current.strftime('%d%m%y')               # data da operacão
         expect(detalhe[84..89]).to eq ' ' * 6                                       # brancos

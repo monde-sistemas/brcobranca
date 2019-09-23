@@ -185,7 +185,7 @@ module Brcobranca
         end
 
         def documento_cedente_dv
-          documento_cedente.modulo11(mapeamento: { 10 => 'X' })
+          documento_cedente.modulo11(mapeamento: Boleto::Credisis::MAPEAMENTO_MODULO11)
         end
       end
     end
