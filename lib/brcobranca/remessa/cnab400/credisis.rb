@@ -78,10 +78,9 @@ module Brcobranca
         # @return [String]
         #
         def complemento
-          # sequencial da remessa  9[7]
-          # brancos                X[284]
-          # versao do arquivo      9[3] - 001 Padrão
-          "#{sequencial_remessa}#{' ' * 284}001"
+          brancos = ' ' * 284
+          versao_arquivo = '001'
+          "#{sequencial_remessa}#{brancos}#{versao_arquivo}"
         end
 
         # Detalhe do arquivo
