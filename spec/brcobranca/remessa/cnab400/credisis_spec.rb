@@ -117,7 +117,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         end
       end
 
-      context 'sequencial remessa com mais de 7 dígitos' do
+      context 'com mais de 7 dígitos' do
         let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: "12345678")) }
 
         it do
