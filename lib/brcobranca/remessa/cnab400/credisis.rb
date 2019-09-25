@@ -80,8 +80,8 @@ module Brcobranca
         def complemento
           # sequencial da remessa  9[7]
           # brancos                X[284]
-          # Versão do Arquivo      9[3] - 001 Padrão
-          "#{sequencial_remessa}#{" " * 284}001"
+          # versao do arquivo      9[3] - 001 Padrão
+          "#{sequencial_remessa}#{' ' * 284}001"
         end
 
         # Detalhe do arquivo
