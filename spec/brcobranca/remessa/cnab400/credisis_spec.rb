@@ -108,10 +108,22 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
     end
 
     context '@sequencial_remessa' do
-      it 'deve ser inválido se a sequencial remessa tiver mais de 7 dígitos' do
-        credisis.sequencial_remessa = '12345678'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
+      context 'com valor nil' do
+        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: nil)) }
+
+        it do
+          expect(credisis.invalid?).to be true
+          expect(credisis.errors.full_messages).to include('Sequencial remessa não pode estar em branco.')
+        end
+      end
+
+      context 'sequencial remessa com mais de 7 dígitos' do
+        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: "12345678")) }
+
+        it do
+          expect(credisis.invalid?).to be true
+          expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
+        end
       end
     end
   end

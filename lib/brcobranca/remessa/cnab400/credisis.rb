@@ -18,7 +18,8 @@ module Brcobranca
         attr_accessor :parcela
         attr_accessor :codigo_cedente
 
-        validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela, :convenio
+        validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela,
+                              :convenio, :sequencial_remessa
         validates_length_of :convenio, maximum: 6
         validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 8
@@ -80,7 +81,7 @@ module Brcobranca
         def complemento
           brancos = ' ' * 284
           versao_arquivo = '001'
-          "#{sequencial_remessa}#{brancos}#{versao_arquivo}"
+          "#{sequencial_remessa.to_s.rjust(7, '0')}#{brancos}#{versao_arquivo}"
         end
 
         # Detalhe do arquivo
