@@ -19,6 +19,12 @@ module Brcobranca
       attr_accessor :nome_sacado
       # <b>REQUERIDO</b>: endereco do sacado (cliente)
       attr_accessor :endereco_sacado
+      # <b>OPCIONAL</b>: logradouro do sacado (cliente)
+      attr_accessor :logradouro_sacado
+      # <b>OPCIONAL</b>: numero do imovel do sacado (cliente)
+      attr_accessor :numero_sacado
+      # <b>OPCIONAL</b>: complemento do endereco do sacado (cliente)
+      attr_accessor :complemento_sacado
       # <b>REQUERIDO</b>: bairro do sacado (cliente)
       attr_accessor :bairro_sacado
       # <b>REQUERIDO</b>: CEP do sacado (cliente)
