@@ -48,10 +48,6 @@ module Brcobranca
           @carteira = valor.to_s.rjust(2, '0') if valor
         end
 
-        def sequencial_remessa=(valor)
-          @sequencial_remessa = valor.to_s.rjust(7, '0') if valor
-        end
-
         def cod_banco
           '097'
         end
