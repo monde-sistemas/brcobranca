@@ -13,7 +13,6 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
                                        percentual_multa: '2.00',
                                        documento_sacado: '12345678901',
                                        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-                                       endereco_sacado: 'RUA RIO GRANDE DO SUL, 190',
                                        logradouro_sacado: 'RUA RIO GRANDE DO SUL',
                                        numero_sacado: '190',
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
