@@ -13,7 +13,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
                                        percentual_multa: '2.00',
                                        documento_sacado: '12345678901',
                                        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       logradouro_sacado: 'RUA RIO GRANDE DO SUL',
+                                       numero_sacado: '190',
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
@@ -106,10 +107,22 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
     end
 
     context '@sequencial_remessa' do
-      it 'deve ser inválido se a sequencial remessa tiver mais de 7 dígitos' do
-        credisis.sequencial_remessa = '12345678'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
+      context 'com valor nil' do
+        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: nil)) }
+
+        it do
+          expect(credisis.invalid?).to be true
+          expect(credisis.errors.full_messages).to include('Sequencial remessa não pode estar em branco.')
+        end
+      end
+
+      context 'com mais de 7 dígitos' do
+        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: "12345678")) }
+
+        it do
+          expect(credisis.invalid?).to be true
+          expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
+        end
       end
     end
   end
@@ -117,7 +130,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
   context 'formatacoes dos valores' do
     it 'cod_banco deve ser 097' do
       expect(credisis.cod_banco).to eq '097'
-      expect(credisis.nome_banco.strip).to eq 'CENTRALCRED'
+      expect(credisis.nome_banco.strip).to eq 'CENTRALCREDI'
     end
 
     it 'info_conta deve retornar com 20 posicoes as informacoes da conta' do
@@ -140,6 +153,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(header[26..45]).to eq credisis.info_conta              # informacoes da conta
         expect(header[76..78]).to eq '097'                            # codigo do banco
         expect(header[100..106]).to eq '0000003'                      # sequencial da remessa
+        expect(header[107..390]).to eq ' ' * 284                      # brancos
+        expect(header[391..393]).to eq '001'                          # versão do arquivo
+        expect(header[394..399]).to eq '000001'                       # nr sequencial do revistro
       end
     end
 
@@ -176,8 +192,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[159..172]).to eq '00012345678901'                            # cpf/cnpj sacado
         expect(detalhe[173..212]).to eq 'PABLO DIEGO JOSE FRANCISCO DE PAULA JUAN'  # nome do sacado
         expect(detalhe[213..237]).to eq ' ' * 25                                    # nome fantasia
-        expect(detalhe[238..278]).to eq 'RUA RIO GRANDE DO SUL Sao paulo Minas cac' # endereco do sacado
-        expect(detalhe[279..303]).to eq 'Sao jose dos quatro apost'                 # bairro do sacado
+        expect(detalhe[238..272]).to eq 'RUA RIO GRANDE DO SUL              '       # endereco do sacado
+        expect(detalhe[273..278]).to eq '190   '                                    # bairro do sacado
         expect(detalhe[304..328]).to eq 'Santa rita de cassia mari'                 # cidade do sacado
         expect(detalhe[329..330]).to eq 'SP'                                        # uf do sacado
         expect(detalhe[331..338]).to eq '12345678'                                  # cep do sacado

@@ -18,7 +18,8 @@ module Brcobranca
         attr_accessor :parcela
         attr_accessor :codigo_cedente
 
-        validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela, :convenio
+        validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela,
+                              :convenio, :sequencial_remessa
         validates_length_of :convenio, maximum: 6
         validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 8
@@ -47,16 +48,12 @@ module Brcobranca
           @carteira = valor.to_s.rjust(2, '0') if valor
         end
 
-        def sequencial_remessa=(valor)
-          @sequencial_remessa = valor.to_s.rjust(7, '0') if valor
-        end
-
         def cod_banco
           '097'
         end
 
         def nome_banco
-          'CENTRALCRED'.ljust(15, ' ')
+          'CENTRALCREDI'.ljust(15, ' ')
         end
 
         # Informacoes da conta corrente do cedente
@@ -78,7 +75,9 @@ module Brcobranca
         # @return [String]
         #
         def complemento
-          sequencial_remessa.to_s.ljust(294, ' ')
+          brancos = ' ' * 284
+          versao_arquivo = '001'
+          "#{sequencial_remessa.to_s.rjust(7, '0')}#{brancos}#{versao_arquivo}"
         end
 
         # Detalhe do arquivo
@@ -123,7 +122,8 @@ module Brcobranca
           detalhe << pagamento.documento_sacado.to_s.rjust(14, '0') # documento do pagador                  9[14]
           detalhe << pagamento.nome_sacado.format_size(40)                  # nome do pagador                       A[40]
           detalhe << ' ' * 25                                               # nome fantasia do pagador              A[25]
-          detalhe << pagamento.endereco_sacado.format_size(41)              # endereco + nr do pagador              A[41]
+          detalhe << pagamento.logradouro_sacado.format_size(35)            # logradouro                            A[35]
+          detalhe << pagamento.numero_sacado.format_size(6)                 # numero endereco do pagador            9[06]
           detalhe << pagamento.bairro_sacado.format_size(25)                # bairro do pagador                     X[25]
           detalhe << pagamento.cidade_sacado.format_size(25)                # cidade do pagador                     A[25]
           detalhe << pagamento.uf_sacado                                    # uf do pagador                         A[02]

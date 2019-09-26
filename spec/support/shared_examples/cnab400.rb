@@ -6,7 +6,8 @@ shared_examples_for 'cnab400' do
                                        nosso_numero: 123,
                                        documento_sacado: '12345678901',
                                        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-                                       endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       logradouro_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                                       numero_sacado: '190',
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
@@ -68,6 +69,7 @@ shared_examples_for 'cnab400' do
         empresa_mae: 'SOCIEDADE BRASILEIRA DE ZOOLOGIA LTDA',
         convenio: '0027',
         documento_cedente: '12345678910',
+        sequencial_remessa: '1',
         pagamentos: [pagamento]
       }
     elsif subject.class == Brcobranca::Remessa::Cnab400::Banrisul

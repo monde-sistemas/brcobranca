@@ -1,3 +1,6 @@
+require 'active_support/core_ext/date/calculations'
+require 'active_support/core_ext/time/calculations'
+
 # -*- encoding: utf-8 -*-
 module Brcobranca
   module Remessa
@@ -17,8 +20,12 @@ module Brcobranca
       attr_accessor :documento_sacado
       # <b>REQUERIDO</b>: nome do sacado (cliente)
       attr_accessor :nome_sacado
-      # <b>REQUERIDO</b>: endereco do sacado (cliente)
-      attr_accessor :endereco_sacado
+      # <b>REQUERIDO</b>: logradouro do sacado (cliente)
+      attr_accessor :logradouro_sacado
+      # <b>REQUERIDO</b>: numero do imovel do sacado (cliente)
+      attr_accessor :numero_sacado
+      # <b>OPCIONAL</b>: complemento do endereco do sacado (cliente)
+      attr_accessor :complemento_sacado
       # <b>REQUERIDO</b>: bairro do sacado (cliente)
       attr_accessor :bairro_sacado
       # <b>REQUERIDO</b>: CEP do sacado (cliente)
@@ -89,8 +96,8 @@ module Brcobranca
       attr_accessor :dias_baixa
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
-                            :documento_sacado, :nome_sacado, :endereco_sacado,
-                            :cep_sacado, :cidade_sacado, :uf_sacado
+                            :documento_sacado, :nome_sacado, :logradouro_sacado,
+                            :numero_sacado, :cep_sacado, :cidade_sacado, :uf_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
       validates_length_of :cod_segundo_desconto, is: 1
@@ -275,6 +282,14 @@ module Brcobranca
 
       def formata_data_vencimento(formato = '%d%m%Y')
         data_vencimento.strftime(formato)
+      end
+
+      def endereco_sacado
+        [
+          logradouro_sacado,
+          numero_sacado,
+          complemento_sacado
+        ].reject(&:blank?).join(', ')
       end
 
       private

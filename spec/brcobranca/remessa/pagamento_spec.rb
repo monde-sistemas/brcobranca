@@ -1,15 +1,16 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*
 
 require 'spec_helper'
 
 RSpec.describe Brcobranca::Remessa::Pagamento do
   let(:pagamento) do
-    subject.class.new(valor: 199.9,
+    described_class.new(valor: 199.9,
                       data_vencimento: Date.parse('2015-06-25'),
                       nosso_numero: 123,
                       documento_sacado: '12345678901',
                       nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
-                      endereco_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva junior',
+                      logradouro_sacado: 'RUA RIO GRANDE DO SUL São paulo Minas caçapa da silva',
+                      numero_sacado: '999',
                       bairro_sacado: 'São josé dos quatro apostolos magros',
                       cep_sacado: '12345678',
                       cidade_sacado: 'Santa rita de cássia maria da silva',
@@ -47,10 +48,16 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.errors.full_messages).to include('Nome sacado não pode estar em branco.')
     end
 
-    it 'deve ser inválido se não possuir endereco do sacado' do
-      pagamento.endereco_sacado = nil
+    it 'deve ser inválido se não possuir logradouro do sacado' do
+      pagamento.logradouro_sacado = nil
       expect(pagamento.invalid?).to be true
-      expect(pagamento.errors.full_messages).to include('Endereco sacado não pode estar em branco.')
+      expect(pagamento.errors.full_messages).to include('Logradouro sacado não pode estar em branco.')
+    end
+
+    it 'deve ser inválido se não possuir número do sacado' do
+      pagamento.numero_sacado = nil
+      expect(pagamento.invalid?).to be true
+      expect(pagamento.errors.full_messages).to include('Numero sacado não pode estar em branco.')
     end
 
     it 'deve ser inválido se não possuir cidade do sacado' do
@@ -235,6 +242,32 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
         pagamento.documento_avalista = '12345678901'
         expect(pagamento.identificacao_avalista(false)).to eq '1'
       end
+    end
+  end
+
+  describe '#endereco_sacado' do
+    subject { pagamento.endereco_sacado }
+
+    before do
+      pagamento.logradouro_sacado = logradouro_sacado
+      pagamento.numero_sacado = numero_sacado
+      pagamento.complemento_sacado = complemento_sacado
+    end
+
+    context 'com todos os campos informados' do
+      let(:logradouro_sacado) { 'Rua dos bobos' }
+      let(:numero_sacado) { '0' }
+      let(:complemento_sacado) { 'casa muito engraçada' }
+
+      it { is_expected.to eq 'Rua dos bobos, 0, casa muito engraçada' }
+    end
+
+    context 'com campos em branco' do
+      let(:logradouro_sacado) { 'Wall street' }
+      let(:numero_sacado) { '999' }
+      let(:complemento_sacado) { '' }
+
+      it { is_expected.to eq 'Wall street, 999' }
     end
   end
 end
