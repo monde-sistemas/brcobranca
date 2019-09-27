@@ -137,9 +137,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       end
 
       context 'com valor válido' do
-        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: '36136903825')) }
+        let(:credisis) { subject.class.new(params.merge!(documento_cedente: '36136903825')) }
 
-        it { expect(credisis.invalid?).to be true }
+        it { expect(credisis.invalid?).to be false }
       end
     end
   end
