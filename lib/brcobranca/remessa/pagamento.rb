@@ -94,10 +94,12 @@ module Brcobranca
       attr_accessor :codigo_baixa
       # <b>OPCIONAL</b>: dias para baixa
       attr_accessor :dias_baixa
+      attr_accessor :validar_numero_sacado
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
                             :documento_sacado, :nome_sacado, :logradouro_sacado,
-                            :numero_sacado, :cep_sacado, :cidade_sacado, :uf_sacado
+                            :cep_sacado, :cidade_sacado, :uf_sacado
+      validates_presence_of :numero_sacado, if: :validar_numero_sacado
       validates_length_of :cep_sacado, is: 8
       validates_length_of :cod_desconto, is: 1
       validates_length_of :cod_segundo_desconto, is: 1
@@ -130,7 +132,8 @@ module Brcobranca
           codigo_baixa: '0',
           dias_baixa: '000',
           cod_primeira_instrucao: '00',
-          cod_segunda_instrucao: '00'
+          cod_segunda_instrucao: '00',
+          validar_numero_sacado: false
         }
 
         campos = padrao.merge!(campos)
