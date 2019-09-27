@@ -54,10 +54,23 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       expect(pagamento.errors.full_messages).to include('Logradouro sacado não pode estar em branco.')
     end
 
-    it 'deve ser inválido se não possuir número do sacado' do
-      pagamento.numero_sacado = nil
-      expect(pagamento.invalid?).to be true
-      expect(pagamento.errors.full_messages).to include('Numero sacado não pode estar em branco.')
+    describe '#validar_numero_sacado' do
+      before { pagamento.numero_sacado = nil }
+
+      context 'ativado' do
+        before { pagamento.validar_numero_sacado = true }
+
+        it do
+          expect(pagamento.invalid?).to be true
+          expect(pagamento.errors.full_messages).to include('Numero sacado não pode estar em branco.')
+        end
+      end
+
+      context 'desativado' do
+        before { pagamento.validar_numero_sacado = false }
+
+        it { expect(pagamento.invalid?).to be false }
+      end
     end
 
     it 'deve ser inválido se não possuir cidade do sacado' do

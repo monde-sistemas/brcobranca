@@ -125,6 +125,23 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         end
       end
     end
+
+    describe '#documento_cedente' do
+      context 'com valor nil' do
+        let(:credisis) { described_class.new(params.merge!(documento_cedente: nil)) }
+
+        it do
+          expect(credisis.invalid?).to be true
+          expect(credisis.errors.full_messages).to include('Documento cedente não pode estar em branco.')
+        end
+      end
+
+      context 'com valor válido' do
+        let(:credisis) { subject.class.new(params.merge!(documento_cedente: '36136903825')) }
+
+        it { expect(credisis.invalid?).to be false }
+      end
+    end
   end
 
   context 'formatacoes dos valores' do

@@ -19,7 +19,7 @@ module Brcobranca
         attr_accessor :codigo_cedente
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela,
-                              :convenio, :sequencial_remessa
+                              :convenio, :sequencial_remessa, :documento_cedente
         validates_length_of :convenio, maximum: 6
         validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 8
@@ -90,6 +90,7 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
+          pagamento.validar_numero_sacado = true
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]
