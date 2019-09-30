@@ -48,6 +48,13 @@ module Brcobranca
           @carteira = valor.to_s.rjust(2, '0') if valor
         end
 
+        def pagamentos=(valor)
+          @pagamentos = (valor || []).map do |pagamento|
+            pagamento[:validar_numero_sacado] = true
+            pagamento
+          end
+        end
+
         def cod_banco
           '097'
         end
@@ -90,7 +97,6 @@ module Brcobranca
         # @return [String]
         #
         def monta_detalhe(pagamento, sequencial)
-          pagamento.validar_numero_sacado = true
           fail Brcobranca::RemessaInvalida.new(pagamento) if pagamento.invalid?
 
           detalhe = '1'                                                     # identificacao transacao               9[01]

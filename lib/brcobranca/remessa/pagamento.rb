@@ -138,7 +138,7 @@ module Brcobranca
 
         campos = padrao.merge!(campos)
         campos.each do |campo, valor|
-          send "#{campo}=", valor
+          self[campo] = valor
         end
 
         yield self if block_given?
@@ -156,6 +156,10 @@ module Brcobranca
         else
           '00000000'
         end
+      end
+
+      def []=(campo, valor)
+        send "#{campo}=", valor
       end
 
       # Formata a data de segundo desconto de acordo com o formato passado
