@@ -148,7 +148,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
     context "quando o campo validar_numero_sacado é falso" do
       before { pagamento.validar_numero_sacado = false }
 
-      it "seta valor para verdadeiro" do
+      it "altera valor para verdadeiro" do
         expect(credisis.pagamentos.first.validar_numero_sacado).to be true
       end
     end
