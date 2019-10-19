@@ -34,6 +34,16 @@ module Brcobranca
           arquivo.close
           codigo_banco
         end
+
+        def self.arquivo_invalido?(file)
+          File.open(file) do |arquivo|
+
+          end
+
+          codigo_banco = header.blank? ? nil : header[0..2]
+          arquivo.close
+          codigo_banco
+        end
       end
     end
   end

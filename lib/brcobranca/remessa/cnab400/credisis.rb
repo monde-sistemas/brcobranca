@@ -11,9 +11,35 @@ module Brcobranca
           'RC' => '17',
           'ME' => '21',
           'NF' => '23'
+        }.freeze
+
+        CODIGOS_MULTA = {
+          '0' => 'I',
+          '1' => 'F',
+          '2' => 'P'
+        }.freeze
+
+        CODIGOS_MORA = {
+          '3' => 'I',
+          '1' => 'F',
+          '2' => 'P'
+        }.freeze
+
+        CODIGOS_DESCONTO = {
+          '0' => 'I',
+          '1' => 'F',
+          '2' => 'P'
         }
 
+        attr_accessor :nome_cedente
         attr_accessor :documento_cedente
+        attr_accessor :logradouro_cedente
+        attr_accessor :numero_cedente
+        attr_accessor :complemento_cedente
+        attr_accessor :bairro_cedente
+        attr_accessor :cidade_cedente
+        attr_accessor :uf_cedente
+        attr_accessor :cep_cedente
         attr_accessor :convenio
         attr_accessor :parcela
         attr_accessor :codigo_cedente
@@ -142,6 +168,42 @@ module Brcobranca
           detalhe
         end
 
+        def monta_detalhe_multa(pagamento, sequencial)
+          detalhe = '2'                                                     # identificacao # transacao             9[01]
+          detalhe << tipo_identificacao_cedente                             # tipo de identificacao da empresa      9[02]
+          detalhe << documento_cedente.to_s.rjust(14, '0')     # cpf/cnpj da empresa                   9[14
+          detalhe << nome_cedente.format_size(40)                           # nome do sacador/avalista              A[40]
+          detalhe << logradouro_cedente.format_size(35)                     # logradouro do sacador/avalista        A[35]
+          detalhe << numero_cedente.format_size(6)                          # numero do sacador/avalista            9[6]
+          detalhe << complemento_cedente.format_size(25)                    # complemento do sacador/avalista       A[25]
+          detalhe << bairro_cedente.format_size(35)                         # bairro do sacador/avalista            A[35]
+          detalhe << cidade_cedente.format_size(25)                         # cidade do sacador/avalista            A[25]
+          detalhe << uf_cedente.format_size(2)                              # uf do sacador/avalista                A[02]
+          detalhe << ' '                                                    # brancos                               X[01]
+          detalhe << pagamento.instrucoes                                   # instrucoes                            A[100]
+          detalhe << ' '                                                    # brancos                               X[01]
+          detalhe << pagamento.formata_valor_mora(15)                       # valor juros                           V[15]
+          detalhe << CODIGOS_MORA[pagamento.codigo_juros]                   # codigo tipo do juros                  A[01]
+          detalhe << '2'                                                    # tipo carência do juros                9[01]
+          detalhe << '00'                                                   # dias carência do juros                9[01]
+          detalhe << pagamento.formata_percentual_multa(15)                 # valor multa                           V[15]
+          detalhe << CODIGOS_MULTA[pagamento.codigo_multa]                  # codigo tipo da multa                  A[01]
+          detalhe << '2'                                                    # tipo carência do multa                9[01]
+          detalhe << '00'                                                   # dias carência da multa                9[02]
+          detalhe << pagamento.formata_data_desconto                        # data primeiro desconto                D[06]
+          detalhe << pagamento.formata_valor_desconto(13)                   # valor primeiro desconto               V[13]
+          detalhe << CODIGOS_DESCONTO[pagamento.cod_desconto]               # codigo primeiro desconto              A[01]
+          detalhe << pagamento.formata_data_segundo_desconto                # data segundo desconto                 D[06]
+          detalhe << pagamento.formata_valor_segundo_desconto(13)           # valor segundo desconto                V[13]
+          detalhe << CODIGOS_DESCONTO[pagamento.cod_segundo_desconto]       # codigo segundo desconto               A[01]
+          detalhe << pagamento.formata_data_terceiro_desconto               # data terceiro desconto                D[06]
+          detalhe << pagamento.formata_valor_terceiro_desconto(13)          # valor terceiro desconto               V[13]
+          detalhe << CODIGOS_DESCONTO[pagamento.cod_terceiro_desconto]      # codigo terceiro desconto              A[01]
+          detalhe << ' ' * 12                                               # brancos                               X[12]
+          detalhe << sequencial.to_s.rjust(6, '0')             # numero do registro no arquivo         9[06]
+          detalhe
+        end
+
         def formata_nosso_numero(nosso_numero)
           # 0 9 7 X A A A A C C C C C C S S S S S S
           #
@@ -193,6 +255,10 @@ module Brcobranca
 
         def documento_cedente_dv
           documento_cedente.modulo11(mapeamento: Boleto::Credisis::MAPEAMENTO_MODULO11)
+        end
+
+        def gera_detalhe_multa?(pagamento)
+          !pagamento.instrucoes.blank?
         end
       end
     end
