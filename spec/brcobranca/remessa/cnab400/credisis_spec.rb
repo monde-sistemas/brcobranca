@@ -64,6 +64,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
     it { is_expected.to validate_presence_of(:bairro_cedente) }
     it { is_expected.to validate_presence_of(:cep_cedente) }
     it { is_expected.to validate_presence_of(:cidade_cedente) }
+    it { is_expected.to validate_presence_of(:uf_cedente) }
     it { is_expected.not_to validate_presence_of(:complemento_cedente) }
     it { is_expected.not_to validate_presence_of(:instrucoes) }
   end
