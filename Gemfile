@@ -17,4 +17,5 @@ group :test do
   gem 'rspec'
   gem 'rake'
   gem 'timecop'
+  gem 'shoulda-matchers'
 end

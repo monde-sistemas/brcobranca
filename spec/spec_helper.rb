@@ -14,10 +14,19 @@ require 'pry'
 require 'tempfile'
 require 'brcobranca'
 require 'rghost'
+require 'shoulda/matchers'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+
+    with.library :active_model
+  end
+end
 
 RSpec.configure do |config|
   config.disable_monkey_patching!
