@@ -208,8 +208,8 @@ module Brcobranca
         ].reject(&:blank?).join(', ')
       end
 
-      def method_missing(method_name, *args, &block)
-        name = method_name.to_s
+      def method_missing(method, *args, &block)
+        name = method.to_s
         if name.start_with? 'formata_data'
           formata_campo_data(name.remove('formata_'), *args)
         elsif name.start_with? "formata_valor"
@@ -219,8 +219,8 @@ module Brcobranca
         end
       end
 
-      def respond_to_missing?(method_name, include_private = false)
-        name = method_name.to_s
+      def respond_to_missing?(method, include_private = false)
+        name = method.to_s
         name.start_with?('formata_data') || name.start_with?('formata_valor') || super
       end
 
