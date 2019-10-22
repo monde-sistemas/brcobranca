@@ -29,7 +29,7 @@ module Brcobranca
           '0' => 'I',
           '1' => 'F',
           '2' => 'P'
-        }
+        }.freeze
 
         attr_accessor :nome_cedente
         attr_accessor :documento_cedente
@@ -43,21 +43,26 @@ module Brcobranca
         attr_accessor :convenio
         attr_accessor :parcela
         attr_accessor :codigo_cedente
+        attr_accessor :instrucoes
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela,
-                              :convenio, :sequencial_remessa, :documento_cedente
+                              :convenio, :sequencial_remessa, :documento_cedente, :nome_cedente,
+                              :logradouro_cedente, :numero_cedente, :bairro_cedente, :cidade_cedente,
+                              :uf_cedente, :cep_cedente
         validates_length_of :convenio, maximum: 6
         validates_length_of :agencia, maximum: 4
         validates_length_of :conta_corrente, maximum: 8
         validates_length_of :carteira, maximum: 2
         validates_length_of :digito_conta, maximum: 1
         validates_length_of :sequencial_remessa, maximum: 7
+        validates_length_of :instrucoes, maximum: 100
 
         # Nova instancia do CrediSIS
         def initialize(campos = {})
           campos = {
             aceite: 'N',
-            parcela: '01'
+            parcela: '01',
+            instrucoes: ''
           }.merge!(campos)
           super(campos)
         end
@@ -168,7 +173,7 @@ module Brcobranca
           detalhe
         end
 
-        def monta_detalhe_multa(pagamento, sequencial)
+        def monta_detalhe_opcional(pagamento, sequencial)
           detalhe = '2'                                                     # identificacao # transacao             9[01]
           detalhe << tipo_identificacao_cedente                             # tipo de identificacao da empresa      9[02]
           detalhe << documento_cedente.to_s.rjust(14, '0')     # cpf/cnpj da empresa                   9[14
@@ -176,11 +181,12 @@ module Brcobranca
           detalhe << logradouro_cedente.format_size(35)                     # logradouro do sacador/avalista        A[35]
           detalhe << numero_cedente.format_size(6)                          # numero do sacador/avalista            9[6]
           detalhe << complemento_cedente.format_size(25)                    # complemento do sacador/avalista       A[25]
-          detalhe << bairro_cedente.format_size(35)                         # bairro do sacador/avalista            A[35]
+          detalhe << bairro_cedente.format_size(25)                         # bairro do sacador/avalista            A[35]
           detalhe << cidade_cedente.format_size(25)                         # cidade do sacador/avalista            A[25]
           detalhe << uf_cedente.format_size(2)                              # uf do sacador/avalista                A[02]
+          detalhe << cep_cedente.format_size(8)                              # uf do sacador/avalista                A[02]
           detalhe << ' '                                                    # brancos                               X[01]
-          detalhe << pagamento.instrucoes                                   # instrucoes                            A[100]
+          detalhe << instrucoes.format_size(99)                            # instrucoes                            A[100]
           detalhe << ' '                                                    # brancos                               X[01]
           detalhe << pagamento.formata_valor_mora(15)                       # valor juros                           V[15]
           detalhe << CODIGOS_MORA[pagamento.codigo_juros]                   # codigo tipo do juros                  A[01]
@@ -257,8 +263,8 @@ module Brcobranca
           documento_cedente.modulo11(mapeamento: Boleto::Credisis::MAPEAMENTO_MODULO11)
         end
 
-        def gera_detalhe_multa?(pagamento)
-          !pagamento.instrucoes.blank?
+        def gera_detalhe_multa?
+          !instrucoes.blank?
         end
       end
     end

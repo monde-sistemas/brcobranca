@@ -57,7 +57,7 @@ module Brcobranca
           raise_metodo_nao_implementado
         end
 
-        def monta_detalhe_multa(_pagamento, _sequencial)
+        def monta_detalhe_opcional(_pagamento, _sequencial)
           raise_metodo_nao_implementado
         end
 
@@ -73,9 +73,9 @@ module Brcobranca
           pagamentos.each do |pagamento|
             contador += 1
             ret << monta_detalhe(pagamento, contador)
-            if gera_detalhe_multa?(pagamento)
+            if gera_detalhe_multa?
               contador += 1
-              ret << monta_detalhe_multa(pagamento, contador)
+              ret << monta_detalhe_opcional(pagamento, contador)
             end
           end
           ret << monta_trailer(contador + 1)
@@ -118,7 +118,7 @@ module Brcobranca
           '01'
         end
 
-        def gera_detalhe_multa?(_pagamento)
+        def gera_detalhe_multa?
           false
         end
 
