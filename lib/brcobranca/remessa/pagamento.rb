@@ -98,7 +98,6 @@ module Brcobranca
       attr_accessor :codigo_baixa
       # <b>OPCIONAL</b>: dias para baixa
       attr_accessor :dias_baixa
-      # <b>OPCIONAL</b>: instruções pagamento
       attr_accessor :validar_numero_sacado
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
