@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 require 'spec_helper'
 
-RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
+RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
   let(:pagamento) do
     Brcobranca::Remessa::Pagamento.new(valor: 199.9,
                                        data_vencimento: Date.new(2019, 9, 13),
@@ -18,7 +18,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       codigo_juros: '2',
+                                       codigo_multa: '2')
   end
   let(:params) do
     {
@@ -26,6 +28,14 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       agencia: '1',
       conta_corrente: '2',
       convenio: '0027',
+      nome_cedente: 'ANDERSON WILLIAN MACEDO',
+      logradouro_cedente: 'RUA DOS BOBOS',
+      numero_cedente: '0',
+      complemento_cedente: 'CASA MUITO ENGRAÇADA',
+      bairro_cedente: 'BAIRRO DO ESMERO',
+      cidade_cedente: 'JABULANDIA',
+      uf_cedente: 'BA',
+      cep_cedente: '18016335',
       documento_cedente: '12345678901234',
       digito_conta: '7',
       sequencial_remessa: '3',
@@ -33,115 +43,29 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
       pagamentos: [pagamento]
     }
   end
-  let(:credisis) { subject.class.new(params) }
+  let(:credisis) { described_class.new(params) }
 
-  context 'validações dos campos' do
-    context '@agencia' do
-      it 'deve ser inválido se não possuir uma agência' do
-        object = subject.class.new(params.merge!(agencia: nil))
-        expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Agencia não pode estar em branco.')
-      end
-
-      it 'deve ser invalido se a agencia tiver mais de 4 dígitos' do
-        credisis.agencia = '12345'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Agencia é muito longo (máximo: 4 caracteres).')
-      end
-    end
-
-    context '@digito_conta' do
-      it 'deve ser inválido se não possuir um dígito da conta corrente' do
-        objeto = subject.class.new(params.merge!(digito_conta: nil))
-        expect(objeto.invalid?).to be true
-        expect(objeto.errors.full_messages).to include('Digito conta não pode estar em branco.')
-      end
-
-      it 'deve ser inválido se o dígito da conta tiver mais de 1 dígito' do
-        credisis.digito_conta = '12'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Digito conta é muito longo (máximo: 1 caracteres).')
-      end
-    end
-
-    context '@conta_corrente' do
-      it 'deve ser inválido se não possuir uma conta corrente' do
-        object = subject.class.new(params.merge!(conta_corrente: nil))
-        expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Conta corrente não pode estar em branco.')
-      end
-
-      it 'deve ser inválido se a conta corrente tiver mais de 8 dígitos' do
-        credisis.conta_corrente = '123456789'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Conta corrente é muito longo (máximo: 8 caracteres).')
-      end
-    end
-
-    context '@convenio' do
-      it 'deve ser inválido se não possuir código do cedente' do
-        object = subject.class.new(params.merge!(convenio: nil))
-        expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Convenio não pode estar em branco.')
-      end
-
-      it 'deve ser inválido se o convênio tiver mais de 6 dígitos' do
-        credisis.convenio = '1234567'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Convenio é muito longo (máximo: 6 caracteres).')
-      end
-    end
-
-    context '@carteira' do
-      it 'deve ser inválido se não possuir uma carteira' do
-        object = subject.class.new(params.merge!(carteira: nil))
-        expect(object.invalid?).to be true
-        expect(object.errors.full_messages).to include('Carteira não pode estar em branco.')
-      end
-
-      it 'deve ser inválido se a carteira tiver mais de 2 dígitos' do
-        credisis.carteira = '123'
-        expect(credisis.invalid?).to be true
-        expect(credisis.errors.full_messages).to include('Carteira é muito longo (máximo: 2 caracteres).')
-      end
-    end
-
-    context '@sequencial_remessa' do
-      context 'com valor nil' do
-        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: nil)) }
-
-        it do
-          expect(credisis.invalid?).to be true
-          expect(credisis.errors.full_messages).to include('Sequencial remessa não pode estar em branco.')
-        end
-      end
-
-      context 'com mais de 7 dígitos' do
-        let(:credisis) { subject.class.new(params.merge!(sequencial_remessa: "12345678")) }
-
-        it do
-          expect(credisis.invalid?).to be true
-          expect(credisis.errors.full_messages).to include('Sequencial remessa é muito longo (máximo: 7 caracteres).')
-        end
-      end
-    end
-
-    describe '#documento_cedente' do
-      context 'com valor nil' do
-        let(:credisis) { described_class.new(params.merge!(documento_cedente: nil)) }
-
-        it do
-          expect(credisis.invalid?).to be true
-          expect(credisis.errors.full_messages).to include('Documento cedente não pode estar em branco.')
-        end
-      end
-
-      context 'com valor válido' do
-        let(:credisis) { subject.class.new(params.merge!(documento_cedente: '36136903825')) }
-
-        it { expect(credisis.invalid?).to be false }
-      end
-    end
+  describe 'validações' do
+    it { is_expected.to validate_presence_of(:agencia) }
+    it { is_expected.to validate_length_of(:agencia).is_at_most(4) }
+    it { is_expected.to validate_presence_of(:digito_conta) }
+    it { is_expected.to validate_length_of(:digito_conta).is_at_most(1) }
+    it { is_expected.to validate_presence_of(:conta_corrente) }
+    it { is_expected.to validate_length_of(:conta_corrente).is_at_most(8) }
+    it { is_expected.to validate_presence_of(:convenio) }
+    it { is_expected.to validate_length_of(:convenio).is_at_most(6) }
+    it { is_expected.to validate_presence_of(:carteira) }
+    it { is_expected.to validate_length_of(:carteira).is_at_most(2) }
+    it { is_expected.to validate_presence_of(:sequencial_remessa) }
+    it { is_expected.to validate_length_of(:sequencial_remessa).is_at_most(7) }
+    it { is_expected.to validate_presence_of(:nome_cedente) }
+    it { is_expected.to validate_presence_of(:logradouro_cedente) }
+    it { is_expected.to validate_presence_of(:numero_cedente) }
+    it { is_expected.to validate_presence_of(:bairro_cedente) }
+    it { is_expected.to validate_presence_of(:cep_cedente) }
+    it { is_expected.to validate_presence_of(:cidade_cedente) }
+    it { is_expected.not_to validate_presence_of(:complemento_cedente) }
+    it { is_expected.not_to validate_presence_of(:instrucoes) }
   end
 
   describe "pagamentos=" do
@@ -229,6 +153,47 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis do
         expect(detalhe[393]).to eq ' '                                              # brancos
         expect(detalhe[394..399]).to eq '000001'                                    # sequencial remessa
       end
+    end
+
+    describe '#monta_detalhe_opcional' do
+      subject(:detalhe) { credisis.monta_detalhe_opcional(pagamento, 1) }
+
+      let(:credisis) { described_class.new(params.merge!(instrucoes: 'PAGAR ANTES DO VENCIMENTO')) }
+
+      it { expect(detalhe.size).to eq 400 }
+      it { expect(detalhe[0]).to eq '2' }
+      it { expect(detalhe[1..2]).to eq '02' }
+      it { expect(detalhe[3..16]).to eq '12345678901234' }
+      it { expect(detalhe[17..56]).to eq 'ANDERSON WILLIAN MACEDO                 ' }
+      it { expect(detalhe[57..91]).to eq 'RUA DOS BOBOS                      ' }
+      it { expect(detalhe[92..97]).to eq '0     ' }
+      it { expect(detalhe[98..122]).to eq 'CASA MUITO ENGRACADA     ' }
+      it { expect(detalhe[123..147]).to eq 'BAIRRO DO ESMERO         ' }
+      it { expect(detalhe[148..172]).to eq 'JABULANDIA               ' }
+      it { expect(detalhe[173..174]).to eq 'BA' }
+      it { expect(detalhe[175..182]).to eq '18016335' }
+      it { expect(detalhe[183]).to eq ' ' }
+      it { expect(detalhe[184..282]).to include 'PAGAR ANTES DO VENCIMENTO' }
+      it { expect(detalhe[283]).to eq ' ' }
+      it { expect(detalhe[284..298]).to eq '000000000000800' }
+      it { expect(detalhe[299]).to eq 'P' }
+      it { expect(detalhe[300]).to eq '2' }
+      it { expect(detalhe[301..302]).to eq '00' }
+      it { expect(detalhe[303..317]).to eq '000000000000200' }
+      it { expect(detalhe[318]).to eq 'P' }
+      it { expect(detalhe[319]).to eq '2' }
+      it { expect(detalhe[320..321]).to eq '00' }
+      it { expect(detalhe[322..327]).to eq '000000' }
+      it { expect(detalhe[328..340]).to eq '0000000000000' }
+      it { expect(detalhe[341]).to eq 'I' }
+      it { expect(detalhe[342..347]).to eq '000000' }
+      it { expect(detalhe[348..360]).to eq '0000000000000' }
+      it { expect(detalhe[361]).to eq 'I' }
+      it { expect(detalhe[362..367]).to eq '000000' }
+      it { expect(detalhe[368..380]).to eq '0000000000000' }
+      it { expect(detalhe[381]).to eq 'I' }
+      it { expect(detalhe[382..393]).to eq ' ' * 12 }
+      it { expect(detalhe[394..399]).to eq '000001' }
     end
 
     context 'arquivo' do
