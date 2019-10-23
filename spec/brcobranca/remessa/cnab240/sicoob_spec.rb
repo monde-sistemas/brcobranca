@@ -16,7 +16,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
       cep_sacado: '12345678',
       cidade_sacado: 'Santa rita de cássia maria da silva',
       uf_sacado: 'RJ',
-      tipo_mora: '1',
+      codigo_mora: '1',
       codigo_protesto: '1',
       especie_titulo: 'DSI',
       codigo_multa: '1'
@@ -203,7 +203,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
     end
 
     it 'data de mora deve ser após o vencimento quando informada e tipo de mora for 2' do
-      pagamento.tipo_mora = '2'
+      pagamento.codigo_mora = '2'
       segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
 
       expect(segmento_p[77..84]).to eql '14072015'
@@ -211,7 +211,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicoob do
     end
 
     it 'data de mora deve estar zerada caso tipo de mora seja 1 ou 2' do
-      pagamento.tipo_mora = '0'
+      pagamento.codigo_mora = '0'
       segmento_p = sicoob.monta_segmento_p(pagamento, 1, 2)
 
       expect(segmento_p[118..125]).to eql '00000000'

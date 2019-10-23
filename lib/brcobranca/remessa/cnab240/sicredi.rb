@@ -193,7 +193,7 @@ module Brcobranca
         end
 
         def data_mora(pagamento)
-          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
+          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.codigo_mora
 
           pagamento.formata_proximo_dia_apos_data_vencimento
         end

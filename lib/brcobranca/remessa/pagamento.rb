@@ -84,12 +84,10 @@ module Brcobranca
       attr_accessor :percentual_multa
       # <b>OPCIONAL</b>: Data para cobrança de multa
       attr_accessor :data_multa
-      # <b>OPCIONAL</b>: tipo de mora (diário, mensal)
-      attr_accessor :tipo_mora
+      # <b>OPCIONAL</b>: codigo tipo de mora (diário, mensal)
+      attr_accessor :codigo_mora
       # <b>OPCIONAL</b>: Data para cobrança de mora
       attr_accessor :data_mora
-      # <b>OPCIONAL</b>: codigo dos juros
-      attr_accessor :codigo_juros
       # <b>OPCIONAL</b>: codigo do protesto
       attr_accessor :codigo_protesto
       # <b>OPCIONAL</b>: dias para protesto
@@ -119,7 +117,7 @@ module Brcobranca
           data_emissao: Date.current,
           data_segundo_desconto: '00-00-00',
           data_terceiro_desconto: '00-00-00',
-          tipo_mora: '3',
+          codigo_mora: '3',
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,

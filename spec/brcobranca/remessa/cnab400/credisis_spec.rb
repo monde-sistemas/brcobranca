@@ -9,7 +9,9 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
                                        nosso_numero: 123,
                                        documento: 6969,
                                        dias_protesto: '6',
+                                       codigo_mora: '2',
                                        valor_mora: '8.00',
+                                       codigo_multa: '2',
                                        percentual_multa: '2.00',
                                        documento_sacado: '12345678901',
                                        nome_sacado: 'PABLO DIEGO JOSÉ FRANCISCO DE PAULA JUAN NEPOMUCENO MARÍA DE LOS REMEDIOS CIPRIANO DE LA SANTÍSSIMA TRINIDAD RUIZ Y PICASSO',
@@ -18,9 +20,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP',
-                                       codigo_juros: '2',
-                                       codigo_multa: '2')
+                                       uf_sacado: 'SP')
   end
   let(:params) do
     {
