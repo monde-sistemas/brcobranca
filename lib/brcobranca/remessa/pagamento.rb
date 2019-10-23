@@ -72,6 +72,10 @@ module Brcobranca
       attr_accessor :data_segundo_desconto
       # <b>OPCIONAL</b>: valor a ser concedido de desconto
       attr_accessor :valor_segundo_desconto
+      # <b>OPCIONAL</b>: data limite para o desconto
+      attr_accessor :data_terceiro_desconto
+      # <b>OPCIONAL</b>: valor a ser concedido de desconto
+      attr_accessor :valor_terceiro_desconto
       # <b>OPCIONAL</b>: espécie do título
       attr_accessor :especie_titulo
       # <b>OPCIONAL</b>: código da multa
@@ -114,10 +118,12 @@ module Brcobranca
         padrao = {
           data_emissao: Date.current,
           data_segundo_desconto: '00-00-00',
+          data_terceiro_desconto: '00-00-00',
           tipo_mora: '3',
           valor_mora: 0.0,
           valor_desconto: 0.0,
           valor_segundo_desconto: 0.0,
+          valor_terceiro_desconto: 0.0,
           valor_iof: 0.0,
           valor_abatimento: 0.0,
           nome_avalista: '',
@@ -144,36 +150,8 @@ module Brcobranca
         yield self if block_given?
       end
 
-      # Formata a data de desconto de acordo com o formato passado
-      #
-      # @return [String]
-      #
-      def formata_data_desconto(formato = '%d%m%y')
-        data_desconto.strftime(formato)
-      rescue
-        if formato == '%d%m%y'
-          '000000'
-        else
-          '00000000'
-        end
-      end
-
       def []=(campo, valor)
         send "#{campo}=", valor
-      end
-
-      # Formata a data de segundo desconto de acordo com o formato passado
-      #
-      # @return [String]
-      #
-      def formata_data_segundo_desconto(formato = '%d%m%y')
-        data_segundo_desconto.strftime(formato)
-      rescue
-        if formato == '%d%m%y'
-          '000000'
-        else
-          '00000000'
-        end
       end
 
       # Formata a valor do percentual da multa
@@ -184,32 +162,7 @@ module Brcobranca
       # @return [String]
       #
       def formata_percentual_multa(tamanho = 4)
-        format_value(percentual_multa, tamanho)
-      end
-
-      # Formata a data de cobrança da multa
-      #
-      # @return [String]
-      #
-      def formata_data_multa(formato = '%d%m%y')
-        data_multa.strftime(formato)
-      rescue
-        if formato == '%d%m%y'
-          '000000'
-        else
-          '00000000'
-        end
-      end
-
-      # Formata o campo valor
-      # referentes as casas decimais
-      # exe. R$199,90 => 0000000019990
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor(tamanho = 13)
-        format_value(valor, tamanho)
+        formata_campo_valor(:percentual_multa, tamanho)
       end
 
       def documento_ou_numero
@@ -219,51 +172,6 @@ module Brcobranca
       def formata_documento_ou_numero(tamanho = 25, caracter = ' ')
         doc = documento_ou_numero.to_s.gsub(/[^0-9A-Za-z ]/, '')
         doc.rjust(tamanho, caracter)[0...tamanho]
-      end
-
-      # Formata o campo valor da mora
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor_mora(tamanho = 13)
-        format_value(valor_mora, tamanho)
-      end
-
-      # Formata o campo valor do desconto
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor_desconto(tamanho = 13)
-        format_value(valor_desconto, tamanho)
-      end
-
-      # Formata o campo valor do segundo desconto
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor_segundo_desconto(tamanho = 13)
-        format_value(valor_segundo_desconto, tamanho)
-      end
-
-      # Formata o campo valor do IOF
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor_iof(tamanho = 13)
-        format_value(valor_iof, tamanho)
-      end
-
-      # Formata o campo valor do IOF
-      #
-      # @param tamanho [Integer]
-      #   quantidade de caracteres a ser retornado
-      #
-      def formata_valor_abatimento(tamanho = 13)
-        format_value(valor_abatimento, tamanho)
       end
 
       # Retorna a identificacao do pagador
@@ -288,7 +196,7 @@ module Brcobranca
       end
 
       def formata_data_vencimento(formato = '%d%m%Y')
-        data_vencimento.strftime(formato)
+        formata_campo_data(:data_vencimento, formato)
       end
 
       def endereco_sacado
@@ -299,12 +207,39 @@ module Brcobranca
         ].reject(&:blank?).join(', ')
       end
 
+      def method_missing(method, *args, &block)
+        name = method.to_s
+        if name.start_with? 'formata_data'
+          formata_campo_data(name.remove('formata_'), *args)
+        elsif name.start_with? "formata_valor"
+          formata_campo_valor(name.remove('formata_'), *args)
+        else
+          super
+        end
+      end
+
+      def respond_to_missing?(method, include_private = false)
+        name = method.to_s
+        name.start_with?('formata_data') || name.start_with?('formata_valor') || super
+      end
+
       private
 
-      def format_value(value, tamanho)
-        fail ValorInvalido.new('Deve ser um Float') unless value.to_s =~ /\./
+      def formata_campo_valor(campo, tamanho = 13)
+        valor = send(campo.to_sym)
+        raise ValorInvalido, 'Deve ser um Float' unless valor.to_s =~ /\./
 
-        sprintf('%.2f', value).delete('.').rjust(tamanho, '0')
+        sprintf('%.2f', valor).delete('.').rjust(tamanho, '0')
+      end
+
+      def formata_campo_data(campo, formato = '%d%m%y')
+        send(campo.to_sym).strftime(formato)
+      rescue
+        if formato == '%d%m%y'
+          '000000'
+        else
+          '00000000'
+        end
       end
     end
   end
