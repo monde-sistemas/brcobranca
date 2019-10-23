@@ -6,7 +6,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Sicredi do
     Brcobranca::Remessa::Pagamento.new(
       valor: 50.0,
       data_vencimento: Date.today,
-      tipo_mora: '1',
+      codigo_mora: '1',
       nosso_numero: '072000031',
       numero: '00003',
       documento: 6969,

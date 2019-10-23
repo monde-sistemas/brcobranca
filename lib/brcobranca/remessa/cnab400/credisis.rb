@@ -189,7 +189,7 @@ module Brcobranca
           detalhe << instrucoes.format_size(99)                            # instrucoes                            A[100]
           detalhe << ' '                                                    # brancos                               X[01]
           detalhe << pagamento.formata_valor_mora(15)                       # valor juros                           V[15]
-          detalhe << CODIGOS_MORA[pagamento.codigo_juros]                   # codigo tipo do juros                  A[01]
+          detalhe << CODIGOS_MORA[pagamento.codigo_mora]                    # codigo tipo do juros                  A[01]
           detalhe << '2'                                                    # tipo carência do juros                9[01]
           detalhe << '00'                                                   # dias carência do juros                9[01]
           detalhe << pagamento.formata_percentual_multa(15)                 # valor multa                           V[15]

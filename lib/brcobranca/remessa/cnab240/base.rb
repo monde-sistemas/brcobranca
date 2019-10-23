@@ -193,7 +193,7 @@ module Brcobranca
           segmento_p << especie_titulo(pagamento)                       # especie do titulo                     2
           segmento_p << aceite                                          # aceite                                1
           segmento_p << pagamento.data_emissao.strftime('%d%m%Y')       # data de emissao titulo                8
-          segmento_p << pagamento.tipo_mora                             # cod. do mora                          1
+          segmento_p << pagamento.codigo_mora                           # cod. do mora                          1
           segmento_p << data_mora(pagamento)                            # data mora                             8
           segmento_p << pagamento.formata_valor_mora(15)                # valor mora                            15
           segmento_p << codigo_desconto(pagamento)                      # cod. do desconto                      1
@@ -527,7 +527,7 @@ module Brcobranca
         end
 
         def data_mora(pagamento)
-          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.tipo_mora
+          return ''.rjust(8, '0') unless %w( 1 2 ).include? pagamento.codigo_mora
 
           pagamento.formata_data_vencimento
         end

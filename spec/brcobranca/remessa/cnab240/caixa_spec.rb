@@ -18,7 +18,7 @@ RSpec.describe Brcobranca::Remessa::Cnab240::Caixa do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       tipo_mora: '1',
+                                       codigo_mora: '1',
                                        codigo_multa: '2',
                                        uf_sacado: 'SP',
                                        especie_titulo: 'RC')

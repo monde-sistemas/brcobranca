@@ -134,8 +134,8 @@ module Brcobranca
         end
 
         def tipo_mora(pagamento)
-          return ' ' if pagamento.tipo_mora == '3'
-          pagamento.tipo_mora
+          return ' ' if pagamento.codigo_mora == '3'
+          pagamento.codigo_mora
         end
 
         def formata_percentual_multa(pagamento)
@@ -145,7 +145,7 @@ module Brcobranca
         end
 
         def formata_valor_mora(tamanho, pagamento)
-          return ''.rjust(tamanho, ' ') if pagamento.tipo_mora == '3'
+          return ''.rjust(tamanho, ' ') if pagamento.codigo_mora == '3'
           pagamento.formata_valor_mora(tamanho)
         end
       end
