@@ -56,6 +56,8 @@ module Brcobranca
 
         campos = { aceite: 'N' }.merge!(campos)
         campos.each do |campo, valor|
+          next unless respond_to? "#{campo}="
+
           send "#{campo}=", valor
         end
 

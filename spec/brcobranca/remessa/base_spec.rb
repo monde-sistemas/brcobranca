@@ -21,9 +21,20 @@ RSpec.describe Brcobranca::Remessa::Base do
       conta_corrente: '1234',
       pagamentos: [pagamento] }
   end
-  let(:base) { subject.class.new(params) }
 
-  context 'validacoes' do
+  describe '#new' do
+    subject(:instance) { described_class.new(params) }
+
+    context 'with nonexistent properties' do
+      let(:params) { { a: 'a', b: 'b' } }
+
+      it 'initializes without errors' do
+        expect(instance).to be_an_instance_of(described_class)
+      end
+    end
+  end
+
+  describe 'validacoes' do
     context '@pagamentos' do
       it 'deve ser invalido se nao possuir ao menos um pagamento' do
         objeto = subject.class.new(params.merge!(pagamentos: nil))

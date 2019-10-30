@@ -20,7 +20,8 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
                                        bairro_sacado: 'São josé dos quatro apostolos magros',
                                        cep_sacado: '12345678',
                                        cidade_sacado: 'Santa rita de cássia maria da silva',
-                                       uf_sacado: 'SP')
+                                       uf_sacado: 'SP',
+                                       instrucoes_boleto: instrucoes_boleto)
   end
   let(:params) do
     {
@@ -43,6 +44,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
       pagamentos: [pagamento]
     }
   end
+  let(:instrucoes_boleto) { '' }
   let(:credisis) { described_class.new(params) }
 
   describe 'validações' do
@@ -66,7 +68,6 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
     it { is_expected.to validate_presence_of(:cidade_cedente) }
     it { is_expected.to validate_presence_of(:uf_cedente) }
     it { is_expected.not_to validate_presence_of(:complemento_cedente) }
-    it { is_expected.not_to validate_presence_of(:instrucoes) }
   end
 
   describe "pagamentos=" do
@@ -159,7 +160,7 @@ RSpec.describe Brcobranca::Remessa::Cnab400::Credisis, type: :model do
     describe '#monta_detalhe_opcional' do
       subject(:detalhe) { credisis.monta_detalhe_opcional(pagamento, 1) }
 
-      let(:credisis) { described_class.new(params.merge!(instrucoes: 'PAGAR ANTES DO VENCIMENTO')) }
+      let(:instrucoes_boleto) { 'PAGAR ANTES DO VENCIMENTO' }
 
       it { expect(detalhe.size).to eq 400 }
       it { expect(detalhe[0]).to eq '2' }

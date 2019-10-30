@@ -73,7 +73,7 @@ module Brcobranca
           pagamentos.each do |pagamento|
             contador += 1
             ret << monta_detalhe(pagamento, contador)
-            if gera_detalhe_multa?
+            if gera_detalhe_multa?(pagamento)
               contador += 1
               ret << monta_detalhe_opcional(pagamento, contador)
             end
@@ -118,7 +118,7 @@ module Brcobranca
           '01'
         end
 
-        def gera_detalhe_multa?
+        def gera_detalhe_multa?(_pagamento)
           false
         end
 

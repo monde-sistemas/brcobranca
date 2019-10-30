@@ -43,7 +43,6 @@ module Brcobranca
         attr_accessor :convenio
         attr_accessor :parcela
         attr_accessor :codigo_cedente
-        attr_accessor :instrucoes
 
         validates_presence_of :agencia, :conta_corrente, :digito_conta, :parcela,
                               :convenio, :sequencial_remessa, :documento_cedente, :nome_cedente,
@@ -55,14 +54,12 @@ module Brcobranca
         validates_length_of :carteira, maximum: 2
         validates_length_of :digito_conta, maximum: 1
         validates_length_of :sequencial_remessa, maximum: 7
-        validates_length_of :instrucoes, maximum: 100
 
         # Nova instancia do CrediSIS
         def initialize(campos = {})
           campos = {
             aceite: 'N',
-            parcela: '01',
-            instrucoes: ''
+            parcela: '01'
           }.merge!(campos)
           super(campos)
         end
@@ -184,9 +181,9 @@ module Brcobranca
           detalhe << bairro_cedente.format_size(25)                         # bairro do sacador/avalista            A[35]
           detalhe << cidade_cedente.format_size(25)                         # cidade do sacador/avalista            A[25]
           detalhe << uf_cedente.format_size(2)                              # uf do sacador/avalista                A[02]
-          detalhe << cep_cedente.format_size(8)                              # uf do sacador/avalista                A[02]
+          detalhe << cep_cedente.format_size(8)                             # uf do sacador/avalista                A[02]
           detalhe << ' '                                                    # brancos                               X[01]
-          detalhe << instrucoes.format_size(99)                            # instrucoes                            A[100]
+          detalhe << pagamento.instrucoes_boleto.format_size(99)            # instrucoes                            A[100]
           detalhe << ' '                                                    # brancos                               X[01]
           detalhe << pagamento.formata_valor_mora(15)                       # valor juros                           V[15]
           detalhe << CODIGOS_MORA[pagamento.codigo_mora]                    # codigo tipo da mora                   A[01]
@@ -263,8 +260,8 @@ module Brcobranca
           documento_cedente.modulo11(mapeamento: Boleto::Credisis::MAPEAMENTO_MODULO11)
         end
 
-        def gera_detalhe_multa?
-          !instrucoes.blank?
+        def gera_detalhe_multa?(pagamento)
+          !pagamento.instrucoes_boleto.blank?
         end
       end
     end
