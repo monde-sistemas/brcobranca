@@ -96,6 +96,8 @@ module Brcobranca
       attr_accessor :codigo_baixa
       # <b>OPCIONAL</b>: dias para baixa
       attr_accessor :dias_baixa
+      # <b>OPCIONAL</b>: instruções boleto
+      attr_accessor :instrucoes_boleto
       attr_accessor :validar_numero_sacado
 
       validates_presence_of :nosso_numero, :data_vencimento, :valor,
@@ -137,7 +139,8 @@ module Brcobranca
           dias_baixa: '000',
           cod_primeira_instrucao: '00',
           cod_segunda_instrucao: '00',
-          validar_numero_sacado: false
+          validar_numero_sacado: false,
+          instrucoes_boleto: ''
         }
 
         campos = padrao.merge!(campos)
