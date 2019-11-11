@@ -283,4 +283,14 @@ RSpec.describe Brcobranca::Remessa::Pagamento do
       it { is_expected.to eq 'Wall street, 999' }
     end
   end
+
+  describe "#instrucoes_boleto=" do
+    subject! { pagamento.instrucoes_boleto = instrucoes }
+
+    context "com quebras de linhas e espaços" do
+      let(:instrucoes) { "A\n   B\nC\t"}
+
+      it { expect(pagamento.instrucoes_boleto).to eq "A B C"}
+    end
+  end
 end
