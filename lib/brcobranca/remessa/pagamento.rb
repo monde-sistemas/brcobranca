@@ -1,5 +1,6 @@
 require 'active_support/core_ext/date/calculations'
 require 'active_support/core_ext/time/calculations'
+require 'active_support/core_ext/string'
 
 # -*- encoding: utf-8 -*-
 module Brcobranca
@@ -222,6 +223,10 @@ module Brcobranca
       def respond_to_missing?(method, include_private = false)
         name = method.to_s
         name.start_with?('formata_data') || name.start_with?('formata_valor') || super
+      end
+
+      def instrucoes_boleto=(valor)
+        @instrucoes_boleto = valor.to_s.squish
       end
 
       private
