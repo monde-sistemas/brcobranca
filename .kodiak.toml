@@ -4,3 +4,7 @@ version = 1
 [merge]
 method = "squash"
 delete_branch_on_merge = true
+block_on_reviews_requested = true
+
+[merge.message]
+body = "pull_request_body" 
